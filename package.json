@@ -1,0 +1,25 @@
+{
+  "name": "wildrent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npx prettier . --write && npx eslint .",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dreyrk/wildrent.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dreyrk/wildrent/issues"
+  },
+  "homepage": "https://github.com/Dreyrk/wildrent#readme",
+  "dependencies": {
+    "eslint": "^8.56.0",
+    "husky": "^9.0.7",
+    "prettier": "^3.2.4"
+  }
+}
