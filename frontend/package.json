@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,28 +7,36 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "check-types": "tsc --pretty --noEmit",
+    "check-format": "prettier --check .",
+    "check-lint": "eslint . --ext ts --ext tsx --ext js",
+    "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
     "codegen": "graphql-codegen --config codegen.yml --watch"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.10",
-    "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/introspection": "^4.0.0",
-    "@graphql-codegen/typescript": "^4.0.1",
-    "@graphql-codegen/typescript-operations": "^4.0.1",
-    "@graphql-codegen/typescript-react-apollo": "^4.1.0",
+    "@apollo/client": "^3.8.6",
+    "@heroicons/react": "^2.0.18",
+    "@types/node": "20.6.2",
+    "@types/react": "18.2.22",
+    "@types/react-dom": "18.2.7",
+    "axios": "^1.5.1",
     "graphql": "^16.8.1",
-    "next": "14.1.0",
-    "react": "^18",
-    "react-dom": "^18"
+    "next": "13.4.19",
+    "prettier": "^3.2.4",
+    "query-string": "^8.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "daisyui": "^4.6.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "@graphql-codegen/cli": "3.2.2",
+    "@graphql-codegen/introspection": "3.0.1",
+    "@graphql-codegen/typescript": "3.0.2",
+    "@graphql-codegen/typescript-operations": "3.0.2",
+    "@graphql-codegen/typescript-react-apollo": "3.3.7",
+    "autoprefixer": "^10.4.16",
+    "daisyui": "^3.8.1",
+    "postcss": "^8.4.30",
+    "tailwindcss": "^3.3.3"
   }
 }

@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "npx prettier . --write && npx eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check-types": "tsc -p ./frontend/tsconfig.json --pretty --noEmit && tsc -p ./backend/tsconfig.json --pretty --noEmit",
+    "check-format": "prettier --check .",
+    "check-lint": "eslint . ",
+    "build": "cd ./frontend && npm run build && cd ../backend && npm run build",
+    "format": "prettier --write .",
+    "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
     "prepare": "husky"
   },
   "repository": {
@@ -19,7 +25,18 @@
   "homepage": "https://github.com/Dreyrk/wildrent#readme",
   "dependencies": {
     "eslint": "^8.56.0",
-    "husky": "^9.0.7",
+    "husky": "^9.0.7"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard-with-typescript": "^43.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.1.0",
+    "eslint-plugin-promise": "^6.0.0",
     "prettier": "^3.2.4"
   }
 }

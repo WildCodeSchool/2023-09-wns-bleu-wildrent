@@ -4,25 +4,37 @@
   "description": "",
   "main": "./src/index.ts",
   "scripts": {
-    "dev": "ts-node-dev ./src/index.ts",
+    "start": "ts-node-dev src/index.ts",
     "build": "tsc",
     "start:prod": "node build/index.js",
-    "resetDB": "ts-node-dev src/resetDb.ts"
+    "resetDB": "ts-node-dev src/resetDb.ts",
+    "format": "prettier --write .",
+    "check-types": "tsc --pretty --noEmit",
+    "check-format": "prettier --check .",
+    "check-lint": "eslint . ",
+    "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
+    "@apollo/server": "^4.9.5",
+    "class-validator": "^0.14.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "graphql": "^15.8.0",
     "graphql-scalars": "^1.22.4",
-    "reflect-metadata": "^0.2.1",
-    "ts-node": "^10.9.2",
+    "pg": "^8.11.3",
+    "prettier": "^3.2.4",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.1.6",
     "ts-node-dev": "^2.0.0",
-    "type-graphql": "^1.1.1",
-    "typeorm": "^0.3.20",
+    "type-graphql": "^2.0.0-beta.3",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.17",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+
     "typescript": "^5.3.3"
   }
 }
