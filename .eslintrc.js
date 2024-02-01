@@ -3,7 +3,7 @@ module.exports = {
 
   overrides: [
     {
-      files: ['frontend/**/*.js'],
+      files: ['frontend/*/.js, *.mjs, *.tsx, *.ts '],
       env: {
         node: true,
         es2021: true,
@@ -24,7 +24,7 @@ module.exports = {
       },
     },
     {
-      files: ['backend/**/*.js'],
+      files: ['backend/**/*.js, *.ts '],
       env: {
         node: true,
         es2021: true,
