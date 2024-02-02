@@ -11,6 +11,7 @@
     "build": "cd ./frontend && npm run build && cd ../backend && npm run build",
     "format": "prettier --write .",
     "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
+    "install": "cd ./frontend && npm i && cd ../backend && npm i",
     "prepare": "husky"
   },
   "repository": {
