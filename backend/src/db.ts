@@ -4,9 +4,17 @@ import { Category } from './entities/category.entity';
 import { SubCategory } from './entities/subcategory.entity';
 import User from './entities/user.entity';
 
+let databaseUrl: string | undefined;
+
+if (process.env.NODE_ENV) {
+  databaseUrl = process.env.DATABASE_URL;
+} else {
+  databaseUrl = process.env.DEV_DATABASE_URL;
+}
+
 export default new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST || 'db',
+  host: databaseUrl || 'db',
   port: parseInt(process.env.DB_PORT || '0') || 5432,
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASS || 'postgres',
