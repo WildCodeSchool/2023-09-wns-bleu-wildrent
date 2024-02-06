@@ -26,7 +26,7 @@ const config: Config = {
           'base-100': '#f7fafc',
           info: '#63b3ed',
           success: '#48bb78',
-          warning: '#ecc94b',
+          warning: '#ecc94c',
           error: '#f56565',
         },
       },
