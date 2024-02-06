@@ -1,6 +1,6 @@
 import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Field, InputType, Int, ObjectType } from 'type-graphql';
-import argon2 from 'argon2';
+import { argon2id, verify, hash } from 'argon2';
 
 type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
@@ -8,7 +8,7 @@ type ROLE = 'ADMIN' | 'USER';
 export default class User extends BaseEntity {
   @BeforeInsert()
   protected async hashPassword() {
-    this.password = await argon2.hash(this.password);
+    this.password = await hash(this.password);
   }
 
   @PrimaryGeneratedColumn()
@@ -58,6 +58,15 @@ export default class User extends BaseEntity {
   password: string;
 }
 
+@ObjectType()
+export class Message {
+  @Field()
+  success: boolean;
+
+  @Field()
+  message: string;
+}
+
 // InputType pour la création d'un nouveau user
 @InputType()
 export class InputRegister {
@@ -69,23 +78,9 @@ export class InputRegister {
   @Column()
   lastname: string;
 
-  @Field({ nullable: true })
-  @Column()
-  address?: string;
-
-  @Field({ nullable: true })
-  @Column()
-  cp?: string;
-
-  @Field({ nullable: true })
-  @Column()
-  city?: string;
-
-  @Field()
-  role: ROLE;
-
   @Field()
   email: string;
+
   @Field()
   password: string;
 }
@@ -99,3 +94,16 @@ export class InputLogin {
   @Field()
   password: string;
 }
+
+export const verifyPassword = async (
+  plainPassword: string,
+  hashedPassword: string,
+): Promise<boolean> => {
+  const hashingOptions = {
+    memoryCost: 2 ** 16,
+    timeCost: 5,
+    type: argon2id,
+  };
+
+  return await verify(hashedPassword, plainPassword, hashingOptions);
+};

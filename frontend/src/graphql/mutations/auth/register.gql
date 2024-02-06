@@ -1,0 +1,6 @@
+mutation Register($newUser: InputRegister!) {
+  register(newUser: $newUser) {
+    success
+    message
+  }
+}
