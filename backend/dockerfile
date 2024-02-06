@@ -9,6 +9,6 @@ RUN npm i
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./src ./src
 
-ENV NODE_ENV="production"
+ENV NODE_ENV="dev"
 
 CMD npm run start
