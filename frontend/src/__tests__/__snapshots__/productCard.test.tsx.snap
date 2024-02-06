@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProductCard Component renders correctly 1`] = `
+<body>
+  <div>
+    <div>
+      <a
+        href="/products/1"
+      >
+        <h3>
+           
+          Guirlande
+        </h3>
+        <img
+          alt="Guirlande"
+          src="https://img.com/i.png"
+        />
+        <p>
+          Cupcake ipsum dolor sit amet tootsie roll pastry.
+        </p>
+        <p>
+          1
+          €
+        </p>
+      </a>
+    </div>
+  </div>
+</body>
+`;
