@@ -21,20 +21,32 @@ describe('Categories Resolver', () => {
       image: 'https://www.highgest.fr/image/505818799390/1920/945/Les-petits-+.jpg',
     }).save();
     const res = await execute(getCategories);
-    expect(res).toMatchInlineSnapshot();
+    expect(res).toMatchSnapshot();
   });
 
-  //   it('can create a tag', async () => {
-  //     const res = await execute(addTag, { data: { name: 'test' } }, await getAdminContext());
-  //     expect(res).toMatchInlineSnapshot(`
-  // {
-  //   "data": {
-  //     "createTag": {
-  //       "id": 1,
-  //       "name": "test",
+  it('can get one category by id', async () => {
+    const cat3 = await Category.create({
+      name: 'Sonorisation',
+      description: 'Description de la catégorie Sonorisation',
+      image: 'https://exemple.com/image_sonorisation.jpg',
+    }).save();
+    const res = await execute(getCategoryById, { categoryId: cat3.id });
+    expect(res).toMatchSnapshot();
+  });
+
+  // it('can create a tag', async () => {
+  //   const res = await execute(
+  //     addCategory,
+  //     {
+  //       data: {
+  //         name: 'Bougie',
+  //         description:
+  //           'Oat cake biscuit cookie chocolate pudding. Fruitcake cake cupcake bonbon pudding tiramisu jelly beans marzipan. Shortbread dessert chocolate biscuit jelly-o brownie. Toffee tootsie roll lollipop jelly beans powder croissant pie. Sesame snaps jelly-o dessert sugar plum donut caramels chocolate. Bear claw macaroon brownie cookie icing jelly sugar plum.',
+  //         image: 'https://www.highgest.fr/image/505818799390/1920/945/Les-petits-+.jpg',
+  //       },
   //     },
-  //   },
-  // }
-  // `);
-  //   });
+  //     // await getAdminContext()
+  //   );
+  //   expect(res).toMatchSnapshot();
+  // });
 });
