@@ -14,14 +14,9 @@ export interface Ad {
 export interface ContextType {
   req: express.Request;
   res: express.Response;
-  currentUser?: User;
+  currentUser?: User | null;
 }
 
 export interface JWTPayload {
   userId: number;
 }
-
-export type Message = {
-  success: boolean;
-  message: string;
-};

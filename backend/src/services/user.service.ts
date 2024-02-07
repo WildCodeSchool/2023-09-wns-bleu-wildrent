@@ -16,6 +16,14 @@ export default class UserService {
     }
   }
 
+  async findUserById(id: number) {
+    try {
+      return await this.db.findOneBy({ id });
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+  }
+
   async createUser({ firstname, lastname, email, password }: InputRegister) {
     try {
       const newUser = this.db.create({ firstname, lastname, email, password, role: 'USER' });

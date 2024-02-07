@@ -1,22 +1,11 @@
 'use client';
 
-import { InputRegister, useRegisterMutation } from '@/graphql/generated/schema';
+import { useLoginMutation, InputLogin } from '@/graphql/generated/schema';
 import FormInput from './FormInput';
+import { useRouter } from 'next/navigation';
 import client from '@/graphql/client';
 
 const fields = [
-  {
-    label: 'Nom',
-    id: 'lastname',
-    type: 'text',
-    placeholder: 'Doe',
-  },
-  {
-    label: 'Prénom',
-    id: 'firstname',
-    type: 'text',
-    placeholder: 'John',
-  },
   {
     label: 'Email',
     id: 'email',
@@ -29,18 +18,30 @@ const fields = [
     type: 'password',
     placeholder: '**********',
   },
-  {
-    label: 'Confirmation du mot de passe',
-    id: 'confirm_password',
-    type: 'password',
-    placeholder: '**********',
-  },
 ];
 
 export default function LoginForm() {
+  const router = useRouter();
+  const [login, { data, loading, error }] = useLoginMutation();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    try {
+      const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const user = Object.fromEntries(formData.entries()) as InputLogin;
+      await login({
+        variables: {
+          user,
+        },
+      });
+      if (data?.login.success && !error && !loading) {
+        console.log(data);
+        router.push('/');
+      }
+    } catch (err) {
+      console.error(`Could not create account: ${err}`);
+    } finally {
+      client.resetStore();
+    }
   };
   return (
     <form className="flex flex-col gap-4 border rounded p-4" onSubmit={handleSubmit}>
@@ -54,7 +55,7 @@ export default function LoginForm() {
         />
       ))}
       <button className="text-center self-center px-3 py-2 border rounded-lg w-fit" type="submit">
-        Inscription
+        Se Connecter
       </button>
     </form>
   );

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { InputRegister, useRegisterMutation } from '@/graphql/generated/schema';
 import FormInput from './FormInput';
 import client from '@/graphql/client';
@@ -38,25 +39,23 @@ const fields = [
 ];
 
 export default function RegisterForm() {
-  const [register] = useRegisterMutation();
+  const router = useRouter();
+  const [register, { data, loading, error }] = useRegisterMutation();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const password = formData.get('password') as string;
     if (formData.get('password') === formData.get('confirm_password')) {
       formData.delete('confirm_password');
+      const newUser = Object.fromEntries(formData.entries()) as InputRegister;
       try {
         const { data } = await register({
           variables: {
-            newUser: {
-              email: formData.get('email') as string,
-              firstname: formData.get('firstname') as string,
-              lastname: formData.get('lastname') as string,
-              password,
-            },
+            newUser,
           },
         });
-        console.log(data);
+        if (data?.register.success && !error && !loading) {
+          router.push('/auth/login');
+        }
       } catch (err) {
         console.error(`could not create account: ${err}`);
       } finally {
@@ -75,7 +74,11 @@ export default function RegisterForm() {
           inputType={field.type}
         />
       ))}
-      <button className="text-center self-center px-3 py-2 border rounded-lg w-fit" type="submit">
+      <button
+        disabled={loading}
+        className="text-center self-center px-3 py-2 border rounded-lg w-fit"
+        type="submit"
+      >
         Inscription
       </button>
     </form>

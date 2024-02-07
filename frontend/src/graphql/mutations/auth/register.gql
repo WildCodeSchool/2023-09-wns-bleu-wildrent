@@ -1,4 +1,4 @@
-mutation Register($newUser: InputRegister!) {
+mutation register($newUser: InputRegister!) {
   register(newUser: $newUser) {
     success
     message

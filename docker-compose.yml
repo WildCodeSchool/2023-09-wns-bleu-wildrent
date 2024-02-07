@@ -20,6 +20,8 @@ services:
         condition: service_healthy
 
     build: backend
+    environment:
+      - JWT_PRIVATE_KEY=ZKlkzgkRpFczbn5abHQ3EVN3Wly5ePPqZeX5zzJXvQU=
     ports:
       - 4001:4001
     volumes:
