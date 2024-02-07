@@ -10,4 +10,6 @@ COPY ./.env ./.env
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./src ./src
 
-CMD npm run start
+RUN npm run build
+
+CMD npm run start:prod

@@ -13,8 +13,8 @@ describe('ProductCard Component', () => {
         link="/products/1"
       ></ProductCard>,
     );
-    const heading = screen.getByRole('heading', { level: 3 });
     const link = screen.getByRole('link');
+    const heading = screen.getByRole('heading', { level: 3 });
     expect(link).toHaveAttribute('href', '/products/1');
     expect(heading).toBeInTheDocument();
     expect(screen.getByText('Guirlande')).toBeInTheDocument();
