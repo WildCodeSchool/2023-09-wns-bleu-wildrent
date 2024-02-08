@@ -11,9 +11,8 @@ export class SubCategory extends BaseCategory {
   @ManyToOne(() => Category, (category) => category.subCategories)
   @Field(() => Category)
   category: Category;
-
   @OneToMany(() => ProductRef, (productRef) => productRef.subCategory)
-  // @Field(() => ProductRef)
+  @Field(() => ProductRef)
   productRefs: ProductRef[];
 }
 
