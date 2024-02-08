@@ -11,6 +11,7 @@ COPY ./next-env.d.ts ./next-env.d.ts
 COPY ./next.config.mjs ./next.config.mjs
 COPY ./tailwind.config.ts ./tailwind.config.ts
 COPY ./postcss.config.js ./postcss.config.js
+COPY ./public ./public
 COPY ./src ./src
 
 CMD npm run dev
