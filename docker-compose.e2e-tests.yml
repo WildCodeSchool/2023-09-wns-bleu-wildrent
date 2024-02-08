@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d postgres -U postgres" ]
+      test: ['CMD-SHELL', 'pg_isready -d postgres -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,7 +26,7 @@ services:
     environment:
       - DB_HOST=testDB
     healthcheck:
-      test: 'curl --fail --request GET -H ''content-type:application/json'' --url ''http://localhost:4001/graphql?query=%7B__typename%7D'''
+      test: "curl --fail --request GET -H 'content-type:application/json' --url 'http://localhost:4001/graphql?query=%7B__typename%7D'"
       interval: 5s
       timeout: 5s
       retries: 10
