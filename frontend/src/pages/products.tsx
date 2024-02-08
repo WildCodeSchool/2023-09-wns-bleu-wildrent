@@ -1,6 +1,6 @@
 import React from 'react';
 import ProductCard from '@/components/ProductCard';
-import { useAllProductRefsQuery } from '@/graphql/generated/schema';
+import { useAllProductRefsQuery } from '../graphql/generated/schema';
 import Layout from '@/components/Layout';
 
 function ProductList() {

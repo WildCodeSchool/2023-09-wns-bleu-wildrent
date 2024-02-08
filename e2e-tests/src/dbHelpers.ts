@@ -1,4 +1,4 @@
-import db from "../../backend/src/db";
+import db from '../../backend/src/db';
 
 export async function connect() {
   await db.initialize();

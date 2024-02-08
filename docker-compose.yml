@@ -18,12 +18,14 @@ services:
         condition: service_healthy
     environment:
       - DB_HOST=db
-
     build: backend
     ports:
       - 4001:4001
     volumes:
       - ./backend/src:/app/src
+    env_file:
+      - ./secret.env
+      - ./global.env
 
   frontend:
     build: frontend
@@ -31,3 +33,5 @@ services:
       - 3000:3000
     volumes:
       - ./frontend/src:/app/src
+    env_file:
+      - ./global.env

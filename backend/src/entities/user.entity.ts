@@ -1,6 +1,6 @@
 import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Field, InputType, Int, ObjectType } from 'type-graphql';
-import { argon2id, hash /*, verify*/ } from 'argon2';
+import { argon2id, verify, hash } from 'argon2';
 
 type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
@@ -8,7 +8,7 @@ type ROLE = 'ADMIN' | 'USER';
 export default class User extends BaseEntity {
   @BeforeInsert()
   protected async hashPassword() {
-    this.password = await hash(this.password, hashingOptions);
+    this.password = await hash(this.password);
   }
 
   @PrimaryGeneratedColumn()
@@ -58,6 +58,15 @@ export default class User extends BaseEntity {
   password: string;
 }
 
+@ObjectType()
+export class Message {
+  @Field()
+  success: boolean;
+
+  @Field()
+  message: string;
+}
+
 // InputType pour la création d'un nouveau user
 @InputType()
 export class InputRegister {
@@ -69,23 +78,9 @@ export class InputRegister {
   @Column()
   lastname: string;
 
-  @Field({ nullable: true })
-  @Column()
-  address?: string;
-
-  @Field({ nullable: true })
-  @Column()
-  cp?: string;
-
-  @Field({ nullable: true })
-  @Column()
-  city?: string;
-
-  @Field()
-  role: ROLE;
-
   @Field()
   email: string;
+
   @Field()
   password: string;
 }
@@ -100,12 +95,15 @@ export class InputLogin {
   password: string;
 }
 
-// https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
-const hashingOptions = {
-  memoryCost: 2 ** 16,
-  timeCost: 5,
-  type: argon2id,
-};
+export const verifyPassword = async (
+  plainPassword: string,
+  hashedPassword: string,
+): Promise<boolean> => {
+  const hashingOptions = {
+    memoryCost: 2 ** 16,
+    timeCost: 5,
+    type: argon2id,
+  };
 
-export const hashPassword = async (plainPassword: string): Promise<string> =>
-  await hash(plainPassword, hashingOptions);
+  return await verify(hashedPassword, plainPassword, hashingOptions);
+};
