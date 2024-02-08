@@ -5,11 +5,12 @@ const API_URL = getApiUrl();
 
 const httpLink = new HttpLink({
   uri: API_URL,
-  credentials: 'same-origin',
+  credentials: 'include',
 });
 
 const client = new ApolloClient({
   link: httpLink,
+  credentials: 'include',
   cache: new InMemoryCache(),
 });
 

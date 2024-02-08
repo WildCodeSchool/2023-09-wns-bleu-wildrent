@@ -40,7 +40,6 @@ export default class UserResolver {
           secure: process.env.NODE_ENV === 'production',
           httpOnly: true,
         });
-        console.log(ctx.res);
         ctx.currentUser = user;
         return { success: true, message: 'Authenticated' };
       }

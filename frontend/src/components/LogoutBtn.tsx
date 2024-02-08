@@ -1,13 +1,15 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useLogoutMutation } from '@/graphql/generated/schema';
 
 export default function LogoutBtn() {
-  const [logout, { data, loading, error }] = useLogoutMutation();
+  const router = useRouter();
+  const [logout] = useLogoutMutation();
 
   const handleClick = async () => {
     await logout();
-    console.log(data);
+    router.push('/auth/login');
   };
 
   return (

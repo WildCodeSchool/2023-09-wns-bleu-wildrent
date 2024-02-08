@@ -34,13 +34,10 @@ export default function LoginForm() {
         },
       });
       if (data?.login.success && !error && !loading) {
-        console.log(data);
         router.push('/');
       }
     } catch (err) {
       console.error(`Could not create account: ${err}`);
-    } finally {
-      client.resetStore();
     }
   };
   return (

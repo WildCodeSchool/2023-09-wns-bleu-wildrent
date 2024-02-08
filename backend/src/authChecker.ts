@@ -8,12 +8,6 @@ export async function authChecker({ context }: { context: ContextType }) {
   const { req } = context;
   const tokenInAuthHeaders = req.headers.authorization?.split(' ')[0];
   const tokenInCookie = cookie.parse(req.headers.cookie ?? '').token;
-  console.log(
-    '------------------------',
-    tokenInAuthHeaders,
-    tokenInCookie,
-    '------------------------',
-  );
   const token = tokenInAuthHeaders ?? tokenInCookie;
   if (typeof token !== 'string') return false;
   const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY as string) as JWTPayload;
