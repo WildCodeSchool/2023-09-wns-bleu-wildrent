@@ -6,7 +6,7 @@ node_modules
 /backend/build
 
 #dev
-
+/frontend/src/graphql/generated
 .prettierrc.js
 .eslintrc.js
 package-lock.json
