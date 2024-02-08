@@ -5,11 +5,12 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import { buildSchema } from 'type-graphql';
 import CategoriesResolver from './resolvers/category.resolver';
 import db from './db';
+import ProductRefsResolver from './resolvers/productRef.resolver';
 
 const port = Number(process.env.SERVER_PORT) || 4001;
 
 buildSchema({
-  resolvers: [CategoriesResolver],
+  resolvers: [CategoriesResolver, ProductRefsResolver],
 }).then(async (schema) => {
   await db.initialize();
 
