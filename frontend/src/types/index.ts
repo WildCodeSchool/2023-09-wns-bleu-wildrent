@@ -10,3 +10,11 @@ export type ProductRef = {
   image: string;
   priceHT: number;
 };
+
+export type FormInputProps = {
+  label: string;
+  id: string;
+  placeholder: string;
+  inputType?: string;
+  error?: string;
+};

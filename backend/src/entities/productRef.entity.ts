@@ -25,8 +25,12 @@ export class ProductRef extends BaseEntity {
   @Column({ type: 'float' })
   @Field()
   priceHT: number;
-  @Field(() => SubCategory)
-  @ManyToOne(() => SubCategory, (subcategory) => subcategory.productRefs)
+
+  @ManyToOne(() => SubCategory, (subcategory) => subcategory.productRefs, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @Field()
   subCategory: SubCategory;
 }
 
