@@ -1,6 +1,6 @@
 'use client';
 
-import { useLoginMutation, InputLogin } from '@/graphql/generated/schema';
+import { useLoginMutation, InputLogin } from '../graphql/generated/schema';
 import FormInput from './FormInput';
 import { useRouter } from 'next/navigation';
 import client from '@/graphql/client';
