@@ -23,8 +23,6 @@ async function clearDB() {
 
 async function main() {
   await db.initialize();
-  console.log(process.env.MARION);
-
   await clearDB();
   const category1 = Category.create({
     name: 'Mobilier',

@@ -12,7 +12,10 @@
     "format": "prettier --write .",
     "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
     "install": "cd ./frontend && npm i && cd ../backend && npm i",
-    "prepare": "husky"
+    "prepare": "husky", 
+    "dev": "docker compose up --build",
+    "prod": "docker compose -f docker-compose.production.yml up --build",
+    "testDB": "docker compose -f docker-compose.integration-tests.yml -p wildrent_testdb up "
   },
   "repository": {
     "type": "git",

@@ -6,7 +6,7 @@ import { buildSchema } from 'type-graphql';
 import CategoriesResolver from './resolvers/category.resolver';
 import db from './db';
 
-const port = Number(process.env.USE_PORT) || 4001;
+const port = Number(process.env.SERVER_PORT) || 4001;
 
 buildSchema({
   resolvers: [CategoriesResolver],
