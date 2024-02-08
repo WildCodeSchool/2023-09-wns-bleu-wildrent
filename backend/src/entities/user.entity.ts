@@ -1,6 +1,6 @@
 import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Field, InputType, Int, ObjectType } from 'type-graphql';
-import argon2 from 'argon2';
+import { argon2id, hash /*, verify*/ } from 'argon2';
 
 type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
@@ -8,7 +8,7 @@ type ROLE = 'ADMIN' | 'USER';
 export default class User extends BaseEntity {
   @BeforeInsert()
   protected async hashPassword() {
-    this.password = await argon2.hash(this.password);
+    this.password = await hash(this.password, hashingOptions);
   }
 
   @PrimaryGeneratedColumn()
@@ -99,3 +99,13 @@ export class InputLogin {
   @Field()
   password: string;
 }
+
+// https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+const hashingOptions = {
+  memoryCost: 2 ** 16,
+  timeCost: 5,
+  type: argon2id,
+};
+
+export const hashPassword = async (plainPassword: string): Promise<string> =>
+  await hash(plainPassword, hashingOptions);

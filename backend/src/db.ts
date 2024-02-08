@@ -1,25 +1,27 @@
 import { DataSource } from 'typeorm';
-import { ProductRef } from './entities/productRef.entity';
 import { Category } from './entities/category.entity';
+import env from './env';
 import { SubCategory } from './entities/subcategory.entity';
+import { ProductRef } from './entities/productRef.entity';
 import User from './entities/user.entity';
+const { DB_USER, DB_PASS, DB_NAME, DB_PORT, DB_HOST } = env;
 
-let databaseUrl: string | undefined;
+const db = new DataSource({
+  type: 'postgres',
+  host: DB_HOST,
+  port: DB_PORT,
+  username: DB_USER,
+  password: DB_PASS,
+  database: DB_NAME,
+  entities: [Category, SubCategory, ProductRef, User],
+  synchronize: true,
+  logging: env.NODE_ENV !== 'test',
+});
 
-if (process.env.NODE_ENV) {
-  databaseUrl = process.env.DATABASE_URL;
-} else {
-  databaseUrl = process.env.DEV_DATABASE_URL;
+export async function clearDB() {
+  const entities = db.entityMetadatas;
+  const tableNames = entities.map((entity) => `"${entity.tableName}"`).join(', ');
+  await db.query(`TRUNCATE ${tableNames} RESTART IDENTITY CASCADE;`);
 }
 
-export default new DataSource({
-  type: 'postgres',
-  host: databaseUrl || 'db',
-  port: parseInt(process.env.DB_PORT || '0') || 5432,
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASS || 'postgres',
-  database: process.env.DB_NAME || 'postgres',
-  entities: [User, SubCategory, Category, ProductRef],
-  synchronize: true,
-  logging: true,
-});
+export default db;

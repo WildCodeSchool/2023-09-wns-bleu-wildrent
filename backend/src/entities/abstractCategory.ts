@@ -1,8 +1,9 @@
-import { Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, BaseEntity, Entity } from 'typeorm';
 import { Field, Int, InputType, ObjectType } from 'type-graphql';
 import { Length } from 'class-validator';
 
 // Classe de base abstraite
+@Entity()
 @ObjectType()
 export class BaseCategory extends BaseEntity {
   @PrimaryGeneratedColumn()

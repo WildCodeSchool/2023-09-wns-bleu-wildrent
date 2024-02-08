@@ -14,4 +14,6 @@ COPY ./tailwind.config.ts ./tailwind.config.ts
 COPY ./postcss.config.js ./postcss.config.js
 COPY ./src ./src
 
-CMD npm run dev
+RUN npm run build
+
+CMD npm start
