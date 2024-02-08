@@ -19,12 +19,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dreyrk/wildrent.git"
+    "url": "git+https://github.com/WildCodeSchool/2023-09-wns-bleu-wildrent.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Dreyrk/wildrent/issues"
+    "url": "https://github.com/WildCodeSchool/2023-09-wns-bleu-wildrent/issues"
   },
   "homepage": "https://github.com/Dreyrk/wildrent#readme",
   "dependencies": {
