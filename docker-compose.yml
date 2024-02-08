@@ -18,7 +18,6 @@ services:
         condition: service_healthy
     environment:
       - DB_HOST=db
-      - JWT_PRIVATE_KEY=ZKlkzgkRpFczbn5abHQ3EVN3Wly5ePPqZeX5zzJXvQU=
     build: backend
     ports:
       - 4001:4001
@@ -26,6 +25,7 @@ services:
       - ./backend/src:/app/src
     env_file:
       - ./global.env
+      - ./secret.env
 
   frontend:
     build: frontend
