@@ -1,0 +1,6 @@
+mutation Login($user: InputLogin!) {
+  login(user: $user) {
+    success
+    message
+  }
+}

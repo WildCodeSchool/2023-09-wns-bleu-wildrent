@@ -1,3 +1,4 @@
+import LogoutBtn from '@/components/LogoutBtn';
 import React from 'react';
 
 export default function Home() {
