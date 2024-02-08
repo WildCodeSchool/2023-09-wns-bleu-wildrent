@@ -61,6 +61,13 @@ async function main() {
     image: 'https://www.highgest.fr/admin/storage/144852959826.jpg',
     priceHT: 10,
   });
+  const productRef2 = ProductRef.create({
+    name: 'Chaise Médaillon',
+    description:
+      'Toffee candy canes danish liquorice candy canes donut jujubes apple pie. Jujubes chocolate jujubes brownie bonbon sugar plum danish pie. Lollipop jelly-o gummi bears wafer dessert biscuit oat cake sweet roll. Topping icing brownie liquorice liquorice. Apple pie carrot cake croissant topping jelly-o chocolate cake pudding cupcake. Oat cake jelly beans toffee soufflé gingerbread cupcake. Pie dessert soufflé fruitcake danish. Fruitcake halvah tart ice cream cookie fruitcake shortbread.',
+    image: 'https://www.highgest.fr/admin/storage/209057119173.jpg',
+    priceHT: 10,
+  });
   const admin = User.create({
     firstname: 'admin',
     lastname: 'WildRent',
@@ -75,6 +82,7 @@ async function main() {
     password: 'mdp',
   });
   productRef1.subCategory = subCategory2;
+  productRef2.subCategory = subCategory2;
   subCategory1.category = category1;
   subCategory2.category = category1;
   subCategory3.category = category2;
@@ -86,6 +94,7 @@ async function main() {
   await subCategory2.save();
   await subCategory3.save();
   await productRef1.save();
+  await productRef2.save();
 }
 
 main();

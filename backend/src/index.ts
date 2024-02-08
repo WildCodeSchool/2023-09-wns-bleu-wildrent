@@ -11,6 +11,7 @@ import { buildSchema } from 'type-graphql';
 import CategoriesResolver from './resolvers/category.resolver';
 import UserResolver from './resolvers/user.resolver';
 import db from './db';
+import ProductRefsResolver from './resolvers/productRef.resolver';
 import { verify } from 'jsonwebtoken';
 import UserService from './services/user.service';
 
@@ -20,7 +21,7 @@ async function main() {
   try {
     // Initialisation des schema via les resolvers puis de la database
     const schema = await buildSchema({
-      resolvers: [CategoriesResolver, UserResolver],
+      resolvers: [CategoriesResolver, ProductRefsResolver, UserResolver],
       validate: false,
     });
     await db.initialize();
