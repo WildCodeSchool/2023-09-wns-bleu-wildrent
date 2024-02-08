@@ -14,7 +14,7 @@ import db from './db';
 import { verify } from 'jsonwebtoken';
 import UserService from './services/user.service';
 
-const port = Number(process.env.USE_PORT) || 4001;
+const port = Number(process.env.SERVER_PORT) || 4001;
 
 async function main() {
   try {
