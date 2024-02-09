@@ -38,7 +38,7 @@ export default class UserResolver {
       if (token) {
         ctx.res.cookie('token', token, {
           secure: process.env.NODE_ENV === 'production',
-          httpOnly: true,
+          httpOnly: false, // si true pas possible de le récupérer en front
         });
         ctx.currentUser = user;
         return { success: true, message: 'Authenticated' };

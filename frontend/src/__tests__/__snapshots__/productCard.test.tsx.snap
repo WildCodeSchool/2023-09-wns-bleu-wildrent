@@ -3,27 +3,35 @@
 exports[`ProductCard Component renders correctly 1`] = `
 <body>
   <div>
-    <div>
-      <a
-        href="/products/1"
+    <a
+      href="/products/1"
+    >
+      <div
+        class="card card-compact w-96 bg-base-100 shadow-xl"
       >
-        <h3>
-           
-          Guirlande
-        </h3>
-        <img
-          alt="Guirlande"
-          src="https://img.com/i.png"
-        />
-        <p>
-          Cupcake ipsum dolor sit amet tootsie roll pastry.
-        </p>
-        <p>
-          1
-          €
-        </p>
-      </a>
-    </div>
+        <figure>
+          <img
+            alt="Guirlande"
+            src="https://img.com/i.png"
+          />
+        </figure>
+        <div
+          class="card-body"
+        >
+          <h2
+            class="card-title text-center"
+          >
+            Guirlande
+          </h2>
+          <div
+            class="card-price text-right"
+          >
+            1
+             € / jour
+          </div>
+        </div>
+      </div>
+    </a>
   </div>
 </body>
 `;

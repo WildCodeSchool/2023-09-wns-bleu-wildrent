@@ -11,9 +11,8 @@ export default function Home() {
         <h4 className="font-normal mb-1">Titre Sous-section (H4)</h4>
         <p className="font-light">Paragraph de texte</p>
 
-        {/* Bouton avec hover */}
-        <button className="btn mt-6 hover:bg-red-700 transition-colors">Bouton avec Hover</button>
-      </main>{' '}
+        <button className="btn">Bouton</button>
+      </main>
     </Layout>
   );
 }
