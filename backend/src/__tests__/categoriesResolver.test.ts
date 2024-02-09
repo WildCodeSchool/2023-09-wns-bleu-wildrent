@@ -34,7 +34,7 @@ describe('Categories Resolver', () => {
     expect(res).toMatchSnapshot();
   });
 
-  // it('can create a tag', async () => {
+  // it('can create a category', async () => {
   //   const res = await execute(
   //     addCategory,
   //     {
