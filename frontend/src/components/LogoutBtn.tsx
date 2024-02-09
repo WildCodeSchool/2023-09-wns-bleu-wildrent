@@ -13,7 +13,7 @@ export default function LogoutBtn() {
   };
 
   return (
-    <button onClick={handleClick} className="bg-red-600 p-4 text-xl font-bold" type="button">
+    <button onClick={handleClick} className="bg-red-600 p-4 text-xl font-bold" type="button" data-test-id="logout-button">
       Logout
     </button>
   );

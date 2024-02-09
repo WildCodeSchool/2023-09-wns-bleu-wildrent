@@ -4,3 +4,7 @@ test-results/
 /playwright/.cache/
 dist/
 .env
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
