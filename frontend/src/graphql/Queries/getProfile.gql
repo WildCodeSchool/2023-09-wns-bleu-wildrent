@@ -1,9 +1,0 @@
-# query Profile {
-#   profile {
-#     id
-#     email
-#     role
-#     firstname
-#     lastname
-#   }
-# }
