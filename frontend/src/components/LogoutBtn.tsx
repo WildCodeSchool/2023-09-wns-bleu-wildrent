@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useLogoutMutation } from '@/graphql/generated/schema';
+import Button from '@/ui/Button';
 
 export default function LogoutBtn() {
   const router = useRouter();
@@ -12,9 +13,5 @@ export default function LogoutBtn() {
     router.push('/auth/login');
   };
 
-  return (
-    <button onClick={handleClick} className="bg-red-600 p-4 text-xl font-bold" type="button">
-      Logout
-    </button>
-  );
+  return <Button text="Logout" onClick={handleClick} style="text-white" />;
 }
