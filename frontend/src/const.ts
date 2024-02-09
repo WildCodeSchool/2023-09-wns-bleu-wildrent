@@ -7,7 +7,7 @@ export const navData = [
   {
     text: 'Produits',
     alt: 'alt',
-    link: '/product',
+    link: '/products',
   },
   {
     text: 'A propos',
