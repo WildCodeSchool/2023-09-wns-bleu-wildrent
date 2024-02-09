@@ -34,6 +34,7 @@ export default function Component() {
         <nav className="flex flex-col gap-2 text-sm md:flex-row md:gap-4 lg:gap-2">
           {navData.map((item, index) => (
             <Link
+              key={index}
               className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
               href={item.link}
             >
