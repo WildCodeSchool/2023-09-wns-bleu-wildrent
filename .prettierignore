@@ -10,5 +10,6 @@ node_modules
 .prettierrc.js
 .eslintrc.js
 package-lock.json
+.next
 
 *.hbs
