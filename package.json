@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "check-types": "tsc -p ./frontend/tsconfig.json --pretty --noEmit && tsc -p ./backend/tsconfig.json --pretty --noEmit",
-    "check-format": "prettier --check .",
+    "check-format": "prettier --check --debug-check .",
     "check-lint": "eslint . ",
     "build": "cd ./frontend && npm run build && cd ../backend && npm run build",
     "format": "prettier --write .",
@@ -14,8 +14,7 @@
     "install": "cd ./frontend && npm i && cd ../backend && npm i",
     "prepare": "husky",
     "dev": "docker compose up --build",
-    "prod": "docker compose -f docker-compose.production.yml up --build",
-    "testDB": "docker compose -f docker-compose.integration-tests.yml -p wildrent_testdb up "
+    "prod": "docker compose -f docker-compose.production.yml up --build"
   },
   "repository": {
     "type": "git",

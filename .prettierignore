@@ -2,11 +2,11 @@
 node_modules
 
 # production
-/frontend/.next
-/backend/build
+frontend/.next
+backend/build
 
 #dev
-/frontend/src/graphql/generated
+frontend/src/graphql/generated
 .prettierrc.js
 .eslintrc.js
 package-lock.json
