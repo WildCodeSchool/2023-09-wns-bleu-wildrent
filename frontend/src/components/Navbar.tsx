@@ -1,18 +1,42 @@
 'use client';
+import Button from '@/ui/Button';
 import Link from 'next/link';
-import React, { useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import router from 'next/router';
+import { navData } from '../const';
+import { checkUserLoggedIn } from '@/utils/clientSideUtils';
+import logo from '../../public/logo.svg';
+import Image from 'next/image';
 import LogoutBtn from './LogoutBtn';
 
-const Navbar = () => {
-  const { changeTheme } = useContext(ThemeContext);
+export default function Navbar() {
+  function checkIsActive(link: string, router: any) {
+    return link === router;
+  }
+  const isLoggedIn = checkUserLoggedIn();
 
   return (
-    <nav>
-      <div className="navbar bg-base-100">
-        <div className="navbar-start">
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+    <div className="navbar bg-base-100">
+      <div className="flex-1">
+        <Image src={logo} width={50} height={50} alt="logo" />
+        <h1 className=" m-4 text-xl">WILDRENT</h1>
+      </div>
+      <div className="flex items-center">
+        {navData.map((item, index) => (
+          <Link href={item.link} key={index}>
+            <div
+              className={`m-1 p-4 rounded ${
+                checkIsActive(item.link, router) ? 'text-secondary' : 'text-white'
+              } hover:text-black`}
+            >
+              {item.text}
+            </div>
+          </Link>
+        ))}
+      </div>
+      <div className="flex-none">
+        <div className="dropdown dropdown-end">
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+            <div className="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -24,96 +48,95 @@ const Navbar = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
+              <span className="badge badge-sm indicator-item">8</span>
             </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <a>Item 1</a>
-              </li>
-              <li>
-                <a>Parent</a>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a>Item 3</a>
-              </li>
-            </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
-        </div>
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <a>Item 1</a>
-            </li>
-            <li>
-              <details>
-                <summary>Parent</summary>
-                <ul className="p-2">
-                  <li>
-                    <a>Submenu 1</a>
-                  </li>
-                  <li>
-                    <a>Submenu 2</a>
-                  </li>
-                </ul>
-              </details>
-            </li>
-            <li>
-              <a>Item 3</a>
-            </li>
-          </ul>
-        </div>
-        <div className="navbar-end">
-          {/* Icône de mode clair */}
-          <svg
-            onClick={() => changeTheme('light')}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6 cursor-pointer"
+          <div
+            tabIndex={0}
+            className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-            />
-          </svg>
-          {/* Icône de mode sombre */}
-          <svg
-            onClick={() => changeTheme('dark')}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6 cursor-pointer"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
-            />
-          </svg>
+            <div className="card-body">
+              <span className="font-bold text-lg">8 Items</span>
+              <span className="text-info">Subtotal: $999</span>
+              <div className="card-actions">
+                <button className="btn btn-primary btn-block">View cart</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <LogoutBtn />
-      </div>
-    </nav>
-  );
-};
 
-export default Navbar;
+        <div>
+          {isLoggedIn ? (
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                <div className="w-10 rounded-full">
+                  <img
+                    alt="Tailwind CSS Navbar component"
+                    src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                  />
+                </div>
+              </div>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <a className="justify-between">
+                    Profile
+                    <span className="badge">New</span>
+                  </a>
+                </li>
+                <li>
+                  <a>Settings</a>
+                </li>
+                <li>
+                  <LogoutBtn />
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <div className="flex">
+              <Link href={'/auth/login'}>
+                <div className={'m-1 p-4 rounded'}>Se connecter</div>
+              </Link>
+              <Link href={'/auth/register'}>
+                <div className={'m-1 p-4 rounded'}>S'enregistrer</div>
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+    // <nav className="flex items-center justify-between bg-secondary p-4">
+    //   <div className="flex items-center">
+    //     <Image src={logo} width={50} height={50} alt="logo" />
+    //     <div className="text-white font-bold m-4">WildRent</div>
+    //   </div>
+    //   <div className="flex items-center">
+    //     {navData.map((item, index) => (
+    //       <Link href={item.link} key={index}>
+    //         <div
+    //           className={`m-1 p-4 rounded ${
+    //             checkIsActive(item.link, router) ? 'text-secondary' : 'text-white'
+    //           } hover:bg-light`}
+    //         >
+    //           {item.text}
+    //         </div>
+    //       </Link>
+    //     ))}
+    //   </div>
+    //   <div>
+    //     {isLoggedIn ? (
+    //       <LogoutBtn />
+    //     ) : (
+    //       <Link href={'/auth/login'}>
+    //         <div className={'m-1 p-4 rounded'}>Log in</div>
+    //       </Link>
+    //     )}
+    //   </div>
+    // </nav>
+  );
+}

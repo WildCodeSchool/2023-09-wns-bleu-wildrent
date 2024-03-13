@@ -136,6 +136,13 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, role: string, firstname: string, lastname: string, email: string, address?: string | null, city?: string | null, cp?: string | null } };
 
+export type ProductRefByIdQueryVariables = Exact<{
+  productRefId: Scalars['Int'];
+}>;
+
+
+export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number } };
+
 export type LoginMutationVariables = Exact<{
   user: InputLogin;
 }>;
@@ -241,6 +248,45 @@ export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pr
 export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
 export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
 export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
+export const ProductRefByIdDocument = gql`
+    query ProductRefById($productRefId: Int!) {
+  productRefById(productRefId: $productRefId) {
+    id
+    name
+    description
+    image
+    priceHT
+  }
+}
+    `;
+
+/**
+ * __useProductRefByIdQuery__
+ *
+ * To run a query within a React component, call `useProductRefByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProductRefByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProductRefByIdQuery({
+ *   variables: {
+ *      productRefId: // value for 'productRefId'
+ *   },
+ * });
+ */
+export function useProductRefByIdQuery(baseOptions: Apollo.QueryHookOptions<ProductRefByIdQuery, ProductRefByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProductRefByIdQuery, ProductRefByIdQueryVariables>(ProductRefByIdDocument, options);
+      }
+export function useProductRefByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProductRefByIdQuery, ProductRefByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProductRefByIdQuery, ProductRefByIdQueryVariables>(ProductRefByIdDocument, options);
+        }
+export type ProductRefByIdQueryHookResult = ReturnType<typeof useProductRefByIdQuery>;
+export type ProductRefByIdLazyQueryHookResult = ReturnType<typeof useProductRefByIdLazyQuery>;
+export type ProductRefByIdQueryResult = Apollo.QueryResult<ProductRefByIdQuery, ProductRefByIdQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($user: InputLogin!) {
   login(user: $user) {
