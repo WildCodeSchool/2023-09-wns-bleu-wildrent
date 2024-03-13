@@ -1,7 +1,8 @@
-'use client';
+import { useMeQuery } from '@/graphql/generated/schema';
 import Cookies from 'js-cookie';
-export function checkUserLoggedIn() {
-  const cookies = Cookies.get('token');
-  console.log('cookies', cookies);
-  return !!cookies;
+
+export function checkUserIsLoggedIn() {
+  const { data } = useMeQuery();
+  console.log('checkUserIsLoggedIn', data?.me?.role);
+  return data?.me?.role;
 }

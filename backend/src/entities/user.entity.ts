@@ -6,6 +6,9 @@ type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
 @Entity()
 export default class User extends BaseEntity {
+  // static findUserById(id: number): User | PromiseLike<User | null> | null {
+  //   throw new Error('Method not implemented.');
+  // }
   @BeforeInsert()
   protected async hashPassword() {
     this.password = await hash(this.password);

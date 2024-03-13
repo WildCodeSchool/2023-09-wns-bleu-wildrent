@@ -24,7 +24,6 @@ services:
     volumes:
       - ./backend/src:/app/src
     env_file:
-      - ./secret.env
       - ./global.env
 
   frontend:

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Arg, Ctx, Mutation, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/user.service';
 import User, { InputLogin, InputRegister, verifyPassword, Message } from '../entities/user.entity';
@@ -58,5 +58,18 @@ export default class UserResolver {
     } else {
       return { success: false, message: 'no currentUser' };
     }
+  }
+  @Authorized()
+  @Query(() => [User])
+  async allUsers() {
+    return await User.find({ order: { id: 'desc' } });
+  }
+
+  private userService = new UserService();
+
+  @Authorized()
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() ctx: ContextType): Promise<User | null> {
+    return ctx.currentUser ? await this.userService.findUserById(ctx.currentUser.id) : null;
   }
 }

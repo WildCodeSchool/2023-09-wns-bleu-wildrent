@@ -1,9 +1,8 @@
-'use client';
 import Button from '@/ui/Button';
 import Link from 'next/link';
 import router from 'next/router';
 import { navData } from '../const';
-import { checkUserLoggedIn } from '@/utils/clientSideUtils';
+import { checkUserIsLoggedIn } from '@/utils/clientSideUtils';
 import logo from '../../public/logo.svg';
 import Image from 'next/image';
 import LogoutBtn from './LogoutBtn';
@@ -12,7 +11,10 @@ export default function Navbar() {
   function checkIsActive(link: string, router: any) {
     return link === router;
   }
-  const isLoggedIn = checkUserLoggedIn();
+
+  const isLoggedIn = checkUserIsLoggedIn();
+  console.log('isLoggedIn', isLoggedIn);
+  const isAdmin = checkUserIsLoggedIn() === 'ADMIN';
 
   return (
     <div className="navbar bg-base-100">
@@ -83,11 +85,15 @@ export default function Navbar() {
                 tabIndex={0}
                 className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
               >
+                {isAdmin && (
+                  <li>
+                    <Link href={'/admin/dashboard'}>
+                      <div className="justify-between">Dashboard</div>
+                    </Link>
+                  </li>
+                )}
                 <li>
-                  <a className="justify-between">
-                    Profile
-                    <span className="badge">New</span>
-                  </a>
+                  <a className="justify-between">Profile</a>
                 </li>
                 <li>
                   <a>Settings</a>

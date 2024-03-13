@@ -3,15 +3,14 @@ import 'reflect-metadata';
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import { ContextType, JWTPayload } from './types';
+import { ContextType, Payload } from './types';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServer } from '@apollo/server';
-import { buildSchema } from 'type-graphql';
-import CategoriesResolver from './resolvers/category.resolver';
-import UserResolver from './resolvers/user.resolver';
+import getSchema from './schema';
+
 import db from './db';
-import ProductRefsResolver from './resolvers/productRef.resolver';
+
 import { verify } from 'jsonwebtoken';
 import UserService from './services/user.service';
 
@@ -20,10 +19,7 @@ const port = Number(process.env.SERVER_PORT) || 4001;
 async function main() {
   try {
     // Initialisation des schema via les resolvers puis de la database
-    const schema = await buildSchema({
-      resolvers: [CategoriesResolver, ProductRefsResolver, UserResolver],
-      validate: false,
-    });
+    const schema = await getSchema;
     await db.initialize();
 
     // Creation du server http express/ApolloServer
@@ -43,7 +39,7 @@ async function main() {
     const context = async (ctx: ContextType) => {
       const token = ctx.req.headers.cookie?.split('token=')[1];
       if (token) {
-        const payload = verify(token, process.env.JWT_PRIVATE_KEY as string) as JWTPayload;
+        const payload = verify(token, process.env.JWT_PRIVATE_KEY as string) as Payload;
         if (payload.userId) {
           const currentUser = await new UserService().findUserById(payload.userId);
           ctx.currentUser = currentUser;
