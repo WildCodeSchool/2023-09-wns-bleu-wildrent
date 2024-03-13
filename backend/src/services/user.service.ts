@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import db from '../db';
-import User, { InputRegister } from '../entities/user.entity';
+import User, { InputRegister, InputUpdate } from '../entities/user.entity';
 
 export default class UserService {
   db: Repository<User>;
@@ -16,11 +16,57 @@ export default class UserService {
     }
   }
 
-  async findUserById(id: number) {
+  async findUserById(id: number | null): Promise<User | null> {
     try {
-      return await this.db.findOneBy({ id });
+      if (!id) {
+        return null;
+      }
+      return await this.db.findOne({
+        where: { id },
+        select: ['email', 'firstname', 'lastname', 'city', 'address', 'cp', 'id', 'role'],
+      });
     } catch (e) {
       console.error((e as Error).message);
+      return null;
+    }
+  }
+
+  async updateUser(id: number, updatedUser: InputUpdate) {
+    try {
+      if (!id) {
+        return null;
+      }
+      const currentUser = await this.db.findOne({
+        where: { id },
+      });
+
+      if (currentUser) {
+        if (updatedUser.firstname) {
+          currentUser.firstname = updatedUser.firstname;
+        }
+        if (updatedUser.lastname) {
+          currentUser.lastname = updatedUser.lastname;
+        }
+        if (updatedUser.email) {
+          currentUser.email = updatedUser.email;
+        }
+        if (updatedUser.address) {
+          currentUser.address = updatedUser.address;
+        }
+        if (updatedUser.city) {
+          currentUser.city = updatedUser.city;
+        }
+        if (updatedUser.cp) {
+          currentUser.cp = updatedUser.cp;
+        }
+        await currentUser.save();
+        return currentUser;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+      return null;
     }
   }
 

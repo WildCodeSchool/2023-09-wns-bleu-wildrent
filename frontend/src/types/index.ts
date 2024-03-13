@@ -18,3 +18,14 @@ export type FormInputProps = {
   inputType?: string;
   error?: string;
 };
+
+export type User = {
+  id: number;
+  role: 'USER' | 'ADMIN';
+  firstname: string;
+  lastname: string;
+  email: string;
+  address: string;
+  city: string;
+  cp: string;
+};

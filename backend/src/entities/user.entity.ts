@@ -23,15 +23,15 @@ export default class User extends BaseEntity {
   @Column()
   lastname: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   address?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   cp?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   city?: string;
 
@@ -53,9 +53,37 @@ export default class User extends BaseEntity {
   })
   email: string;
 
-  @Field()
   @Column()
   password: string;
+}
+
+// Profile = User mais sans la key 'password'
+@ObjectType()
+export class Profile extends User {
+  @Field(() => String, { nullable: true })
+  declare password: never;
+}
+
+// Input modification des infos du user
+@InputType()
+export class InputUpdate {
+  @Field({ nullable: true })
+  email?: string;
+
+  @Field({ nullable: true })
+  firstname?: string;
+
+  @Field({ nullable: true })
+  lastname?: string;
+
+  @Field({ nullable: true })
+  address?: string;
+
+  @Field({ nullable: true })
+  city?: string;
+
+  @Field({ nullable: true })
+  cp?: string;
 }
 
 @ObjectType()

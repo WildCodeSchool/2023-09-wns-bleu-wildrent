@@ -1,8 +1,15 @@
 import 'dotenv/config';
-import { Arg, Ctx, Mutation, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/user.service';
-import User, { InputLogin, InputRegister, verifyPassword, Message } from '../entities/user.entity';
+import User, {
+  InputLogin,
+  InputRegister,
+  verifyPassword,
+  Message,
+  Profile,
+  InputUpdate,
+} from '../entities/user.entity';
 import { ContextType } from '../types';
 import db from '../db';
 
@@ -22,6 +29,7 @@ export default class UserResolver {
       }
     }
   }
+
   @Mutation(() => Message)
   async login(@Arg('user') { email, password }: InputLogin, @Ctx() ctx: ContextType) {
     try {
@@ -57,6 +65,40 @@ export default class UserResolver {
       return { success: true, message: 'logged out' };
     } else {
       return { success: false, message: 'no currentUser' };
+    }
+  }
+  @Mutation(() => Profile)
+  async updateUser(
+    @Arg('updatedUser') updatedUser: InputUpdate,
+    @Ctx() { currentUser }: ContextType,
+  ): Promise<Profile | Message> {
+    try {
+      if (!currentUser) {
+        return { success: false, message: 'no currentUser' };
+      }
+      const newUser = await new UserService().updateUser(currentUser.id, updatedUser);
+      if (!newUser) {
+        return { success: false, message: 'cannot update user' };
+      } else {
+        return newUser as Profile;
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Cannot find current user: ${(e as Error).message}` };
+    }
+  }
+
+  @Authorized()
+  @Query(() => Profile)
+  async getProfile(@Ctx() { currentUser }: ContextType): Promise<Profile | Message> {
+    try {
+      if (!currentUser) {
+        return { success: false, message: 'no currentUser' };
+      }
+      return (await new UserService().findUserById(currentUser.id)) as Profile;
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Cannot find current user: ${(e as Error).message}` };
     }
   }
 }

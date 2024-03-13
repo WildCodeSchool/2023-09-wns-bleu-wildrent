@@ -1,0 +1,12 @@
+mutation updateProfile($updatedUser: InputUpdate!) {
+  updateUser(updatedUser: $updatedUser) {
+    id
+    email
+    role
+    firstname
+    lastname
+    address
+    city
+    cp
+  }
+}

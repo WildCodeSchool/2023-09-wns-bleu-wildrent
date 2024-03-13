@@ -36,6 +36,15 @@ export type InputRegister = {
   password: Scalars['String'];
 };
 
+export type InputUpdate = {
+  address?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  cp?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstname?: InputMaybe<Scalars['String']>;
+  lastname?: InputMaybe<Scalars['String']>;
+};
+
 export type Message = {
   __typename?: 'Message';
   message: Scalars['String'];
@@ -47,6 +56,7 @@ export type Mutation = {
   login: Message;
   logout: Message;
   register: Message;
+  updateUser: Profile;
 };
 
 
@@ -59,6 +69,11 @@ export type MutationRegisterArgs = {
   newUser: InputRegister;
 };
 
+
+export type MutationUpdateUserArgs = {
+  updatedUser: InputUpdate;
+};
+
 export type ProductRef = {
   __typename?: 'ProductRef';
   description: Scalars['String'];
@@ -69,11 +84,25 @@ export type ProductRef = {
   subCategory: SubCategory;
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  address?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  cp?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstname: Scalars['String'];
+  id: Scalars['Int'];
+  lastname: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+  role: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   allProductRefs: Array<ProductRef>;
   categories: Array<Category>;
   categoryById: Category;
+  getProfile: Profile;
   productRefById: ProductRef;
 };
 
@@ -102,6 +131,11 @@ export type AllProductRefsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AllProductRefsQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, image: string, priceHT: number }> };
 
+export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, role: string, firstname: string, lastname: string, email: string, address?: string | null, city?: string | null, cp?: string | null } };
+
 export type LoginMutationVariables = Exact<{
   user: InputLogin;
 }>;
@@ -120,6 +154,13 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'Message', success: boolean, message: string } };
+
+export type UpdateProfileMutationVariables = Exact<{
+  updatedUser: InputUpdate;
+}>;
+
+
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Profile', id: number, email: string, role: string, firstname: string, lastname: string, address?: string | null, city?: string | null, cp?: string | null } };
 
 
 export const AllProductRefsDocument = gql`
@@ -159,6 +200,47 @@ export function useAllProductRefsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type AllProductRefsQueryHookResult = ReturnType<typeof useAllProductRefsQuery>;
 export type AllProductRefsLazyQueryHookResult = ReturnType<typeof useAllProductRefsLazyQuery>;
 export type AllProductRefsQueryResult = Apollo.QueryResult<AllProductRefsQuery, AllProductRefsQueryVariables>;
+export const ProfileDocument = gql`
+    query Profile {
+  getProfile {
+    id
+    role
+    firstname
+    lastname
+    email
+    address
+    city
+    cp
+  }
+}
+    `;
+
+/**
+ * __useProfileQuery__
+ *
+ * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useProfileQuery(baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+      }
+export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+        }
+export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
+export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
+export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($user: InputLogin!) {
   login(user: $user) {
@@ -260,3 +342,43 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UpdateProfileDocument = gql`
+    mutation updateProfile($updatedUser: InputUpdate!) {
+  updateUser(updatedUser: $updatedUser) {
+    id
+    email
+    role
+    firstname
+    lastname
+    address
+    city
+    cp
+  }
+}
+    `;
+export type UpdateProfileMutationFn = Apollo.MutationFunction<UpdateProfileMutation, UpdateProfileMutationVariables>;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
+ *   variables: {
+ *      updatedUser: // value for 'updatedUser'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfileMutation, UpdateProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
+      }
+export type UpdateProfileMutationHookResult = ReturnType<typeof useUpdateProfileMutation>;
+export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
+export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>;

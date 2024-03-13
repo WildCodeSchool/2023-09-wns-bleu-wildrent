@@ -4,7 +4,7 @@ import cookie from 'cookie';
 import { ContextType, JWTPayload } from './types';
 import UserService from './services/user.service';
 
-export async function authChecker({ context }: { context: ContextType }) {
+export async function authChecker({ context }: { context: ContextType }, roles: string[]) {
   const { req } = context;
   const tokenInAuthHeaders = req.headers.authorization?.split(' ')[0];
   const tokenInCookie = cookie.parse(req.headers.cookie ?? '').token;
@@ -16,4 +16,5 @@ export async function authChecker({ context }: { context: ContextType }) {
   const currentUser = await new UserService().findUserById(id);
   if (currentUser === null) return false;
   context.currentUser = currentUser;
+  return roles.length === 0 || roles.includes(currentUser.role);
 }

@@ -14,6 +14,7 @@ import db from './db';
 import ProductRefsResolver from './resolvers/productRef.resolver';
 import { verify } from 'jsonwebtoken';
 import UserService from './services/user.service';
+import { authChecker } from './authChecker';
 
 const port = Number(process.env.SERVER_PORT) || 4001;
 
@@ -23,6 +24,7 @@ async function main() {
     const schema = await buildSchema({
       resolvers: [CategoriesResolver, ProductRefsResolver, UserResolver],
       validate: false,
+      authChecker,
     });
     await db.initialize();
 
