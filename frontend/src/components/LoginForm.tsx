@@ -26,6 +26,7 @@ export default function LoginForm() {
     try {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
       const user = Object.fromEntries(formData.entries()) as InputLogin;
+      console.log(user);
 
       const response = await login({
         variables: {
