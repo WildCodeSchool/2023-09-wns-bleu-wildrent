@@ -23,7 +23,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Install backend dependencies
-        run: cd /backend && npm ci
+        run: cd backend && npm ci
 
       # https://github.com/microsoft/playwright/issues/7249#issuecomment-1385567519
       - name: Store Playwright's Version
