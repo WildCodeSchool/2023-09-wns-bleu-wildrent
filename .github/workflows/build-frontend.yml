@@ -2,7 +2,7 @@ name: build and push production client to dockerhub
 
 on:
   pull_request:
-    branches: staging
+    branches: dev
 
 jobs:
   build-and-push-client:
