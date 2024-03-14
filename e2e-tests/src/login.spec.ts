@@ -1,38 +1,46 @@
-// import { expect, test } from "@playwright/test";
-// import { connect, disconnect } from "./dbHelpers";
-// import { hash } from "argon2";
-// import User, { hashPassword } from "../../backend/src/entities/user.entity";
-// import { clearDB } from "../../backend/src/db";
+import { test, expect } from '@playwright/test';
 
-// test.beforeAll(connect);
-// test.beforeEach(async () => {
-//   await clearDB();
-//   await createUser();
-// });
+test('Login admin et user', async ({ page }) => {
+  // Naviguer vers la page de connexion
+  await page.goto('http://localhost:3000/auth/login');
 
-// test.afterAll(disconnect);
+  // Remplir le formulaire de connexion admin
+  await page.fill('input#email', 'contact@wildrent.com');
+  await page.fill('input#password', 'mdp');
 
-// const email = "user@app.com";
-// const password = "mysuperpassword";
+  // Cliquer sur le bouton de connexion
+  await page.click('[data-test-id="login-button"]');
 
-// async function createUser() {
-//   const hashedPassword = await hashPassword(password);
-//   /*await User.create({ email, hashedPassword}).save();*/
-// }
+  // Vérifier la direction vers le / après la connexion et accès au Dashboard
+  await expect(page).toHaveURL('http://localhost:3000');
+  await page.click('[data-test-id="avatar"]');
+  await page.click('[data-test-id="dashboard-id"]');
+  await expect(page).toHaveURL('http://localhost:3000/admin');
+  await page.click('[data-test-id="wildrent-id"]');
 
-// test("can log in with correct credentials", async ({ page }) => {
-//   await page.goto("/login");
+  // Se déconnecter
+  await page.click('[data-test-id="avatar"]');
+  await page.click('[data-test-id="logout-btn"]');
 
-//   const email = "dave.lopper@website.com";
-//   const password = "1T!ESTINng";
-//   const hashedPassword = await hash(password);
-//   /*await User.create({ email, hashedPassword}).save();*/
+  // Vérifier la redirection vers la page de connexion
+  await expect(page).toHaveURL('http://localhost:3000/auth/login');
 
-//   await page.goto("/login");
-//   await page.getByTestId("login-email").type(email);
-//   await page.getByTestId("login-password").type(password);
-//   await page.getByRole("button", { name: "Se Connecter" }).click();
-//   // await expect(
-//   //   page.getByRole("button", { name: "Se Déconnecter" })
-//   // ).toBeVisible(); A redéfinir
-// });
+  // Remplir le formulaire de connexion utilisateur
+  await page.fill('input#email', 'moi@gmail.com');
+  await page.fill('input#password', 'mdp');
+
+  // Cliquer sur le bouton de connexion
+  await page.click('[data-test-id="login-button"]');
+
+  // Vérifier la direction vers la page d'accueil et vérification de l'absence du Dashboard button
+  await expect(page).toHaveURL('http://localhost:3000/');
+  await page.click('[data-test-id="avatar"]');
+  const dashboardIsVisible = await page.isVisible('[data-test-id="dashboard-id"]');
+  expect(dashboardIsVisible).toBeFalsy();
+
+  // Se déconnecter
+  await page.click('[data-test-id="logout-btn"]');
+
+  // Vérifier la redirection vers la page de connexion
+  await expect(page).toHaveURL('http://localhost:3000/auth/login');
+});

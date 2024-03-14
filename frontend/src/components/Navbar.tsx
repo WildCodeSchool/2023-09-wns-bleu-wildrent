@@ -74,7 +74,7 @@ export default function Navbar() {
           {isLoggedIn ? (
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                <div className="w-10 rounded-full">
+                <div className="w-10 rounded-full" data-test-id="avatar">
                   <img
                     alt="Tailwind CSS Navbar component"
                     src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
@@ -87,8 +87,10 @@ export default function Navbar() {
               >
                 {isAdmin && (
                   <li>
-                    <Link href={'/admin/dashboard'}>
-                      <div className="justify-between">Dashboard</div>
+                    <Link href={'/admin'}>
+                      <div className="justify-between" data-test-id="dashboard-id">
+                        Dashboard
+                      </div>
                     </Link>
                   </li>
                 )}
@@ -98,7 +100,7 @@ export default function Navbar() {
                 <li>
                   <a>Settings</a>
                 </li>
-                <li>
+                <li data-test-id="logout-btn">
                   <LogoutBtn />
                 </li>
               </ul>
