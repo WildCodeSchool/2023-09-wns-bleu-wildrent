@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query Categories {
-    categories {
+  query allCategories {
+    allCategories {
       id
       name
       description
