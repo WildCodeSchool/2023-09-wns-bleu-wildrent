@@ -15,7 +15,7 @@
     "prepare": "husky",
     "dev": "docker compose up --build",
     "prod": "docker compose -f docker-compose.production.yml up --build",
-    "testDB": "docker compose -f docker-compose.integration-tests.yml -p wildrent_testdb up ",
+    "testDB": "docker compose -f docker-compose.integration-tests.yml -p wildrent_testdb up "
   },
   "repository": {
     "type": "git",
