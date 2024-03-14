@@ -6,9 +6,9 @@ COPY package*.json ./
 
 RUN npm i
 
-COPY ./.env ./
-COPY ./tsconfig.json ./tsconfig.json
-COPY ./src ./src
+COPY .env .env
+COPY tsconfig.json tsconfig.json
+COPY src src
 
 
 CMD npm run start
