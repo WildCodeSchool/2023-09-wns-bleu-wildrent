@@ -44,7 +44,7 @@ jobs:
       - name: Make envfiles
         run: |
           cp .env.example .env
-          cd ../backend/ && cp .env.example .env 
+          cd ../e2e-tests/ && cp .env.example .env 
           cd ../frontend/ && cp .env.example .env
       - name: Start app
         run: npm run app:start
