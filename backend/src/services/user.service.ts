@@ -21,6 +21,7 @@ export default class UserService {
       return await this.db.findOneBy({ id });
     } catch (e) {
       console.error((e as Error).message);
+      return null;
     }
   }
 

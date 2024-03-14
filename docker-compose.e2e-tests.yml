@@ -16,9 +16,8 @@ services:
       - 5432:5432
 
   backend:
-    depends_on:
     env_file:
-      - backend/.env
+      - ./e2e-tests/.env
     build: ./backend
     ports:
       - 4001:4001

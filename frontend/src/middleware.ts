@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
+import { jwtVerify, importJWK } from 'jose';
 
-interface Payload {
+export interface Payload {
   userId: number;
 }
-
 const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY || '';
-
+console.log('JWT_PRIVATE_KEY', JWT_PRIVATE_KEY);
 export default async function middleware(request: NextRequest) {
   const { cookies } = request;
   const token = cookies.get('token');
@@ -15,11 +14,10 @@ export default async function middleware(request: NextRequest) {
   return await checkToken(token?.value, request);
 }
 
-export async function verify(token: string) {
+export async function verify(token: string): Promise<Payload> {
   const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_PRIVATE_KEY));
-  return payload;
+  return payload as unknown as Payload;
 }
-
 async function checkToken(token: string | undefined, request: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
@@ -39,5 +37,5 @@ async function checkToken(token: string | undefined, request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin'],
+  matcher: ['/admin/:path*'],
 };

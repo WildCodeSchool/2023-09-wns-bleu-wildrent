@@ -1,0 +1,9 @@
+query ProductRefById($productRefId: Int!) {
+  productRefById(productRefId: $productRefId) {
+    id
+    name
+    description
+    image
+    priceHT
+  }
+}
