@@ -58,6 +58,7 @@ const Sidebar = () => {
           <Link
             href="/"
             className={`${isActive('/') ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
+            data-test-id="wildrent-id"
           >
             WildRent
           </Link>

@@ -53,7 +53,7 @@ export default function LoginForm() {
           inputType={field.type}
         />
       ))}
-      <button className="btn btn-active btn-secondary" type="submit">
+      <button className="btn btn-active btn-secondary" type="submit" data-test-id="login-button">
         Se Connecter
       </button>
     </form>
