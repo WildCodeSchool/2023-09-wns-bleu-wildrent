@@ -14,8 +14,8 @@ const Sidebar = () => {
       <div className="flex flex-col justify-between flex-1 mt-6">
         <nav>
           <Link
-            href="/admin/dashboard"
-            className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin/dashboard') ? 'bg-base-300' : ''}`}
+            href="/admin"
+            className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin') ? 'bg-base-300' : ''}`}
           >
             Accueil dashboard
           </Link>

@@ -6,16 +6,16 @@ import { checkUserIsLoggedIn } from '@/utils/clientSideUtils';
 import logo from '../../public/logo.svg';
 import Image from 'next/image';
 import LogoutBtn from './LogoutBtn';
+import { useGetProfileQuery } from '@/graphql/generated/schema';
 
 export default function Navbar() {
   function checkIsActive(link: string, router: any) {
     return link === router;
   }
-
+  const { data } = useGetProfileQuery();
   const isLoggedIn = checkUserIsLoggedIn();
-  console.log('isLoggedIn', isLoggedIn);
   const isAdmin = checkUserIsLoggedIn() === 'ADMIN';
-
+  const avatar = data?.getProfile?.picture;
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
@@ -77,7 +77,10 @@ export default function Navbar() {
                 <div className="w-10 rounded-full">
                   <img
                     alt="Tailwind CSS Navbar component"
-                    src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                    src={
+                      avatar ||
+                      'https://lachroniquefacile.fr/wp-content/uploads/2018/07/%EF%BC%9F.png'
+                    }
                   />
                 </div>
               </div>
@@ -87,16 +90,15 @@ export default function Navbar() {
               >
                 {isAdmin && (
                   <li>
-                    <Link href={'/admin/dashboard'}>
+                    <Link href={'/admin'}>
                       <div className="justify-between">Dashboard</div>
                     </Link>
                   </li>
                 )}
                 <li>
-                  <a className="justify-between">Profile</a>
-                </li>
-                <li>
-                  <a>Settings</a>
+                  <Link href={'/myprofile'}>
+                    <div className="justify-between">Mon compte</div>
+                  </Link>
                 </li>
                 <li>
                   <LogoutBtn />

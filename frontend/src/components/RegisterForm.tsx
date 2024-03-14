@@ -74,11 +74,7 @@ export default function RegisterForm() {
           inputType={field.type}
         />
       ))}
-      <button
-        disabled={loading}
-        className="text-center self-center px-3 py-2 border rounded-lg w-fit"
-        type="submit"
-      >
+      <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
         Inscription
       </button>
     </form>

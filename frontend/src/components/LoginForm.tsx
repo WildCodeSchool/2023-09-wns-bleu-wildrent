@@ -53,7 +53,7 @@ export default function LoginForm() {
           inputType={field.type}
         />
       ))}
-      <button className="text-center self-center px-3 py-2 border rounded-lg w-fit" type="submit">
+      <button className="btn btn-active btn-secondary" type="submit">
         Se Connecter
       </button>
     </form>

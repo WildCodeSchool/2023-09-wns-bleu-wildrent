@@ -2,7 +2,14 @@ import 'dotenv/config';
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/user.service';
-import User, { InputLogin, InputRegister, verifyPassword, Message } from '../entities/user.entity';
+import User, {
+  InputLogin,
+  InputRegister,
+  verifyPassword,
+  Message,
+  Profile,
+  InputUpdate,
+} from '../entities/user.entity';
 import { ContextType } from '../types';
 import db from '../db';
 
@@ -34,7 +41,7 @@ export default class UserResolver {
         return { success: false, message: 'Wrong Credentials...' };
       }
       const secret = process.env.JWT_PRIVATE_KEY as string;
-      const token = jwt.sign({ userId: user.id }, secret);
+      const token = jwt.sign({ userId: user.id, role: user.role }, secret);
       if (token) {
         ctx.res.cookie('token', token, {
           secure: process.env.NODE_ENV === 'production',
@@ -59,6 +66,27 @@ export default class UserResolver {
       return { success: false, message: 'no currentUser' };
     }
   }
+
+  @Mutation(() => Message)
+  async updateUser(
+    @Arg('updatedUser') updatedUser: InputUpdate,
+    @Ctx() { currentUser }: ContextType,
+  ): Promise<Message> {
+    try {
+      if (!currentUser) {
+        return { success: false, message: 'no currentUser' };
+      }
+      const updated = await new UserService().updateUser(currentUser.id, updatedUser);
+      if (!updated) {
+        return { success: false, message: 'cannot update user' };
+      }
+      return { success: true, message: 'user updated successfully' };
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Error updating user: ${(e as Error).message}` };
+    }
+  }
+
   @Authorized()
   @Query(() => [User])
   async allUsers() {
@@ -68,8 +96,16 @@ export default class UserResolver {
   private userService = new UserService();
 
   @Authorized()
-  @Query(() => User, { nullable: true })
-  async me(@Ctx() ctx: ContextType): Promise<User | null> {
-    return ctx.currentUser ? await this.userService.findUserById(ctx.currentUser.id) : null;
+  @Query(() => Profile)
+  async getProfile(@Ctx() { currentUser }: ContextType): Promise<Profile | Message> {
+    try {
+      if (!currentUser) {
+        return { success: false, message: 'no currentUser' };
+      }
+      return (await new UserService().findUserById(currentUser.id)) as Profile;
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Cannot find current user: ${(e as Error).message}` };
+    }
   }
 }
