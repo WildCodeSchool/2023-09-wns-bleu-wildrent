@@ -16,7 +16,6 @@
     "dev": "docker compose up --build",
     "prod": "docker compose -f docker-compose.production.yml up --build",
     "testDB": "docker compose -f docker-compose.integration-tests.yml -p wildrent_testdb up ",
-    "e2E": "docker compose -f docker-compose.e2e-tests.yml up"
   },
   "repository": {
     "type": "git",
