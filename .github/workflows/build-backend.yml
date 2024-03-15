@@ -22,5 +22,5 @@ jobs:
         with:
           push: true
           context: '{{defaultContext}}:backend'
-          file: 'Dockerfile.production'
+          file: 'dockerfile.production'
           tags: scrip/2023-09-wns-bleu-wildrent-server:staging
