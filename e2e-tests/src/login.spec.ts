@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('Login admin et user', async ({ page }) => {
   // Naviguer vers la page de connexion
+  await page.goto('http://localhost:3000');
   await page.goto('http://localhost:3000/auth/login');
 
   // Remplir le formulaire de connexion admin
