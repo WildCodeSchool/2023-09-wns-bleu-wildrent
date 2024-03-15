@@ -8,7 +8,7 @@ export default function Component() {
       <div className="container flex flex-col items-center gap-6 px-4 text-center md:flex-row md:justify-between md:gap-8 md:px-6 lg:gap-10">
         <div className="flex flex-col gap-2 text-sm items-center md:items-start md:gap-1 lg:flex-row lg:gap-2">
           <span className="mx-auto text-xs tracking-wide text-gray-500 lg:mx-0 lg:mr-2 dark:text-gray-400">
-            Follow us
+            Follow us nous
           </span>
           <div className="flex gap-2 lg:gap-1">
             <Link
