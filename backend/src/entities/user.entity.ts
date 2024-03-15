@@ -18,13 +18,13 @@ export default class User extends BaseEntity {
   @Field(() => Int)
   id: number;
 
-  @Field()
-  @Column()
-  firstname: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  firstname?: string;
 
-  @Field()
-  @Column()
-  lastname: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  lastname?: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

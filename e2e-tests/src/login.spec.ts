@@ -1,15 +1,22 @@
 import { test, expect } from '@playwright/test';
 import { hash } from 'argon2';
 import User from '../../backend/src/entities/user.entity';
+import { connect, disconnect } from './dbHelpers';
+import { clearDB } from '../../backend/src/db';
+
+test.beforeAll(connect);
+test.beforeEach(clearDB);
+test.afterAll(disconnect);
 
 test('Login admin et user', async ({ page }) => {
-  await page.goto('auth/register');
   const emailAdmin = 'contact@wildrent.com';
   const passwordAdmin = 'mdp';
-  const hashedPasswordAdmin = await hash(passwordAdmin);
+  const roleAdmin = 'ADMIN';
+  // const hashedPasswordAdmin = await hash(passwordAdmin);
   const admin = new User();
   admin.email = emailAdmin;
-  admin.password = hashedPasswordAdmin;
+  admin.password = passwordAdmin;
+  admin.role = roleAdmin;
   await admin.save();
 
   // Naviguer vers la page de connexion
@@ -23,7 +30,7 @@ test('Login admin et user', async ({ page }) => {
   await page.click('[data-test-id="login-button"]');
 
   // Vérifier la direction vers le / après la connexion et accès au Dashboard
-  await expect(page).toHaveURL('http://localhost:3000');
+  await expect(page).toHaveURL('http://localhost:3000/');
   await page.click('[data-test-id="avatar"]');
   await page.click('[data-test-id="dashboard-id"]');
   await expect(page).toHaveURL('http://localhost:3000/admin');
@@ -35,16 +42,16 @@ test('Login admin et user', async ({ page }) => {
 
   // Vérifier la redirection vers la page de connexion
   await expect(page).toHaveURL('http://localhost:3000/auth/login');
-
   // Créer un utilisateur de test
   const emailUser = 'moi@gmail.com';
   const passwordUser = 'mdp';
-  const hashedPasswordUSer = await hash(passwordUser);
+  const roleUser = 'USER';
+  // const hashedPasswordUSer = await hash(passwordUser);
 
-  const user = new User(); // Créez une instance de l'entité User
+  const user = new User();
   user.email = emailUser;
-  user.password = hashedPasswordUSer; // Assurez-vous que 'password' correspond à un champ dans votre entité
-  // Ajoutez d'autres champs requis si nécessaire
+  user.password = passwordUser;
+  user.role = roleUser;
   await user.save();
 
   // Remplir le formulaire de connexion utilisateur
@@ -66,3 +73,6 @@ test('Login admin et user', async ({ page }) => {
   // Vérifier la redirection vers la page de connexion
   await expect(page).toHaveURL('http://localhost:3000/auth/login');
 });
+function destroy() {
+  throw new Error('Function not implemented.');
+}
