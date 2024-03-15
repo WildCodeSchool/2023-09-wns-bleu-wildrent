@@ -1,6 +1,17 @@
 import { test, expect } from '@playwright/test';
+import { hash } from 'argon2';
+import User from '../../backend/src/entities/user.entity';
 
 test('Login admin et user', async ({ page }) => {
+  await page.goto('auth/register');
+  const emailAdmin = 'contact@wildrent.com';
+  const passwordAdmin = 'mdp';
+  const hashedPasswordAdmin = await hash(passwordAdmin);
+  const admin = new User();
+  admin.email = emailAdmin;
+  admin.password = hashedPasswordAdmin;
+  await admin.save();
+
   // Naviguer vers la page de connexion
   await page.goto('http://localhost:3000/auth/login');
 
@@ -24,6 +35,17 @@ test('Login admin et user', async ({ page }) => {
 
   // Vérifier la redirection vers la page de connexion
   await expect(page).toHaveURL('http://localhost:3000/auth/login');
+
+  // Créer un utilisateur de test
+  const emailUser = 'moi@gmail.com';
+  const passwordUser = 'mdp';
+  const hashedPasswordUSer = await hash(passwordUser);
+
+  const user = new User(); // Créez une instance de l'entité User
+  user.email = emailUser;
+  user.password = hashedPasswordUSer; // Assurez-vous que 'password' correspond à un champ dans votre entité
+  // Ajoutez d'autres champs requis si nécessaire
+  await user.save();
 
   // Remplir le formulaire de connexion utilisateur
   await page.fill('input#email', 'moi@gmail.com');
