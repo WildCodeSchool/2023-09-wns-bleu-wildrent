@@ -1,5 +1,3 @@
-'use client';
-
 import { useLoginMutation, InputLogin } from '../graphql/generated/schema';
 import FormInput from './FormInput';
 import { useRouter } from 'next/navigation';
@@ -28,16 +26,20 @@ export default function LoginForm() {
     try {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
       const user = Object.fromEntries(formData.entries()) as InputLogin;
-      await login({
+
+      const response = await login({
         variables: {
           user,
         },
       });
-      if (data?.login.success && !error && !loading) {
+
+      if (response.data?.login.success) {
         router.push('/');
       }
     } catch (err) {
       console.error(`Could not create account: ${err}`);
+    } finally {
+      client.resetStore();
     }
   };
   return (
@@ -51,7 +53,7 @@ export default function LoginForm() {
           inputType={field.type}
         />
       ))}
-      <button className="text-center self-center px-3 py-2 border rounded-lg w-fit" type="submit">
+      <button className="btn btn-active btn-secondary" type="submit" data-test-id="login-button">
         Se Connecter
       </button>
     </form>

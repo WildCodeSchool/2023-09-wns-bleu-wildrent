@@ -1,7 +1,7 @@
-'use client';
+import { useGetProfileQuery } from '@/graphql/generated/schema';
 import Cookies from 'js-cookie';
-export function checkUserLoggedIn() {
-  const cookies = Cookies.get('token');
-  console.log('cookies', cookies);
-  return !!cookies;
+
+export function checkUserIsLoggedIn() {
+  const { data } = useGetProfileQuery();
+  return data?.getProfile?.role;
 }

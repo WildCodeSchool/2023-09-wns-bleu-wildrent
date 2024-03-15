@@ -4,7 +4,7 @@ import getApiUrl from '@/utils/getApiUrl';
 const API_URL = getApiUrl();
 
 const httpLink = new HttpLink({
-  uri: API_URL,
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
   credentials: 'include',
 });
 

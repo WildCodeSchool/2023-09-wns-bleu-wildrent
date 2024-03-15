@@ -1,3 +1,5 @@
 /backend/build
 .eslintrc.js
 /frontend/.next
+e2e-tests/dist
+e2e-tests/playwright-report

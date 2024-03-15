@@ -7,6 +7,7 @@ export interface ContextType {
   currentUser?: User | null;
 }
 
-export interface JWTPayload {
+export interface Payload {
   userId: number;
+  role: string;
 }

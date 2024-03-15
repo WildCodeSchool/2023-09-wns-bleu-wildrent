@@ -74,12 +74,14 @@ async function main() {
     role: 'ADMIN',
     email: 'contact@wildrent.com',
     password: 'mdp',
+    picture: 'https://i.pinimg.com/564x/81/51/9e/81519ee42129525ccbe5db410fd14a4b.jpg',
   });
   const customer = User.create({
     firstname: 'Bart',
     lastname: 'Simpson',
     email: 'moi@gmail.com',
     password: 'mdp',
+    picture: 'https://anniversaire-celebrite.com/upload/250x333/bart-simpson-250.jpg',
   });
   productRef1.subCategory = subCategory2;
   productRef2.subCategory = subCategory2;

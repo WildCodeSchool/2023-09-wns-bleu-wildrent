@@ -36,6 +36,16 @@ export type InputRegister = {
   password: Scalars['String'];
 };
 
+export type InputUpdate = {
+  address?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  cp?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstname?: InputMaybe<Scalars['String']>;
+  lastname?: InputMaybe<Scalars['String']>;
+  picture?: InputMaybe<Scalars['String']>;
+};
+
 export type Message = {
   __typename?: 'Message';
   message: Scalars['String'];
@@ -47,6 +57,7 @@ export type Mutation = {
   login: Message;
   logout: Message;
   register: Message;
+  updateUser: Message;
 };
 
 
@@ -59,6 +70,11 @@ export type MutationRegisterArgs = {
   newUser: InputRegister;
 };
 
+
+export type MutationUpdateUserArgs = {
+  updatedUser: InputUpdate;
+};
+
 export type ProductRef = {
   __typename?: 'ProductRef';
   description: Scalars['String'];
@@ -69,12 +85,33 @@ export type ProductRef = {
   subCategory: SubCategory;
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  address?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  cp?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstname: Scalars['String'];
+  id: Scalars['Int'];
+  lastname: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+  picture?: Maybe<Scalars['String']>;
+  role: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  allCategories: Array<Category>;
   allProductRefs: Array<ProductRef>;
-  categories: Array<Category>;
+  allUsers: Array<User>;
   categoryById: Category;
+  getProfile: Profile;
   productRefById: ProductRef;
+};
+
+
+export type QueryAllCategoriesArgs = {
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -97,6 +134,20 @@ export type SubCategory = {
   productRefs: ProductRef;
 };
 
+export type User = {
+  __typename?: 'User';
+  address?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  cp?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  firstname: Scalars['String'];
+  id: Scalars['Int'];
+  lastname: Scalars['String'];
+  password: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+  role: Scalars['String'];
+};
+
 export type AllProductRefsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -108,6 +159,23 @@ export type ProductRefByIdQueryVariables = Exact<{
 
 
 export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number } };
+
+export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, firstname: string, lastname: string, role: string, email: string, password?: string | null, address?: string | null, city?: string | null, cp?: string | null, picture?: string | null } };
+
+export type AllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllCategoriesQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description: string, image: string, subCategories: Array<{ __typename?: 'SubCategory', id: number }> }> };
+
+export type UpdateUserMutationVariables = Exact<{
+  updatedUser: InputUpdate;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Message', success: boolean, message: string } };
 
 export type LoginMutationVariables = Exact<{
   user: InputLogin;
@@ -205,6 +273,123 @@ export function useProductRefByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type ProductRefByIdQueryHookResult = ReturnType<typeof useProductRefByIdQuery>;
 export type ProductRefByIdLazyQueryHookResult = ReturnType<typeof useProductRefByIdLazyQuery>;
 export type ProductRefByIdQueryResult = Apollo.QueryResult<ProductRefByIdQuery, ProductRefByIdQueryVariables>;
+export const GetProfileDocument = gql`
+    query GetProfile {
+  getProfile {
+    id
+    firstname
+    lastname
+    role
+    email
+    password
+    address
+    city
+    cp
+    picture
+  }
+}
+    `;
+
+/**
+ * __useGetProfileQuery__
+ *
+ * To run a query within a React component, call `useGetProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetProfileQuery(baseOptions?: Apollo.QueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+      }
+export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+        }
+export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
+export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
+export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
+export const AllCategoriesDocument = gql`
+    query AllCategories {
+  allCategories {
+    id
+    name
+    description
+    image
+    subCategories {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllCategoriesQuery__
+ *
+ * To run a query within a React component, call `useAllCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AllCategoriesQuery, AllCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllCategoriesQuery, AllCategoriesQueryVariables>(AllCategoriesDocument, options);
+      }
+export function useAllCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllCategoriesQuery, AllCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllCategoriesQuery, AllCategoriesQueryVariables>(AllCategoriesDocument, options);
+        }
+export type AllCategoriesQueryHookResult = ReturnType<typeof useAllCategoriesQuery>;
+export type AllCategoriesLazyQueryHookResult = ReturnType<typeof useAllCategoriesLazyQuery>;
+export type AllCategoriesQueryResult = Apollo.QueryResult<AllCategoriesQuery, AllCategoriesQueryVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($updatedUser: InputUpdate!) {
+  updateUser(updatedUser: $updatedUser) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      updatedUser: // value for 'updatedUser'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($user: InputLogin!) {
   login(user: $user) {
@@ -240,7 +425,7 @@ export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const LogoutDocument = gql`
-    mutation logout {
+    mutation Logout {
   logout {
     success
     message
@@ -273,7 +458,7 @@ export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
-    mutation register($newUser: InputRegister!) {
+    mutation Register($newUser: InputRegister!) {
   register(newUser: $newUser) {
     success
     message

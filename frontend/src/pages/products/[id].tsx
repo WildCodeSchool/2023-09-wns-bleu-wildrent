@@ -42,7 +42,7 @@ function ProductRefDetails() {
                     <span className="text-2xl leading-none align-baseline"> /jour</span>
                   </div>
                   <div className="inline-block align-bottom">
-                    <button className="btn m-6">
+                    <button className="btn btn-active btn-secondary">
                       <i className="mdi mdi-cart -ml-2 mr-2"></i> Vérifier la disponibilité
                     </button>
                   </div>
