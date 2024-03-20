@@ -1,4 +1,3 @@
-import Button from '@/ui/Button';
 import Link from 'next/link';
 import router from 'next/router';
 import { navData } from '../const';
@@ -12,11 +11,14 @@ export default function Navbar() {
   function checkIsActive(link: string, router: any) {
     return link === router;
   }
-  const { data } = useGetProfileQuery();
-  const isLoggedIn = checkUserIsLoggedIn();
+  const { data: currentUser } = useGetProfileQuery();
+  const isLoggedIn = !!checkUserIsLoggedIn();
+
   const isAdmin = checkUserIsLoggedIn() === 'ADMIN';
-  const avatar = data?.getProfile?.picture;
-  const name = data?.getProfile?.lastname;
+
+  const avatar = currentUser?.getProfile?.picture;
+  const name = currentUser?.getProfile?.lastname;
+
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
@@ -72,7 +74,7 @@ export default function Navbar() {
         </div>
 
         <div>
-          {isLoggedIn ? (
+          {!!isLoggedIn ? (
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full" data-test-id="avatar">
@@ -103,9 +105,6 @@ export default function Navbar() {
                     <div className="justify-between">Mon compte</div>
                   </Link>
                 </li>
-                <li>
-                  <a>Settings</a>
-                </li>
                 <li data-test-id="logout-btn">
                   <LogoutBtn />
                 </li>
@@ -124,33 +123,5 @@ export default function Navbar() {
         </div>
       </div>
     </div>
-    // <nav className="flex items-center justify-between bg-secondary p-4">
-    //   <div className="flex items-center">
-    //     <Image src={logo} width={50} height={50} alt="logo" />
-    //     <div className="text-white font-bold m-4">WildRent</div>
-    //   </div>
-    //   <div className="flex items-center">
-    //     {navData.map((item, index) => (
-    //       <Link href={item.link} key={index}>
-    //         <div
-    //           className={`m-1 p-4 rounded ${
-    //             checkIsActive(item.link, router) ? 'text-secondary' : 'text-white'
-    //           } hover:bg-light`}
-    //         >
-    //           {item.text}
-    //         </div>
-    //       </Link>
-    //     ))}
-    //   </div>
-    //   <div>
-    //     {isLoggedIn ? (
-    //       <LogoutBtn />
-    //     ) : (
-    //       <Link href={'/auth/login'}>
-    //         <div className={'m-1 p-4 rounded'}>Log in</div>
-    //       </Link>
-    //     )}
-    //   </div>
-    // </nav>
   );
 }

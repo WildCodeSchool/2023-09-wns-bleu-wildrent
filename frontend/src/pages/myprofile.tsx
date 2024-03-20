@@ -12,12 +12,12 @@ function MyProfile() {
   const { data } = useGetProfileQuery();
   const [updateUser] = useUpdateUserMutation();
   const user = data?.getProfile;
-  console.log({ user });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    console.log({ formJSON });
+
     updateUser({
       variables: {
         updatedUser: formJSON as any,

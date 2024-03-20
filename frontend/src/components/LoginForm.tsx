@@ -20,7 +20,7 @@ const fields = [
 
 export default function LoginForm() {
   const router = useRouter();
-  const [login, { data, loading, error }] = useLoginMutation();
+  const [login] = useLoginMutation();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
