@@ -1,4 +1,4 @@
-mutation logout {
+mutation Logout {
   logout {
     success
     message

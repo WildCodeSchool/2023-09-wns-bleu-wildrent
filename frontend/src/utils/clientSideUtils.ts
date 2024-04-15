@@ -1,8 +1,7 @@
-import { useMeQuery } from '@/graphql/generated/schema';
+import { useGetProfileQuery } from '@/graphql/generated/schema';
 import Cookies from 'js-cookie';
 
 export function checkUserIsLoggedIn() {
-  const { data } = useMeQuery();
-  console.log('checkUserIsLoggedIn', data?.me?.role);
-  return data?.me?.role;
+  const { data } = useGetProfileQuery();
+  return data?.getProfile?.role;
 }

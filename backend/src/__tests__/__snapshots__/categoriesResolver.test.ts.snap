@@ -3,7 +3,7 @@
 exports[`Categories Resolver can get a list of categories 1`] = `
 {
   "data": {
-    "categories": [
+    "allCategories": [
       {
         "description": "Oat cake biscuit cookie chocolate pudding. Fruitcake cake cupcake bonbon pudding tiramisu jelly beans marzipan. Shortbread dessert chocolate biscuit jelly-o brownie. Toffee tootsie roll lollipop jelly beans powder croissant pie. Sesame snaps jelly-o dessert sugar plum donut caramels chocolate. Bear claw macaroon brownie cookie icing jelly sugar plum.",
         "id": 2,

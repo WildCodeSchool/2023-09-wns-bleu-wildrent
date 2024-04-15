@@ -14,7 +14,8 @@
     "install": "cd ./frontend && npm i && cd ../backend && npm i",
     "prepare": "husky",
     "dev": "docker compose up --build",
-    "prod": "docker compose -f docker-compose.production.yml up --build"
+    "prod": "docker compose -f docker-compose.production.yml up --build",
+    "testDB": "docker compose -f docker-compose.integration-tests.yml -p wildrent_testdb up "
   },
   "repository": {
     "type": "git",
@@ -30,12 +31,14 @@
     "@testing-library/jest-dom": "^6.4.2",
     "argon2": "^0.31.2",
     "eslint": "^8.56.0",
+    "graphql": "^16.8.1",
     "husky": "^9.0.7",
     "js-cookie": "^3.0.5",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.42.1",
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.12",
     "@types/js-cookie": "^3.0.6",
@@ -46,8 +49,9 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^5.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-promise": "^6.0.0",
-    "prettier": "^3.2.4"
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3"
   }
 }

@@ -26,4 +26,5 @@ COPY e2e-tests/playwright.config.ts ./
 COPY e2e-tests/tsconfig.json ./
 COPY ./server/.env ./.env
 
+
 CMD npm run test

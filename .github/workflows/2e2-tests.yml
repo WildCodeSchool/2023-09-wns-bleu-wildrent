@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./e2e-tests
+        working-directory: e2e-tests
     steps:
       - uses: actions/checkout@v4
       # https://github.com/satackey/action-docker-layer-caching
@@ -43,9 +43,10 @@ jobs:
 
       - name: Make envfiles
         run: |
-          cp .env.example .env
-          cd ../backend/ && cp .env.example .env 
+          pwd 
+          cd ../backend/ && cp .env.example .env
           cd ../frontend/ && cp .env.example .env
+          cd ../e2e-tests/ && cp .env.example .env
       - name: Start app
         run: npm run app:start
       - name: Run Playwright tests

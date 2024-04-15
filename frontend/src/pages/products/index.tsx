@@ -7,7 +7,6 @@ function ProductList() {
   const { data, loading } = useAllProductRefsQuery();
   if (loading) return 'Chargement...';
   const productRefs = data?.allProductRefs || [];
-  console.log(productRefs);
   return (
     <Layout>
       <div className="flex flex-wrap justify-between">

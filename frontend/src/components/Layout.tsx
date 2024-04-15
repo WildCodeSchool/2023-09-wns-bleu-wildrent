@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <div className="mx-auto max-w-5xl mb-10">
       <Navbar />
-      <div className="container mx-auto px-4">{children}</div>
+      <div className="container mx-auto px-4 min-h-full">{children}</div>
       <Footer />
     </div>
   );
