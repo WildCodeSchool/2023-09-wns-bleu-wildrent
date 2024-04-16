@@ -1,0 +1,8 @@
+query AllProductRefs {
+  allProductRefs {
+    id
+    name
+    image
+    priceHT
+  }
+}
