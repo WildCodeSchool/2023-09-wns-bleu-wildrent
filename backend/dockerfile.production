@@ -8,6 +8,8 @@ RUN npm i
 
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./src ./src
+COPY ./jest.config.ts ./jest.config.ts
+COPY ./jest.setup.ts ./jest.setup.ts
 
 RUN npm run build
 

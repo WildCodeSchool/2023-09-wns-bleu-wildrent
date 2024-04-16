@@ -16,6 +16,8 @@ services:
       db:
         condition: service_healthy
 
+    environment:
+      - DB_HOST=db
     build:
       context: backend
       dockerfile: dockerfile.production
