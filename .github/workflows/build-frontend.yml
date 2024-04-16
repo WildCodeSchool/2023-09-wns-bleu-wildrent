@@ -25,6 +25,6 @@ jobs:
             NEXT_PUBLIC_GRAPHQL_API_URL=http://localhost:4000
           context: '{{defaultContext}}:frontend'
           file: 'dockerfile.production'
-          tags: school/2023-09-wns-bleu-wildrent-client:staging
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/2023-09-wns-bleu-wildrent-client:staging
           cache-from: type=gha
           cache-to: type=gha,mode=max
