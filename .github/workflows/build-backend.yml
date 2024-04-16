@@ -23,4 +23,6 @@ jobs:
           push: true
           context: '{{defaultContext}}:backend'
           file: 'dockerfile.production'
-          tags: scrip/2023-09-wns-bleu-wildrent-server:staging
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/2023-09-wns-bleu-wildrent-server:staging
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
