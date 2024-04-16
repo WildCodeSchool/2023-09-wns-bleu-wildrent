@@ -23,6 +23,6 @@ jobs:
           push: true
           build-args: |
             NEXT_PUBLIC_GRAPHQL_API_URL=http://localhost:4000
-          context: '{{defaultContext}}:frontend'
+          context: './frontend'
           file: 'dockerfile.production'
           tags: scrip/2023-09-wns-bleu-wildrent-client:staging

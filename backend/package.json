@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node-dev --exit-child --watch src --poll src/index.ts",
     "build": "tsc",
-    "start:prod": "node build/index.js",
+    "start:prod": "node build/src/index.js",
     "resetDB": "ts-node-dev src/resetDb.ts",
     "format": "prettier --write .",
     "check-types": "tsc --pretty --noEmit",
