@@ -29,6 +29,14 @@ export type InputLogin = {
   password: Scalars['String'];
 };
 
+export type InputProductRef = {
+  description: Scalars['String'];
+  image: Scalars['String'];
+  name: Scalars['String'];
+  priceHT: Scalars['Float'];
+  subCategoryId: Scalars['ID'];
+};
+
 export type InputRegister = {
   email: Scalars['String'];
   firstname: Scalars['String'];
@@ -54,10 +62,16 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addProductRef: Message;
   login: Message;
   logout: Message;
   register: Message;
   updateUser: Message;
+};
+
+
+export type MutationAddProductRefArgs = {
+  newProductRef: InputProductRef;
 };
 
 
@@ -91,9 +105,9 @@ export type Profile = {
   city?: Maybe<Scalars['String']>;
   cp?: Maybe<Scalars['String']>;
   email: Scalars['String'];
-  firstname: Scalars['String'];
+  firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-  lastname: Scalars['String'];
+  lastname?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -140,9 +154,9 @@ export type User = {
   city?: Maybe<Scalars['String']>;
   cp?: Maybe<Scalars['String']>;
   email: Scalars['String'];
-  firstname: Scalars['String'];
+  firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-  lastname: Scalars['String'];
+  lastname?: Maybe<Scalars['String']>;
   password: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -152,6 +166,11 @@ export type AllProductRefsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllProductRefsQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, image: string, priceHT: number }> };
+
+export type AllProductRefsAdminQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number }> };
 
 export type ProductRefByIdQueryVariables = Exact<{
   productRefId: Scalars['Int'];
@@ -163,7 +182,7 @@ export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __ty
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, firstname: string, lastname: string, role: string, email: string, password?: string | null, address?: string | null, city?: string | null, cp?: string | null, picture?: string | null } };
+export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, firstname?: string | null, lastname?: string | null, role: string, email: string, password?: string | null, address?: string | null, city?: string | null, cp?: string | null, picture?: string | null } };
 
 export type AllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -195,6 +214,13 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'Message', success: boolean, message: string } };
+
+export type AddProductRefMutationVariables = Exact<{
+  newProductRef: InputProductRef;
+}>;
+
+
+export type AddProductRefMutation = { __typename?: 'Mutation', addProductRef: { __typename?: 'Message', success: boolean, message: string } };
 
 
 export const AllProductRefsDocument = gql`
@@ -234,6 +260,44 @@ export function useAllProductRefsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type AllProductRefsQueryHookResult = ReturnType<typeof useAllProductRefsQuery>;
 export type AllProductRefsLazyQueryHookResult = ReturnType<typeof useAllProductRefsLazyQuery>;
 export type AllProductRefsQueryResult = Apollo.QueryResult<AllProductRefsQuery, AllProductRefsQueryVariables>;
+export const AllProductRefsAdminDocument = gql`
+    query AllProductRefsAdmin {
+  allProductRefs {
+    id
+    name
+    description
+    image
+    priceHT
+  }
+}
+    `;
+
+/**
+ * __useAllProductRefsAdminQuery__
+ *
+ * To run a query within a React component, call `useAllProductRefsAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllProductRefsAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllProductRefsAdminQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllProductRefsAdminQuery(baseOptions?: Apollo.QueryHookOptions<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>(AllProductRefsAdminDocument, options);
+      }
+export function useAllProductRefsAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>(AllProductRefsAdminDocument, options);
+        }
+export type AllProductRefsAdminQueryHookResult = ReturnType<typeof useAllProductRefsAdminQuery>;
+export type AllProductRefsAdminLazyQueryHookResult = ReturnType<typeof useAllProductRefsAdminLazyQuery>;
+export type AllProductRefsAdminQueryResult = Apollo.QueryResult<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>;
 export const ProductRefByIdDocument = gql`
     query ProductRefById($productRefId: Int!) {
   productRefById(productRefId: $productRefId) {
@@ -491,3 +555,37 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const AddProductRefDocument = gql`
+    mutation AddProductRef($newProductRef: InputProductRef!) {
+  addProductRef(newProductRef: $newProductRef) {
+    success
+    message
+  }
+}
+    `;
+export type AddProductRefMutationFn = Apollo.MutationFunction<AddProductRefMutation, AddProductRefMutationVariables>;
+
+/**
+ * __useAddProductRefMutation__
+ *
+ * To run a mutation, you first call `useAddProductRefMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddProductRefMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addProductRefMutation, { data, loading, error }] = useAddProductRefMutation({
+ *   variables: {
+ *      newProductRef: // value for 'newProductRef'
+ *   },
+ * });
+ */
+export function useAddProductRefMutation(baseOptions?: Apollo.MutationHookOptions<AddProductRefMutation, AddProductRefMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddProductRefMutation, AddProductRefMutationVariables>(AddProductRefDocument, options);
+      }
+export type AddProductRefMutationHookResult = ReturnType<typeof useAddProductRefMutation>;
+export type AddProductRefMutationResult = Apollo.MutationResult<AddProductRefMutation>;
+export type AddProductRefMutationOptions = Apollo.BaseMutationOptions<AddProductRefMutation, AddProductRefMutationVariables>;

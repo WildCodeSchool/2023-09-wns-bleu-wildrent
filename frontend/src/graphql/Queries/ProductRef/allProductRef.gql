@@ -6,3 +6,13 @@ query AllProductRefs {
     priceHT
   }
 }
+
+query AllProductRefsAdmin {
+  allProductRefs {
+    id
+    name
+    description
+    image
+    priceHT
+  }
+}
