@@ -5,6 +5,7 @@ frontend/.env
 backend/.env
 global.env
 /e2e-tests/playwright-report/
+.env.production
 
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
