@@ -1,12 +1,7 @@
-// pages/admin/categorie.tsx
-import LayoutDashboard from '../../components/admin/LayoutDashboard';
+import React from 'react';
 
-const CategoriePage = () => {
-  return (
-    <LayoutDashboard>
-      <div>Contenu de la catégorie</div>
-    </LayoutDashboard>
-  );
-};
+function categorie() {
+  return <div>categorie</div>;
+}
 
-export default CategoriePage;
+export default categorie;
