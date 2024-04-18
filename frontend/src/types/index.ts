@@ -10,7 +10,7 @@ export type CategoryCardProps = {
 export type Category = {
   id: number;
   name: string;
-  // description?: string;
+  description?: string | null;
   image: string;
   // subCategories: SubCategory[];
 };
