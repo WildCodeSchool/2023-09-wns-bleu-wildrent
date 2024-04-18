@@ -1,7 +1,8 @@
 name: 'test-frontend'
 
 on:
-  push:
+  pull_request:
+  workflow_call:
 jobs:
   test-client:
     runs-on: ubuntu-latest
