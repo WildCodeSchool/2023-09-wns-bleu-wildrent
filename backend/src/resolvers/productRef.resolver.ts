@@ -36,6 +36,22 @@ class ProductRefsResolver {
       }
     }
   }
+
+  @Authorized(['ADMIN'])
+  @Mutation(() => Message)
+  async deleteProductRef(@Arg('productRefId', () => Int) id: number) {
+    try {
+      const productRefToDelete = await ProductRef.findOneBy({ id });
+      if (!productRefToDelete) {
+        return { success: false, message: 'Product Not Exists' };
+      }
+
+      await productRefToDelete.remove();
+      return { success: true, message: 'Product Deleted !' };
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+  }
 }
 
 export default ProductRefsResolver;

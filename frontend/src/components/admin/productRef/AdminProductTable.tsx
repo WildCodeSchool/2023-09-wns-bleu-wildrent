@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import {
   AddProductRefDocument,
   ProductRef as GeneratedProductRef,
+  useDeleteProductRefMutation,
 } from '../../../graphql/generated/schema';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductRefModalDetails from './ProductRefModalDetails';
 import AddProductRefModal from './AddProductRefModal';
+import client from '@/graphql/client';
 
 // Étendez le type généré pour inclure __typename, qui est habituellement renvoyé par les requêtes GraphQL.
 type ProductRef = GeneratedProductRef & {
@@ -20,6 +22,26 @@ type AdminProductTableProps = {
 const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) => {
   // Trier les articles par ordre croissant d'id avant de les rendre
   const sortedProductRefs = [...productRefs].sort((a, b) => a.id - b.id);
+
+  const [deleteProductRef] = useDeleteProductRefMutation();
+  const handleDelete = async (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+      try {
+        const { data } = await deleteProductRef({ variables: { productRefId: id } });
+        if (data?.deleteProductRef.success) {
+          alert('Produit supprimé avec succès !');
+        } else {
+          alert(data?.deleteProductRef.message);
+        }
+      } catch (e) {
+        alert('Erreur lors de la suppression du produit');
+        console.error(e);
+      } finally {
+        client.resetStore();
+      }
+    }
+  };
 
   return (
     <>
@@ -53,7 +75,10 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
                 <button className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
                   Modifier
                 </button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                <button
+                  onClick={(e) => handleDelete(product.id, e)}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                >
                   Supprimer
                 </button>
               </td>
