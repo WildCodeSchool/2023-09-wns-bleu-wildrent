@@ -4,8 +4,5 @@ query AllCategories {
     name
     description
     image
-    subCategories {
-      id
-    }
   }
 }

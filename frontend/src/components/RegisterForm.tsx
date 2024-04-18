@@ -1,5 +1,3 @@
-'use client';
-
 import { useRouter } from 'next/navigation';
 import { InputRegister, useRegisterMutation } from '@/graphql/generated/schema';
 import FormInput from './FormInput';

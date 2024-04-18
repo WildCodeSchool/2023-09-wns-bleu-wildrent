@@ -1,8 +1,0 @@
-mutation AddCategory($name: String!, $description: String!, $image: String!) {
-  addCategory(name: $name, description: $description, image: $image) {
-    id
-    name
-    description
-    image
-  }
-}

@@ -21,12 +21,20 @@ export type Category = {
   id: Scalars['Int'];
   image: Scalars['String'];
   name: Scalars['String'];
-  subCategories: Array<SubCategory>;
+  subCategories: SubCategory;
 };
 
 export type InputLogin = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type InputProductRef = {
+  description: Scalars['String'];
+  image: Scalars['String'];
+  name: Scalars['String'];
+  priceHT: Scalars['Float'];
+  subCategoryId: Scalars['ID'];
 };
 
 export type InputRegister = {
@@ -54,25 +62,16 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addCategory: Category;
-  deleteCategory: Scalars['Boolean'];
+  addProductRef: Message;
   login: Message;
   logout: Message;
   register: Message;
   updateUser: Message;
-  updateCategory?: Maybe<Category>;
 };
 
 
-export type MutationAddCategoryArgs = {
-  description: Scalars['String'];
-  image: Scalars['String'];
-  name: Scalars['String'];
-};
-
-
-export type MutationDeleteCategoryArgs = {
-  id: Scalars['Int'];
+export type MutationAddProductRefArgs = {
+  newProductRef: InputProductRef;
 };
 
 
@@ -90,14 +89,6 @@ export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
 };
 
-
-export type MutationUpdateCategoryArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
-  image?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-};
-
 export type ProductRef = {
   __typename?: 'ProductRef';
   description: Scalars['String'];
@@ -106,6 +97,7 @@ export type ProductRef = {
   name: Scalars['String'];
   priceHT: Scalars['Float'];
   subCategory: SubCategory;
+  subCategoryId: Scalars['Int'];
 };
 
 export type Profile = {
@@ -114,9 +106,9 @@ export type Profile = {
   city?: Maybe<Scalars['String']>;
   cp?: Maybe<Scalars['String']>;
   email: Scalars['String'];
-  firstname: Scalars['String'];
+  firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-  lastname: Scalars['String'];
+  lastname?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -126,22 +118,17 @@ export type Query = {
   __typename?: 'Query';
   allCategories: Array<Category>;
   allProductRefs: Array<ProductRef>;
+  allSubCategories: Array<SubCategory>;
   allUsers: Array<User>;
-  categoryById?: Maybe<Category>;
+  categoryById: Category;
   getProfile: Profile;
-  me?: Maybe<User>;
   productRefById: ProductRef;
-};
-
-
-
-export type QueryAllCategoriesArgs = {
-  name?: InputMaybe<Scalars['String']>;
+  subCategoryById: SubCategory;
 };
 
 
 export type QueryCategoryByIdArgs = {
-  id: Scalars['Int'];
+  categoryId: Scalars['Int'];
 };
 
 
@@ -149,14 +136,20 @@ export type QueryProductRefByIdArgs = {
   productRefId: Scalars['Int'];
 };
 
+
+export type QuerySubCategoryByIdArgs = {
+  subCategoryId: Scalars['Int'];
+};
+
 export type SubCategory = {
   __typename?: 'SubCategory';
   category: Category;
+  categoryId: Scalars['Int'];
   description: Scalars['String'];
   id: Scalars['Int'];
   image: Scalars['String'];
   name: Scalars['String'];
-  productRefs: ProductRef;
+  productRefs: Array<ProductRef>;
 };
 
 export type User = {
@@ -165,9 +158,9 @@ export type User = {
   city?: Maybe<Scalars['String']>;
   cp?: Maybe<Scalars['String']>;
   email: Scalars['String'];
-  firstname: Scalars['String'];
+  firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-  lastname: Scalars['String'];
+  lastname?: Maybe<Scalars['String']>;
   password: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -177,6 +170,11 @@ export type AllProductRefsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllProductRefsQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, image: string, priceHT: number }> };
+
+export type AllProductRefsAdminQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number }> };
 
 export type ProductRefByIdQueryVariables = Exact<{
   productRefId: Scalars['Int'];
@@ -188,12 +186,17 @@ export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __ty
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, firstname: string, lastname: string, role: string, email: string, password?: string | null, address?: string | null, city?: string | null, cp?: string | null, picture?: string | null } };
+export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, firstname?: string | null, lastname?: string | null, role: string, email: string, password?: string | null, address?: string | null, city?: string | null, cp?: string | null, picture?: string | null } };
 
 export type AllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllCategoriesQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description: string, image: string, subCategories: Array<{ __typename?: 'SubCategory', id: number }> }> };
+export type AllCategoriesQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description: string, image: string }> };
+
+export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllSubCategoriesQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> };
 
 export type UpdateUserMutationVariables = Exact<{
   updatedUser: InputUpdate;
@@ -221,31 +224,12 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'Message', success: boolean, message: string } };
 
-export type AddCategoryMutationVariables = Exact<{
-  name: Scalars['String'];
-  description: Scalars['String'];
-  image: Scalars['String'];
+export type AddProductRefMutationVariables = Exact<{
+  newProductRef: InputProductRef;
 }>;
 
 
-export type AddCategoryMutation = { __typename?: 'Mutation', addCategory: { __typename?: 'Category', id: number, name: string, description: string, image: string } };
-
-export type DeleteCategoryMutationVariables = Exact<{
-  id: Scalars['Int'];
-}>;
-
-
-export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: boolean };
-
-export type UpdateCategoryMutationVariables = Exact<{
-  id: Scalars['Int'];
-  name: Scalars['String'];
-  description: Scalars['String'];
-  image: Scalars['String'];
-}>;
-
-
-export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory?: { __typename?: 'Category', id: number, name: string, description: string, image: string } | null };
+export type AddProductRefMutation = { __typename?: 'Mutation', addProductRef: { __typename?: 'Message', success: boolean, message: string } };
 
 
 export const AllProductRefsDocument = gql`
@@ -285,6 +269,44 @@ export function useAllProductRefsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type AllProductRefsQueryHookResult = ReturnType<typeof useAllProductRefsQuery>;
 export type AllProductRefsLazyQueryHookResult = ReturnType<typeof useAllProductRefsLazyQuery>;
 export type AllProductRefsQueryResult = Apollo.QueryResult<AllProductRefsQuery, AllProductRefsQueryVariables>;
+export const AllProductRefsAdminDocument = gql`
+    query AllProductRefsAdmin {
+  allProductRefs {
+    id
+    name
+    description
+    image
+    priceHT
+  }
+}
+    `;
+
+/**
+ * __useAllProductRefsAdminQuery__
+ *
+ * To run a query within a React component, call `useAllProductRefsAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllProductRefsAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllProductRefsAdminQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllProductRefsAdminQuery(baseOptions?: Apollo.QueryHookOptions<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>(AllProductRefsAdminDocument, options);
+      }
+export function useAllProductRefsAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>(AllProductRefsAdminDocument, options);
+        }
+export type AllProductRefsAdminQueryHookResult = ReturnType<typeof useAllProductRefsAdminQuery>;
+export type AllProductRefsAdminLazyQueryHookResult = ReturnType<typeof useAllProductRefsAdminLazyQuery>;
+export type AllProductRefsAdminQueryResult = Apollo.QueryResult<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>;
 export const ProductRefByIdDocument = gql`
     query ProductRefById($productRefId: Int!) {
   productRefById(productRefId: $productRefId) {
@@ -374,9 +396,6 @@ export const AllCategoriesDocument = gql`
     name
     description
     image
-    subCategories {
-      id
-    }
   }
 }
     `;
@@ -407,6 +426,41 @@ export function useAllCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type AllCategoriesQueryHookResult = ReturnType<typeof useAllCategoriesQuery>;
 export type AllCategoriesLazyQueryHookResult = ReturnType<typeof useAllCategoriesLazyQuery>;
 export type AllCategoriesQueryResult = Apollo.QueryResult<AllCategoriesQuery, AllCategoriesQueryVariables>;
+export const AllSubCategoriesDocument = gql`
+    query AllSubCategories {
+  allSubCategories {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useAllSubCategoriesQuery__
+ *
+ * To run a query within a React component, call `useAllSubCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllSubCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllSubCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllSubCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>(AllSubCategoriesDocument, options);
+      }
+export function useAllSubCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>(AllSubCategoriesDocument, options);
+        }
+export type AllSubCategoriesQueryHookResult = ReturnType<typeof useAllSubCategoriesQuery>;
+export type AllSubCategoriesLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesLazyQuery>;
+export type AllSubCategoriesQueryResult = Apollo.QueryResult<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($updatedUser: InputUpdate!) {
   updateUser(updatedUser: $updatedUser) {
@@ -542,111 +596,37 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
-export const AddCategoryDocument = gql`
-    mutation AddCategory($name: String!, $description: String!, $image: String!) {
-  addCategory(name: $name, description: $description, image: $image) {
-    id
-    name
-    description
-    image
+export const AddProductRefDocument = gql`
+    mutation AddProductRef($newProductRef: InputProductRef!) {
+  addProductRef(newProductRef: $newProductRef) {
+    success
+    message
   }
 }
     `;
-export type AddCategoryMutationFn = Apollo.MutationFunction<AddCategoryMutation, AddCategoryMutationVariables>;
+export type AddProductRefMutationFn = Apollo.MutationFunction<AddProductRefMutation, AddProductRefMutationVariables>;
 
 /**
- * __useAddCategoryMutation__
+ * __useAddProductRefMutation__
  *
- * To run a mutation, you first call `useAddCategoryMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddCategoryMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useAddProductRefMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddProductRefMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addCategoryMutation, { data, loading, error }] = useAddCategoryMutation({
+ * const [addProductRefMutation, { data, loading, error }] = useAddProductRefMutation({
  *   variables: {
- *      name: // value for 'name'
- *      description: // value for 'description'
- *      image: // value for 'image'
+ *      newProductRef: // value for 'newProductRef'
  *   },
  * });
  */
-export function useAddCategoryMutation(baseOptions?: Apollo.MutationHookOptions<AddCategoryMutation, AddCategoryMutationVariables>) {
+export function useAddProductRefMutation(baseOptions?: Apollo.MutationHookOptions<AddProductRefMutation, AddProductRefMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddCategoryMutation, AddCategoryMutationVariables>(AddCategoryDocument, options);
+        return Apollo.useMutation<AddProductRefMutation, AddProductRefMutationVariables>(AddProductRefDocument, options);
       }
-export type AddCategoryMutationHookResult = ReturnType<typeof useAddCategoryMutation>;
-export type AddCategoryMutationResult = Apollo.MutationResult<AddCategoryMutation>;
-export type AddCategoryMutationOptions = Apollo.BaseMutationOptions<AddCategoryMutation, AddCategoryMutationVariables>;
-export const DeleteCategoryDocument = gql`
-    mutation DeleteCategory($id: Int!) {
-  deleteCategory(id: $id)
-}
-    `;
-export type DeleteCategoryMutationFn = Apollo.MutationFunction<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
-
-/**
- * __useDeleteCategoryMutation__
- *
- * To run a mutation, you first call `useDeleteCategoryMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteCategoryMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteCategoryMutation, { data, loading, error }] = useDeleteCategoryMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteCategoryMutation, DeleteCategoryMutationVariables>(DeleteCategoryDocument, options);
-      }
-export type DeleteCategoryMutationHookResult = ReturnType<typeof useDeleteCategoryMutation>;
-export type DeleteCategoryMutationResult = Apollo.MutationResult<DeleteCategoryMutation>;
-export type DeleteCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
-export const UpdateCategoryDocument = gql`
-    mutation UpdateCategory($id: Int!, $name: String!, $description: String!, $image: String!) {
-  updateCategory(id: $id, name: $name, description: $description, image: $image) {
-    id
-    name
-    description
-    image
-  }
-}
-    `;
-export type UpdateCategoryMutationFn = Apollo.MutationFunction<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
-
-/**
- * __useUpdateCategoryMutation__
- *
- * To run a mutation, you first call `useUpdateCategoryMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCategoryMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCategoryMutation, { data, loading, error }] = useUpdateCategoryMutation({
- *   variables: {
- *      id: // value for 'id'
- *      name: // value for 'name'
- *      description: // value for 'description'
- *      image: // value for 'image'
- *   },
- * });
- */
-export function useUpdateCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateCategoryMutation, UpdateCategoryMutationVariables>(UpdateCategoryDocument, options);
-      }
-export type UpdateCategoryMutationHookResult = ReturnType<typeof useUpdateCategoryMutation>;
-export type UpdateCategoryMutationResult = Apollo.MutationResult<UpdateCategoryMutation>;
-export type UpdateCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
+export type AddProductRefMutationHookResult = ReturnType<typeof useAddProductRefMutation>;
+export type AddProductRefMutationResult = Apollo.MutationResult<AddProductRefMutation>;
+export type AddProductRefMutationOptions = Apollo.BaseMutationOptions<AddProductRefMutation, AddProductRefMutationVariables>;
