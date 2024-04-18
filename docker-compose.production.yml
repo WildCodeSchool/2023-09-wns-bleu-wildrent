@@ -39,6 +39,7 @@ services:
     build:
       context: backend
       dockerfile: dockerfile.production
+    image: ${{ secrets.DOCKERHUB_USERNAME }}/2023-09-wns-bleu-wildrent-server
 
   frontend:
     environment:
@@ -47,6 +48,7 @@ services:
     build:
       context: frontend
       dockerfile: dockerfile.production
+    image: ${{ secrets.DOCKERHUB_USERNAME }}/2023-09-wns-bleu-wildrent-client
 
   gateway:
     stop_grace_period: 0s
