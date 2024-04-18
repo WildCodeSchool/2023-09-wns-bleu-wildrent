@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { ProductRef as GeneratedProductRef } from '../../graphql/generated/schema';
+import {
+  AddProductRefDocument,
+  ProductRef as GeneratedProductRef,
+} from '../../../graphql/generated/schema';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductRefModalDetails from './ProductRefModalDetails';
+import AddProductRefModal from './AddProductRefModal';
 
 // Étendez le type généré pour inclure __typename, qui est habituellement renvoyé par les requêtes GraphQL.
 type ProductRef = GeneratedProductRef & {
@@ -16,18 +20,7 @@ type AdminProductTableProps = {
 const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) => {
   // Trier les articles par ordre croissant d'id avant de les rendre
   const sortedProductRefs = [...productRefs].sort((a, b) => a.id - b.id);
-  const [selectedProduct, setSelectedProduct] = useState<ProductRef | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleProductClick = (product: ProductRef) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedProduct(null);
-  };
   return (
     <>
       <table className="min-w-full table-auto">
@@ -51,8 +44,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
               </td>
 
               <td className="px-4 py-2 border-b">
-                {/* <Link href={`/admin/products/${product.id}`}>{product.name} </Link> */}
-                <button onClick={() => handleProductClick(product)}>{product.name}</button>
+                <button>{product.name}</button>
               </td>
 
               <td className="px-4 py-2 border-b">{product.description.substring(0, 90)}...</td>
@@ -69,13 +61,6 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
           ))}
         </tbody>
       </table>
-      {selectedProduct && (
-        <ProductRefModalDetails
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          product={selectedProduct}
-        />
-      )}
     </>
   );
 };

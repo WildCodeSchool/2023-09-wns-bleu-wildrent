@@ -29,6 +29,9 @@ export class ProductRef extends BaseEntity {
   @Field(() => SubCategory)
   @ManyToOne(() => SubCategory, (subcategory) => subcategory.productRefs)
   subCategory: SubCategory;
+  @Column()
+  @Field(() => Int)
+  subCategoryId: number;
 }
 
 @InputType()

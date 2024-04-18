@@ -19,8 +19,12 @@ export type SubCategory = {
   id: number;
   name: string;
   description?: string;
-  image: string;
-  productRef: ProductRef[];
+  image?: string;
+  productRef?: ProductRef[];
+};
+export type SimpleSubCategory = {
+  id: number;
+  name: string;
 };
 
 export type ProductRef = {
@@ -31,10 +35,15 @@ export type ProductRef = {
   priceHT: number;
 };
 
+export interface Option {
+  value: number;
+  label: string;
+}
 export type FormInputProps = {
   label: string;
   id: string;
   placeholder: string;
   inputType?: string;
   error?: string;
+  options?: Option[];
 };

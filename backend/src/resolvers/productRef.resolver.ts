@@ -1,4 +1,4 @@
-import { Resolver, Arg, Query, Int, Mutation } from 'type-graphql';
+import { Resolver, Arg, Query, Int, Mutation, Authorized } from 'type-graphql';
 import { GraphQLError } from 'graphql';
 import { InputProductRef, ProductRef } from '../entities/productRef.entity';
 import { Message } from '../entities/user.entity';
@@ -19,17 +19,17 @@ class ProductRefsResolver {
     }
     return productRef;
   }
-
+  @Authorized(['ADMIN'])
   @Mutation(() => Message)
-  async addProductRef(@Arg('newProductRef') newUser: InputProductRef) {
+  async addProductRef(@Arg('newProductRef') newProductRef: InputProductRef) {
     const alreadyRegistered = Boolean(
-      await new ProductRefService().findProductRefByName(ProductRef.name),
+      await new ProductRefService().findProductRefByName(newProductRef.name),
     );
     if (alreadyRegistered) {
       return { success: false, message: 'Already Registered' };
     } else {
       try {
-        await new ProductRefService().createProductRef(newUser);
+        await new ProductRefService().createProductRef(newProductRef);
         return { success: true, message: 'Account Created !' };
       } catch (e) {
         console.error((e as Error).message);

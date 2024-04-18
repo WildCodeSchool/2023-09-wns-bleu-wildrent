@@ -3,7 +3,14 @@
 import { FormInputProps } from '@/types';
 import { useState } from 'react';
 
-export default function FormInput({ label, inputType, placeholder, id, error }: FormInputProps) {
+export default function FormInput({
+  label,
+  inputType,
+  placeholder,
+  id,
+  error,
+  options,
+}: FormInputProps) {
   const [type, setType] = useState(inputType);
 
   const handleShow = () => {
@@ -16,13 +23,34 @@ export default function FormInput({ label, inputType, placeholder, id, error }: 
         {label}
       </label>
       <div className="ml-4 space-x-4">
-        <input
-          className="px-4 py-2 rounded-md placeholder:italic placeholder:font-light"
-          type={type || 'text'}
-          id={id}
-          name={id}
-          placeholder={placeholder}
-        />
+        {type === 'textarea' ? (
+          <textarea
+            className="px-4 py-2 rounded-md placeholder:italic placeholder:font-light"
+            id={id}
+            name={id}
+            placeholder={placeholder}
+          />
+        ) : type === 'select' ? (
+          <select className="px-4 py-2 rounded-md" id={id} name={id} defaultValue="">
+            <option disabled value="">
+              Select an option
+            </option>
+            {options &&
+              options.map((option, index) => (
+                <option key={index} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+          </select>
+        ) : (
+          <input
+            className="px-4 py-2 rounded-md placeholder:italic placeholder:font-light"
+            type={type || 'text'}
+            id={id}
+            name={id}
+            placeholder={placeholder}
+          />
+        )}
         {id.includes('password') && (
           <button onClick={handleShow} type="button">
             {type === 'text' ? 'hide' : 'show'}

@@ -21,7 +21,7 @@ export type Category = {
   id: Scalars['Int'];
   image: Scalars['String'];
   name: Scalars['String'];
-  subCategories: Array<SubCategory>;
+  subCategories: SubCategory;
 };
 
 export type InputLogin = {
@@ -97,6 +97,7 @@ export type ProductRef = {
   name: Scalars['String'];
   priceHT: Scalars['Float'];
   subCategory: SubCategory;
+  subCategoryId: Scalars['Int'];
 };
 
 export type Profile = {
@@ -117,15 +118,12 @@ export type Query = {
   __typename?: 'Query';
   allCategories: Array<Category>;
   allProductRefs: Array<ProductRef>;
+  allSubCategories: Array<SubCategory>;
   allUsers: Array<User>;
   categoryById: Category;
   getProfile: Profile;
   productRefById: ProductRef;
-};
-
-
-export type QueryAllCategoriesArgs = {
-  name?: InputMaybe<Scalars['String']>;
+  subCategoryById: SubCategory;
 };
 
 
@@ -138,14 +136,20 @@ export type QueryProductRefByIdArgs = {
   productRefId: Scalars['Int'];
 };
 
+
+export type QuerySubCategoryByIdArgs = {
+  subCategoryId: Scalars['Int'];
+};
+
 export type SubCategory = {
   __typename?: 'SubCategory';
   category: Category;
+  categoryId: Scalars['Int'];
   description: Scalars['String'];
   id: Scalars['Int'];
   image: Scalars['String'];
   name: Scalars['String'];
-  productRefs: ProductRef;
+  productRefs: Array<ProductRef>;
 };
 
 export type User = {
@@ -187,7 +191,12 @@ export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?:
 export type AllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllCategoriesQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description: string, image: string, subCategories: Array<{ __typename?: 'SubCategory', id: number }> }> };
+export type AllCategoriesQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description: string, image: string }> };
+
+export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllSubCategoriesQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> };
 
 export type UpdateUserMutationVariables = Exact<{
   updatedUser: InputUpdate;
@@ -387,9 +396,6 @@ export const AllCategoriesDocument = gql`
     name
     description
     image
-    subCategories {
-      id
-    }
   }
 }
     `;
@@ -420,6 +426,41 @@ export function useAllCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type AllCategoriesQueryHookResult = ReturnType<typeof useAllCategoriesQuery>;
 export type AllCategoriesLazyQueryHookResult = ReturnType<typeof useAllCategoriesLazyQuery>;
 export type AllCategoriesQueryResult = Apollo.QueryResult<AllCategoriesQuery, AllCategoriesQueryVariables>;
+export const AllSubCategoriesDocument = gql`
+    query AllSubCategories {
+  allSubCategories {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useAllSubCategoriesQuery__
+ *
+ * To run a query within a React component, call `useAllSubCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllSubCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllSubCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllSubCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>(AllSubCategoriesDocument, options);
+      }
+export function useAllSubCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>(AllSubCategoriesDocument, options);
+        }
+export type AllSubCategoriesQueryHookResult = ReturnType<typeof useAllSubCategoriesQuery>;
+export type AllSubCategoriesLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesLazyQuery>;
+export type AllSubCategoriesQueryResult = Apollo.QueryResult<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($updatedUser: InputUpdate!) {
   updateUser(updatedUser: $updatedUser) {
