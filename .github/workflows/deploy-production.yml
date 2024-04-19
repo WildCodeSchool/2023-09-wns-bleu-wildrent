@@ -7,7 +7,7 @@ on:
 
 jobs:
   client-tests:
-    uses: WildCodeSchool/2023-09-wns-bleu-wildrent/.github/workflows/tests-front.yml@main
+    uses: WildCodeSchool/2023-09-wns-bleu-wildrent/.github/workflows/tests-frontend.yml@main
 
   e2e-tests:
     uses: WildCodeSchool/2023-09-wns-bleu-wildrent/.github/workflows/e2e-tests.yml@main
