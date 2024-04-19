@@ -64,6 +64,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addCategory: Category;
   addProductRef: Message;
+  deleteProductRef: Message;
   login: Message;
   logout: Message;
   register: Message;
@@ -80,6 +81,11 @@ export type MutationAddCategoryArgs = {
 
 export type MutationAddProductRefArgs = {
   newProductRef: InputProductRef;
+};
+
+
+export type MutationDeleteProductRefArgs = {
+  productRefId: Scalars['Int'];
 };
 
 
@@ -252,6 +258,13 @@ export type AddProductRefMutationVariables = Exact<{
 
 
 export type AddProductRefMutation = { __typename?: 'Mutation', addProductRef: { __typename?: 'Message', success: boolean, message: string } };
+
+export type DeleteProductRefMutationVariables = Exact<{
+  productRefId: Scalars['Int'];
+}>;
+
+
+export type DeleteProductRefMutation = { __typename?: 'Mutation', deleteProductRef: { __typename?: 'Message', success: boolean, message: string } };
 
 
 export const AllProductRefsDocument = gql`
@@ -727,3 +740,37 @@ export function useAddProductRefMutation(baseOptions?: Apollo.MutationHookOption
 export type AddProductRefMutationHookResult = ReturnType<typeof useAddProductRefMutation>;
 export type AddProductRefMutationResult = Apollo.MutationResult<AddProductRefMutation>;
 export type AddProductRefMutationOptions = Apollo.BaseMutationOptions<AddProductRefMutation, AddProductRefMutationVariables>;
+export const DeleteProductRefDocument = gql`
+    mutation DeleteProductRef($productRefId: Int!) {
+  deleteProductRef(productRefId: $productRefId) {
+    success
+    message
+  }
+}
+    `;
+export type DeleteProductRefMutationFn = Apollo.MutationFunction<DeleteProductRefMutation, DeleteProductRefMutationVariables>;
+
+/**
+ * __useDeleteProductRefMutation__
+ *
+ * To run a mutation, you first call `useDeleteProductRefMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteProductRefMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteProductRefMutation, { data, loading, error }] = useDeleteProductRefMutation({
+ *   variables: {
+ *      productRefId: // value for 'productRefId'
+ *   },
+ * });
+ */
+export function useDeleteProductRefMutation(baseOptions?: Apollo.MutationHookOptions<DeleteProductRefMutation, DeleteProductRefMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteProductRefMutation, DeleteProductRefMutationVariables>(DeleteProductRefDocument, options);
+      }
+export type DeleteProductRefMutationHookResult = ReturnType<typeof useDeleteProductRefMutation>;
+export type DeleteProductRefMutationResult = Apollo.MutationResult<DeleteProductRefMutation>;
+export type DeleteProductRefMutationOptions = Apollo.BaseMutationOptions<DeleteProductRefMutation, DeleteProductRefMutationVariables>;
