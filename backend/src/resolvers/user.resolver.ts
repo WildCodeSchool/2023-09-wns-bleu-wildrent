@@ -67,6 +67,7 @@ export default class UserResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async updateUser(
     @Arg('updatedUser') updatedUser: InputUpdate,
@@ -84,6 +85,28 @@ export default class UserResolver {
     } catch (e) {
       console.error((e as Error).message);
       return { success: false, message: `Error updating user: ${(e as Error).message}` };
+    }
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async deleteUser(
+    @Arg('userId') userId: number,
+    @Ctx() { currentUser }: ContextType,
+  ): Promise<Message> {
+    try {
+      if (!currentUser) {
+        return { success: false, message: 'no currentUser' };
+      }
+      if (currentUser.role === 'ADMIN' || currentUser.id === userId) {
+        await new UserService().deleteUser(userId);
+        return { success: true, message: 'user deleted' };
+      } else {
+        return { success: false, message: 'Unauthorized' };
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Cannot delete user: ${(e as Error).message}` };
     }
   }
 
