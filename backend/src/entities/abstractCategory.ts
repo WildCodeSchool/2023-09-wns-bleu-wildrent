@@ -15,7 +15,7 @@ export class BaseCategory extends BaseEntity {
   name: string;
 
   @Column()
-  @Field()
+  @Field({ nullable: true })
   description?: string;
 
   @Column()
