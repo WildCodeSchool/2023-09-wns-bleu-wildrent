@@ -24,7 +24,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
-      image_name: mariontassy/2023-09-wns-bleu-wildrent-back
+      image_name: mariontassy/2023-09-wns-bleu-wildrent-server
 
   build-and-push-client:
     needs:
@@ -35,7 +35,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
-      image_name: mariontassy/2023-09-wns-bleu-wildrent-front
+      image_name: mariontassy/2023-09-wns-bleu-wildrent-client
 
   notify-vps:
     needs:
