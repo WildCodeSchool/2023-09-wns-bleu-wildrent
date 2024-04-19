@@ -1,6 +1,6 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 // import { Length, Min } from 'class-validator';
-import { ObjectType, Field, Int } from 'type-graphql';
+import { ObjectType, Field, Int, InputType, ID } from 'type-graphql';
 import { SubCategory } from './subcategory.entity';
 
 @Entity()
@@ -25,33 +25,28 @@ export class ProductRef extends BaseEntity {
   @Column({ type: 'float' })
   @Field()
   priceHT: number;
+
   @Field(() => SubCategory)
   @ManyToOne(() => SubCategory, (subcategory) => subcategory.productRefs)
   subCategory: SubCategory;
+  @Column()
+  @Field(() => Int)
+  subCategoryId: number;
 }
 
-// @InputType()
-// export class NewAdInput {
-//   @Field()
-//   @Length(5, 50, { message: 'Le titre doit contenir entre 5 et 50 caractères' })
-//   title: string;
-
-//   @Field()
-//   description: string;
-
-//   @Field()
-//   owner: string;
-
-//   @Field()
-//   @Min(0, { message: 'le prix doit etre positif' })
-//   price: number;
-
-//   @Field()
-//   location: string;
-
-//   @Field()
-//   picture: string;
-// }
+@InputType()
+export class InputProductRef {
+  @Field()
+  name: string;
+  @Field()
+  description: string;
+  @Field()
+  image: string;
+  @Field()
+  priceHT: number;
+  @Field(() => ID)
+  subCategoryId: number;
+}
 // @InputType()
 // export class UpdateAdInput {
 //   @Field({ nullable: true })

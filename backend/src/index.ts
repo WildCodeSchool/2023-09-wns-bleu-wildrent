@@ -38,13 +38,18 @@ async function main() {
     );
     const context = async (ctx: ContextType) => {
       const token = ctx.req.headers.cookie?.split('token=')[1];
-      if (token) {
-        const payload = verify(token, process.env.JWT_PRIVATE_KEY as string) as Payload;
-        if (payload.userId) {
-          const currentUser = await new UserService().findUserById(payload.userId);
-          ctx.currentUser = currentUser;
-          return ctx;
+      try {
+        if (token) {
+          const payload = verify(token, process.env.JWT_PRIVATE_KEY as string) as Payload;
+
+          if (payload.userId) {
+            const currentUser = await new UserService().findUserById(payload.userId);
+            ctx.currentUser = currentUser;
+            return ctx;
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
       return ctx;
     };

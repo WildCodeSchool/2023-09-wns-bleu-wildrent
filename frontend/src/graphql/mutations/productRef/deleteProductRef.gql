@@ -1,0 +1,6 @@
+mutation DeleteProductRef($productRefId: Int!) {
+  deleteProductRef(productRefId: $productRefId) {
+    success
+    message
+  }
+}

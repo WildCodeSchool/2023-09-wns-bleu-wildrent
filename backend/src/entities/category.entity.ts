@@ -1,4 +1,4 @@
-import { Entity, OneToMany } from 'typeorm';
+import { Entity, ManyToOne } from 'typeorm';
 import { ObjectType, Field, InputType } from 'type-graphql';
 import { Length } from 'class-validator';
 import { SubCategory } from './subcategory.entity';
@@ -7,9 +7,9 @@ import { BaseCategory, BaseCategoryInput } from './abstractCategory';
 @Entity()
 @ObjectType()
 export class Category extends BaseCategory {
-  @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
-  @Field(() => [SubCategory])
-  subCategories: SubCategory[];
+  @ManyToOne(() => SubCategory, (subCategory) => subCategory.category)
+  @Field()
+  subCategories: SubCategory;
 }
 
 // InputType pour la création d'une new category

@@ -1,0 +1,6 @@
+mutation AddProductRef($newProductRef: InputProductRef!) {
+  addProductRef(newProductRef: $newProductRef) {
+    success
+    message
+  }
+}
