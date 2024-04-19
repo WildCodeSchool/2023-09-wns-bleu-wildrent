@@ -1,25 +1,27 @@
-import { Entity, ManyToOne } from 'typeorm';
-import { ObjectType, Field, InputType } from 'type-graphql';
-import { Length } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, BaseEntity } from 'typeorm';
+import { ObjectType, Field, Int } from 'type-graphql';
 import { SubCategory } from './subcategory.entity';
-import { BaseCategory, BaseCategoryInput } from './abstractCategory';
 
 @Entity()
 @ObjectType()
-export class Category extends BaseCategory {
-  @ManyToOne(() => SubCategory, (subCategory) => subCategory.category)
-  @Field()
-  subCategories: SubCategory;
-}
+export class Category extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  @Field(() => Int)
+  id: number;
 
-// InputType pour la création d'une new category
-@InputType()
-export class NewCategoryInput extends BaseCategoryInput {
+  @Column()
   @Field()
-  @Length(2, 30, { message: 'Le nom doit contenir entre 2 et 30 caractères' })
-  declare name: string;
-}
+  name: string;
 
-// InputType pour la mise à jour d'une category
-@InputType()
-export class UpdateCategoryInput extends BaseCategoryInput {}
+  @Column({ type: 'text', nullable: true })
+  @Field({ nullable: true })
+  description: string;
+
+  @Column()
+  @Field()
+  image: string;
+
+  @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
+  @Field(() => [SubCategory])
+  subCategories: SubCategory[];
+}

@@ -16,7 +16,11 @@ export default function Home() {
 
           <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
             {categories.map((cat) => (
-              <CategoryCard key={cat.id} category={cat} link={`/categories/${cat.id}`} />
+              <CategoryCard
+                key={cat.id}
+                category={{ ...cat, description: cat.description ?? '' }}
+                link={`/categories/${cat.id}`}
+              />
             ))}
           </div>
         </div>
