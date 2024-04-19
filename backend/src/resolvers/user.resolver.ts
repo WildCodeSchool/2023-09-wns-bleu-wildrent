@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/user.service';
 import User, {
@@ -15,14 +15,15 @@ import db from '../db';
 
 @Resolver()
 export default class UserResolver {
+  private userService = new UserService();
   @Mutation(() => Message)
   async register(@Arg('newUser') newUser: InputRegister) {
-    const alreadyRegistered = Boolean(await new UserService().findUserByEmail(newUser.email));
+    const alreadyRegistered = Boolean(await this.userService.findUserByEmail(newUser.email));
     if (alreadyRegistered) {
       return { success: false, message: 'Already Registered' };
     } else {
       try {
-        await new UserService().createUser(newUser);
+        await this.userService.createUser(newUser);
         return { success: true, message: 'Account Created !' };
       } catch (e) {
         console.error((e as Error).message);
@@ -67,7 +68,6 @@ export default class UserResolver {
     }
   }
 
-  @Authorized()
   @Mutation(() => Message)
   async updateUser(
     @Arg('updatedUser') updatedUser: InputUpdate,
@@ -77,7 +77,7 @@ export default class UserResolver {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
-      const updated = await new UserService().updateUser(currentUser.id, updatedUser);
+      const updated = await this.userService.updateUser(currentUser.id, updatedUser);
       if (!updated) {
         return { success: false, message: 'cannot update user' };
       }
@@ -88,19 +88,19 @@ export default class UserResolver {
     }
   }
 
-  @Authorized()
   @Mutation(() => Message)
   async deleteUser(
-    @Arg('userId') userId: number,
+    @Arg('userId', () => Int) userId: number,
     @Ctx() { currentUser }: ContextType,
   ): Promise<Message> {
     try {
+      console.log(currentUser?.id, userId);
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
       if (currentUser.role === 'ADMIN' || currentUser.id === userId) {
-        await new UserService().deleteUser(userId);
-        return { success: true, message: 'user deleted' };
+        const res = await this.userService.deleteUser(userId);
+        return res;
       } else {
         return { success: false, message: 'Unauthorized' };
       }
@@ -116,8 +116,6 @@ export default class UserResolver {
     return await User.find({ order: { id: 'desc' } });
   }
 
-  private userService = new UserService();
-
   @Authorized()
   @Query(() => Profile)
   async getProfile(@Ctx() { currentUser }: ContextType): Promise<Profile | Message> {
@@ -125,7 +123,7 @@ export default class UserResolver {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
-      return (await new UserService().findUserById(currentUser.id)) as Profile;
+      return (await this.userService.findUserById(currentUser.id)) as Profile;
     } catch (e) {
       console.error((e as Error).message);
       return { success: false, message: `Cannot find current user: ${(e as Error).message}` };

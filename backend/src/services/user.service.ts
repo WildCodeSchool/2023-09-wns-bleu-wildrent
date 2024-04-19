@@ -69,8 +69,12 @@ export default class UserService {
 
   async deleteUser(id: number) {
     const userToDelete = await this.db.findOneBy({ id });
-    console.log(userToDelete);
-    return userToDelete ? await this.db.delete({ id }) : null;
+    if (userToDelete) {
+      await this.db.delete({ id });
+      return { success: true, message: `User ${userToDelete.id} deleted` };
+    } else {
+      return { success: false, message: 'User not exist' };
+    }
   }
 
   async createUser({ firstname, lastname, email, password }: InputRegister) {

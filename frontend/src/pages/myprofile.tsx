@@ -2,7 +2,9 @@ import Layout from '@/components/Layout';
 import React from 'react';
 import {
   GetProfileDocument,
+  useDeleteUserMutation,
   useGetProfileQuery,
+  useLogoutMutation,
   useUpdateUserMutation,
 } from '@/graphql/generated/schema';
 import router from 'next/router';
@@ -11,8 +13,31 @@ import Link from 'next/link';
 function MyProfile() {
   const { data } = useGetProfileQuery();
   const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  const [logout] = useLogoutMutation();
   const user = data?.getProfile;
-  console.log({ user });
+
+  const deleteAccount = async () => {
+    try {
+      console.log(user);
+      if (user && user.id) {
+        const res = await deleteUser({
+          variables: {
+            userId: user.id,
+          },
+        });
+        if (res.data?.deleteUser.success) {
+          logout();
+          router.push('/auth/register');
+        }
+        return alert(res.data?.deleteUser.message);
+      } else {
+        return alert('User not exist');
+      }
+    } catch (e) {
+      console.error(`Something wrong with account delete: ${(e as Error).message}`);
+    }
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -179,11 +204,14 @@ function MyProfile() {
             </div>
             <div className="flex items-center space-x-4">
               <button type="submit" className="btn btn-active btn-secondary">
-                Update product
+                Modifier
               </button>
             </div>
           </form>
         </div>
+        <button className="bg-red-600 px-4 py-2" onClick={deleteAccount} type="button">
+          Supprimer son compte
+        </button>
       </section>
     </Layout>
   );
