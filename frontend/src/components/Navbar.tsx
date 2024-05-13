@@ -12,7 +12,7 @@ export default function Navbar() {
   function checkIsActive(link: string, router: any) {
     return link === router;
   }
-  const { data } = useGetProfileQuery();
+  const { data, error } = useGetProfileQuery();
   const isLoggedIn = checkUserIsLoggedIn();
   const isAdmin = checkUserIsLoggedIn() === 'ADMIN';
   const avatar = data?.getProfile?.picture;

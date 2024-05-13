@@ -9,6 +9,7 @@ import {
 } from '@/graphql/generated/schema';
 import router from 'next/router';
 import Link from 'next/link';
+import client from '@/graphql/client';
 
 function MyProfile() {
   const { data } = useGetProfileQuery();
@@ -19,7 +20,6 @@ function MyProfile() {
 
   const deleteAccount = async () => {
     try {
-      console.log(user);
       if (user && user.id) {
         const res = await deleteUser({
           variables: {
@@ -27,7 +27,7 @@ function MyProfile() {
           },
         });
         if (res.data?.deleteUser.success) {
-          logout();
+          await logout();
           router.push('/auth/register');
         }
         return alert(res.data?.deleteUser.message);
@@ -36,13 +36,14 @@ function MyProfile() {
       }
     } catch (e) {
       console.error(`Something wrong with account delete: ${(e as Error).message}`);
+    } finally {
+      client.resetStore();
     }
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    console.log({ formJSON });
     updateUser({
       variables: {
         updatedUser: formJSON as any,

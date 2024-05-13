@@ -94,7 +94,6 @@ export default class UserResolver {
     @Ctx() { currentUser }: ContextType,
   ): Promise<Message> {
     try {
-      console.log(currentUser?.id, userId);
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
@@ -118,7 +117,7 @@ export default class UserResolver {
 
   @Authorized()
   @Query(() => Profile)
-  async getProfile(@Ctx() { currentUser }: ContextType): Promise<Profile | Message> {
+  async getProfile(@Ctx() { currentUser }: ContextType): Promise<Profile | Message | null> {
     try {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
