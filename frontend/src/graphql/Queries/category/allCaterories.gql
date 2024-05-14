@@ -6,3 +6,12 @@ query AllCategories {
     image
   }
 }
+
+query AllCategoriesAdmin {
+  allCategories {
+    id
+    name
+    description
+    image
+  }
+}

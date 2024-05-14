@@ -25,13 +25,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    image: mariontassy/2023-09-wns-bleu-wildrent-server
+    image: mariontassy/2023-09-wns-bleu-wildrent-server:staging
 
   frontend:
     environment:
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY:-changeme}
     stop_grace_period: 0s
-    image: mariontassy/2023-09-wns-bleu-wildrent-client
+    image: mariontassy/2023-09-wns-bleu-wildrent-client:staging
 
   gateway:
     stop_grace_period: 0s
