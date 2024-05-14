@@ -36,11 +36,14 @@ services:
   gateway:
     stop_grace_period: 0s
     restart: always
+    depends_on:
+      - backend
     build:
       context: gateway
       dockerfile: Dockerfile.production
     ports:
       - ${GATEWAY_PORT-80}:80
+    volumes: ./logs:/var/log/nginx
 
 volumes:
-  prodDB:
+  stagingDB:
