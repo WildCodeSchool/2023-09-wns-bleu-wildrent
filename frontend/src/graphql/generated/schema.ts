@@ -56,6 +56,7 @@ export type InputUpdate = {
 
 export type Message = {
   __typename?: 'Message';
+  isAdmin?: Maybe<Scalars['Boolean']>;
   message: Scalars['String'];
   success: Scalars['Boolean'];
 };
@@ -141,6 +142,7 @@ export type Query = {
   allSubCategories: Array<SubCategory>;
   allUsers: Array<User>;
   categoryById?: Maybe<Category>;
+  checkIfLoggedIn: Message;
   getProfile: Profile;
   productRefById: ProductRef;
   subCategoryById: SubCategory;
@@ -165,7 +167,7 @@ export type SubCategory = {
   __typename?: 'SubCategory';
   category: Category;
   categoryId: Scalars['Int'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   image: Scalars['String'];
   name: Scalars['String'];
@@ -202,6 +204,11 @@ export type ProductRefByIdQueryVariables = Exact<{
 
 
 export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number } };
+
+export type CheckIfLoggedInQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CheckIfLoggedInQuery = { __typename?: 'Query', checkIfLoggedIn: { __typename?: 'Message', isAdmin?: boolean | null, message: string, success: boolean } };
 
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -394,6 +401,42 @@ export function useProductRefByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type ProductRefByIdQueryHookResult = ReturnType<typeof useProductRefByIdQuery>;
 export type ProductRefByIdLazyQueryHookResult = ReturnType<typeof useProductRefByIdLazyQuery>;
 export type ProductRefByIdQueryResult = Apollo.QueryResult<ProductRefByIdQuery, ProductRefByIdQueryVariables>;
+export const CheckIfLoggedInDocument = gql`
+    query CheckIfLoggedIn {
+  checkIfLoggedIn {
+    isAdmin
+    message
+    success
+  }
+}
+    `;
+
+/**
+ * __useCheckIfLoggedInQuery__
+ *
+ * To run a query within a React component, call `useCheckIfLoggedInQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckIfLoggedInQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckIfLoggedInQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCheckIfLoggedInQuery(baseOptions?: Apollo.QueryHookOptions<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>(CheckIfLoggedInDocument, options);
+      }
+export function useCheckIfLoggedInLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>(CheckIfLoggedInDocument, options);
+        }
+export type CheckIfLoggedInQueryHookResult = ReturnType<typeof useCheckIfLoggedInQuery>;
+export type CheckIfLoggedInLazyQueryHookResult = ReturnType<typeof useCheckIfLoggedInLazyQuery>;
+export type CheckIfLoggedInQueryResult = Apollo.QueryResult<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>;
 export const GetProfileDocument = gql`
     query GetProfile {
   getProfile {

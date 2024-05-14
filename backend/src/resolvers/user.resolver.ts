@@ -115,9 +115,17 @@ export default class UserResolver {
     return await User.find({ order: { id: 'desc' } });
   }
 
+  @Query(() => Message)
+  async checkIfLoggedIn(@Ctx() { currentUser }: ContextType): Promise<Message> {
+    const isLoggedIn = Boolean(currentUser?.id);
+    const isAdmin = Boolean(currentUser?.role === 'ADMIN');
+    const message = isLoggedIn ? 'User already authenticated' : 'User not authenticated';
+    return { success: isLoggedIn, message, isAdmin };
+  }
+
   @Authorized()
   @Query(() => Profile)
-  async getProfile(@Ctx() { currentUser }: ContextType): Promise<Profile | Message | null> {
+  async getProfile(@Ctx() { currentUser }: ContextType): Promise<Profile | Message> {
     try {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };

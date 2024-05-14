@@ -7,16 +7,26 @@ import logo from '../../public/logo.svg';
 import Image from 'next/image';
 import LogoutBtn from './LogoutBtn';
 import { useGetProfileQuery } from '@/graphql/generated/schema';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
+  const [user, setUser] = useState({ avatar: '', name: '' });
   function checkIsActive(link: string, router: any) {
     return link === router;
   }
-  const { data, error } = useGetProfileQuery();
-  const isLoggedIn = checkUserIsLoggedIn();
-  const isAdmin = checkUserIsLoggedIn() === 'ADMIN';
-  const avatar = data?.getProfile?.picture;
-  const name = data?.getProfile?.lastname;
+  const { data } = useGetProfileQuery();
+  const isLoggedIn = checkUserIsLoggedIn()?.success;
+  const isAdmin = checkUserIsLoggedIn()?.isAdmin;
+  useEffect(() => {
+    if (isLoggedIn) {
+      setUser({
+        name: `${data?.getProfile.firstname} ${data?.getProfile.lastname}`,
+        avatar: data?.getProfile.picture ? `${data?.getProfile.picture}` : '',
+      });
+    } else {
+      return;
+    }
+  }, [isLoggedIn]);
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
@@ -77,9 +87,9 @@ export default function Navbar() {
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full" data-test-id="avatar">
                   <img
-                    // alt={name}
+                    alt="profile-picture"
                     src={
-                      avatar ||
+                      user.avatar ||
                       'https://st3.depositphotos.com/3581215/18899/v/450/depositphotos_188994514-stock-illustration-vector-illustration-male-silhouette-profile.jpg'
                     }
                   />
@@ -89,6 +99,7 @@ export default function Navbar() {
                 tabIndex={0}
                 className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
               >
+                <li className="font-semibold text-center my-2">{user.name}</li>
                 {isAdmin && (
                   <li>
                     <Link href={'/admin'}>
@@ -124,33 +135,5 @@ export default function Navbar() {
         </div>
       </div>
     </div>
-    // <nav className="flex items-center justify-between bg-secondary p-4">
-    //   <div className="flex items-center">
-    //     <Image src={logo} width={50} height={50} alt="logo" />
-    //     <div className="text-white font-bold m-4">WildRent</div>
-    //   </div>
-    //   <div className="flex items-center">
-    //     {navData.map((item, index) => (
-    //       <Link href={item.link} key={index}>
-    //         <div
-    //           className={`m-1 p-4 rounded ${
-    //             checkIsActive(item.link, router) ? 'text-secondary' : 'text-white'
-    //           } hover:bg-light`}
-    //         >
-    //           {item.text}
-    //         </div>
-    //       </Link>
-    //     ))}
-    //   </div>
-    //   <div>
-    //     {isLoggedIn ? (
-    //       <LogoutBtn />
-    //     ) : (
-    //       <Link href={'/auth/login'}>
-    //         <div className={'m-1 p-4 rounded'}>Log in</div>
-    //       </Link>
-    //     )}
-    //   </div>
-    // </nav>
   );
 }
