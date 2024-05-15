@@ -97,6 +97,9 @@ async function main() {
   await subCategory3.save();
   await productRef1.save();
   await productRef2.save();
+
+  // Close Database connection once finished
+  await db.destroy();
 }
 
 main();

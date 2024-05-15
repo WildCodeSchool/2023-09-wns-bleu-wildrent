@@ -57,7 +57,7 @@ export default function RegisterForm() {
       } catch (err) {
         console.error(`could not create account: ${err}`);
       } finally {
-        client.resetStore();
+        await client.resetStore();
       }
     }
   };
