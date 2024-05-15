@@ -1,3 +1,5 @@
+import { Profile } from '@/graphql/generated/schema';
+
 export type ProductCardProps = {
   productRef: ProductRef;
   link: string;
@@ -44,11 +46,20 @@ export interface Option {
   value: number;
   label: string;
 }
-export type FormInputProps = {
-  label: string;
-  id: string;
-  placeholder: string;
-  inputType?: string;
-  error?: string;
-  options?: Option[];
+
+export type Column = {
+  title: string;
+  id: number;
+};
+
+export type TableRow = {
+  cells: string[];
+  id: number;
+};
+
+export type AdminTableProps = {
+  columns: Column[];
+  dataset: TableRow[];
+  remove?: (id: number) => void;
+  edit?: (user: Profile) => void;
 };

@@ -112,9 +112,14 @@ export default class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [User])
-  async allUsers() {
-    return await User.find({ order: { id: 'desc' } });
+  @Query(() => [Profile])
+  async allUsers(@Ctx() { currentUser }: ContextType): Promise<Profile[] | Message> {
+    console.log(currentUser);
+    if (currentUser?.role === 'ADMIN') {
+      return (await this.userService.getAllUsers()) as Profile[];
+    } else {
+      return { success: false, message: 'Only admin can get all users data' };
+    }
   }
 
   @Query(() => Message)

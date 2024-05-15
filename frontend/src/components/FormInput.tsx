@@ -1,6 +1,6 @@
 'use client';
 
-import { FormInputProps } from '@/types';
+import { FormInputProps } from '@/types/props';
 import { useState } from 'react';
 
 export default function FormInput({

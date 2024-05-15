@@ -25,6 +25,13 @@ export default class UserService {
     }
   }
 
+  async getAllUsers() {
+    return this.db.find({
+      order: { id: 'asc' },
+      select: ['id', 'firstname', 'lastname', 'email', 'role', 'address', 'cp', 'city', 'picture'],
+    });
+  }
+
   async updateUser(id: number, updatedUser: InputUpdate) {
     try {
       if (!id) {

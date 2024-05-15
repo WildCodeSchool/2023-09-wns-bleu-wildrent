@@ -140,7 +140,7 @@ export type Query = {
   allCategories: Array<Category>;
   allProductRefs: Array<ProductRef>;
   allSubCategories: Array<SubCategory>;
-  allUsers: Array<User>;
+  allUsers: Array<Profile>;
   categoryById?: Maybe<Category>;
   checkIfLoggedIn: Message;
   getProfile: Profile;
@@ -174,20 +174,6 @@ export type SubCategory = {
   productRefs: Array<ProductRef>;
 };
 
-export type User = {
-  __typename?: 'User';
-  address?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  cp?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-  firstname?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-  lastname?: Maybe<Scalars['String']>;
-  password: Scalars['String'];
-  picture?: Maybe<Scalars['String']>;
-  role: Scalars['String'];
-};
-
 export type AllProductRefsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -213,7 +199,12 @@ export type CheckIfLoggedInQuery = { __typename?: 'Query', checkIfLoggedIn: { __
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, firstname?: string | null, lastname?: string | null, role: string, email: string, password?: string | null, address?: string | null, city?: string | null, cp?: string | null, picture?: string | null } };
+export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'Profile', id: number, firstname?: string | null, lastname?: string | null, role: string, email: string, address?: string | null, city?: string | null, cp?: string | null, picture?: string | null } };
+
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'Profile', id: number, firstname?: string | null, lastname?: string | null, picture?: string | null, address?: string | null, cp?: string | null, city?: string | null, role: string, email: string }> };
 
 export type AllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -445,7 +436,6 @@ export const GetProfileDocument = gql`
     lastname
     role
     email
-    password
     address
     city
     cp
@@ -480,6 +470,48 @@ export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
+export const GetAllUsersDocument = gql`
+    query GetAllUsers {
+  allUsers {
+    id
+    firstname
+    lastname
+    picture
+    address
+    cp
+    city
+    role
+    email
+  }
+}
+    `;
+
+/**
+ * __useGetAllUsersQuery__
+ *
+ * To run a query within a React component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+      }
+export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+        }
+export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
+export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
+export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
 export const AllCategoriesDocument = gql`
     query AllCategories {
   allCategories {
