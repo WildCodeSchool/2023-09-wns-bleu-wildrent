@@ -27,6 +27,6 @@ export default class CategoryService {
   }
 
   async getAllCategories() {
-    return await this.db.find();
+    return await this.db.find({ order: { id: 'desc' }, relations: ['subCategories'] });
   }
 }

@@ -6,7 +6,10 @@ import { SubCategory } from '../entities/subcategory.entity';
 class SubCategoryResolver {
   @Query(() => [SubCategory])
   async allSubCategories() {
-    return await SubCategory.find({ order: { id: 'desc' } });
+    return await SubCategory.find({
+      order: { id: 'desc' },
+      relations: ['productRefs', 'category'],
+    });
   }
 
   @Query(() => SubCategory)

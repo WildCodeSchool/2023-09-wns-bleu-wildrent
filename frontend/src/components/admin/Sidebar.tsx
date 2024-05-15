@@ -35,13 +35,7 @@ const Sidebar = () => {
             href="/admin/products"
             className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin/products') ? 'bg-base-300' : ''}`}
           >
-            Articles
-          </Link>
-          <Link
-            href="/admin/productref"
-            className={`${isActive('/admin/productref') ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
-          >
-            ProductRef
+            Produits
           </Link>
           <Link
             href="/admin/reservation"

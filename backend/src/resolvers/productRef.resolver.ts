@@ -6,9 +6,10 @@ import ProductRefService from '../services/productRef.service';
 
 @Resolver(ProductRef)
 class ProductRefsResolver {
+  private productRefService = new ProductRefService();
   @Query(() => [ProductRef])
   async allProductRefs() {
-    return await ProductRef.find({ order: { id: 'desc' } });
+    return await this.productRefService.getAllProductRefs();
   }
 
   @Query(() => ProductRef)
@@ -30,7 +31,7 @@ class ProductRefsResolver {
     } else {
       try {
         await new ProductRefService().createProductRef(newProductRef);
-        return { success: true, message: 'Account Created !' };
+        return { success: true, message: 'ProductRef Created !' };
       } catch (e) {
         console.error((e as Error).message);
       }
@@ -39,17 +40,17 @@ class ProductRefsResolver {
 
   @Authorized(['ADMIN'])
   @Mutation(() => Message)
-  async deleteProductRef(@Arg('productRefId', () => Int) id: number) {
+  async deleteProductRef(@Arg('productRefId', () => Int) id: number): Promise<Message> {
     try {
-      const productRefToDelete = await ProductRef.findOneBy({ id });
-      if (!productRefToDelete) {
-        return { success: false, message: 'Product Not Exists' };
+      const success = await this.productRefService.deleteProductRef(id);
+      if (success) {
+        return { success: true, message: 'ProductRef Deleted Successfully!' };
+      } else {
+        return { success: false, message: 'Failed to delete ProductRef' };
       }
-
-      await productRefToDelete.remove();
-      return { success: true, message: 'Product Deleted !' };
     } catch (e) {
       console.error((e as Error).message);
+      return { success: false, message: (e as Error).message };
     }
   }
 }

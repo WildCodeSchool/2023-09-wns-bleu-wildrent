@@ -28,9 +28,9 @@ services:
     image: mariontassy/2023-09-wns-bleu-wildrent-server:staging
 
   frontend:
+    stop_grace_period: 0s
     environment:
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY:-changeme}
-    stop_grace_period: 0s
     image: mariontassy/2023-09-wns-bleu-wildrent-client:staging
 
   gateway:
