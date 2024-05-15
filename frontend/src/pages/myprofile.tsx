@@ -28,7 +28,7 @@ function MyProfile() {
         });
         if (res.data?.deleteUser.success) {
           await logout();
-          router.push('/auth/register');
+          await client.resetStore();
         }
         return alert(res.data?.deleteUser.message);
       } else {
@@ -37,31 +37,27 @@ function MyProfile() {
     } catch (e) {
       console.error(`Something wrong with account delete: ${(e as Error).message}`);
     } finally {
-      client.resetStore();
+      router.push('/auth/register');
     }
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
-    updateUser({
-      variables: {
-        updatedUser: formJSON as any,
-      },
-      refetchQueries: [{ query: GetProfileDocument }],
-      awaitRefetchQueries: true,
-    })
-      .then((res) => {
-        const message = res.data?.updateUser.message;
-        alert(message);
-        if (res.data?.updateUser.success) {
-          router.push(`/myprofile`);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert(error.message || 'Une erreur est survenue lors de la mise à jour du profil.');
+    try {
+      const res = await updateUser({
+        variables: {
+          updatedUser: formJSON as any,
+        },
       });
+      const message = res.data?.updateUser.message;
+      alert(message);
+    } catch (e) {
+      console.error((e as Error).message);
+      alert((e as Error).message || 'Une erreur est survenue lors de la mise à jour du profil.');
+    } finally {
+      await client.resetStore();
+    }
   };
   return (
     <Layout>

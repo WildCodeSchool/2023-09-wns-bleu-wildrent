@@ -46,7 +46,7 @@ export default class UserResolver {
       if (token) {
         ctx.res.cookie('token', token, {
           secure: process.env.NODE_ENV === 'production',
-          httpOnly: false, // si true pas possible de le récupérer en front
+          httpOnly: true,
         });
         ctx.currentUser = user;
         return { success: true, message: 'Authenticated' };
@@ -68,6 +68,7 @@ export default class UserResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async updateUser(
     @Arg('updatedUser') updatedUser: InputUpdate,
@@ -88,6 +89,7 @@ export default class UserResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async deleteUser(
     @Arg('userId', () => Int) userId: number,
