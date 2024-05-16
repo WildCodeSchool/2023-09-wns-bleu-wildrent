@@ -72,9 +72,42 @@ export class Profile extends User {
   declare password: never;
 }
 
+@InputType()
+export class NewUserInput {
+  @Field({ nullable: true })
+  email?: string;
+
+  @Field({ nullable: true })
+  password?: string;
+
+  @Field({ nullable: true })
+  role?: 'USER' | 'ADMIN';
+
+  @Field({ nullable: true })
+  firstname?: string;
+
+  @Field({ nullable: true })
+  lastname?: string;
+
+  @Field({ nullable: true })
+  address?: string;
+
+  @Field({ nullable: true })
+  city?: string;
+
+  @Field({ nullable: true })
+  cp?: string;
+
+  @Field({ nullable: true })
+  picture?: string;
+}
+
 // Input modification des infos du user
 @InputType()
 export class InputUpdate {
+  @Field()
+  id: number;
+
   @Field({ nullable: true })
   email?: string;
 

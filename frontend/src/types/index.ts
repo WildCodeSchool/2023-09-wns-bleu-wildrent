@@ -1,5 +1,3 @@
-import { Profile } from '@/graphql/generated/schema';
-
 export type ProductCardProps = {
   productRef: ProductRef;
   link: string;
@@ -8,6 +6,19 @@ export type CategoryCardProps = {
   category: Category;
   link: string;
 };
+
+export interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  address: string;
+  city: string;
+  cp: string;
+  picture: string;
+  role: 'USER' | 'ADMIN';
+}
 
 export type Message = {
   success: boolean;
@@ -43,7 +54,7 @@ export type ProductRef = {
 };
 
 export interface Option {
-  value: number;
+  value: number | string;
   label: string;
 }
 
@@ -55,11 +66,4 @@ export type Column = {
 export type TableRow = {
   cells: string[];
   id: number;
-};
-
-export type AdminTableProps = {
-  columns: Column[];
-  dataset: TableRow[];
-  remove?: (id: number) => void;
-  edit?: (user: Profile) => void;
 };

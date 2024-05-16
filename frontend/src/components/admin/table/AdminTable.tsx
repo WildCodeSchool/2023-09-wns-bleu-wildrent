@@ -1,9 +1,10 @@
-import { AdminTableProps, TableRow } from '@/types';
+import { TableRow } from '@/types';
+import { AdminTableProps } from '@/types/props';
 
-export default function AdminTable({ columns, dataset, remove, edit }: AdminTableProps) {
+export default function AdminTable({ columns, dataset, remove, edit, create }: AdminTableProps) {
   return (
     <table className="min-w-full bg-white">
-      <thead className="bg-blue-500 text-white space-y-2 w-full">
+      <thead className="bg-gray-400 text-white space-y-2 w-full">
         <tr>
           {columns.map(({ title, id }) => (
             <th className="py-3 px-4 text-center font-semibold text-sm" key={id}>
@@ -16,7 +17,7 @@ export default function AdminTable({ columns, dataset, remove, edit }: AdminTabl
       </thead>
       <tbody>
         {dataset.map(({ cells, id }: TableRow, i: number) => (
-          <tr className={`${i % 2 === 0 && 'bg-slate-200'}`} key={id}>
+          <tr className={`${i % 2 !== 0 ? 'bg-slate-200' : 'bg-slate-50'}`} key={id}>
             {cells.map((data, i: number) => (
               <td
                 className="text-center max-w-32 overflow-hidden text-ellipsis text-nowrap"
@@ -25,18 +26,19 @@ export default function AdminTable({ columns, dataset, remove, edit }: AdminTabl
                 {data || 'Non renseigné'}
               </td>
             ))}
-            {edit && (
-              <td className="p-4 grid place-content-center">
+            <td className="p-4 text-center">
+              {edit && (
                 <button
+                  onClick={() => edit(id)}
                   className="p-2 h-10 w-12 text-white text-center rounded-md bg-blue-600"
                   type="button"
                 >
                   Edit
                 </button>
-              </td>
-            )}
-            {remove && (
-              <td>
+              )}
+            </td>
+            <td className="p-4 text-center">
+              {remove && (
                 <button
                   onClick={() => remove(id)}
                   className="p-2 text-white text-center rounded-md bg-red-500"
@@ -44,13 +46,19 @@ export default function AdminTable({ columns, dataset, remove, edit }: AdminTabl
                 >
                   X
                 </button>
-              </td>
-            )}
+              )}
+            </td>
           </tr>
         ))}
-        <tr aria-colspan={columns.length + 2} className="w-full flex justify-center">
-          <button type="button">Add Item</button>
-        </tr>
+        {create && (
+          <tr className="w-full flex justify-center">
+            <td aria-colspan={columns.length + 2}>
+              <button onClick={create} type="button">
+                Add Item
+              </button>
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );

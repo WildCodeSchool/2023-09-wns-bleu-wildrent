@@ -50,6 +50,7 @@ export type InputUpdate = {
   cp?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   firstname?: InputMaybe<Scalars['String']>;
+  id: Scalars['Float'];
   lastname?: InputMaybe<Scalars['String']>;
   picture?: InputMaybe<Scalars['String']>;
 };
@@ -65,6 +66,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addCategory: Category;
   addProductRef: Message;
+  createNewUser: Message;
   deleteProductRef: Message;
   deleteUser: Message;
   login: Message;
@@ -83,6 +85,11 @@ export type MutationAddCategoryArgs = {
 
 export type MutationAddProductRefArgs = {
   newProductRef: InputProductRef;
+};
+
+
+export type MutationCreateNewUserArgs = {
+  newUser: NewUserInput;
 };
 
 
@@ -108,6 +115,18 @@ export type MutationRegisterArgs = {
 
 export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
+};
+
+export type NewUserInput = {
+  address?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  cp?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstname?: InputMaybe<Scalars['String']>;
+  lastname?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  picture?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['String']>;
 };
 
 export type ProductRef = {
@@ -220,6 +239,13 @@ export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllSubCategoriesQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> };
+
+export type CreateNewUserMutationVariables = Exact<{
+  newUser: NewUserInput;
+}>;
+
+
+export type CreateNewUserMutation = { __typename?: 'Mutation', createNewUser: { __typename?: 'Message', success: boolean, message: string } };
 
 export type DeleteUserMutationVariables = Exact<{
   userId: Scalars['Int'];
@@ -621,6 +647,40 @@ export function useAllSubCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type AllSubCategoriesQueryHookResult = ReturnType<typeof useAllSubCategoriesQuery>;
 export type AllSubCategoriesLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesLazyQuery>;
 export type AllSubCategoriesQueryResult = Apollo.QueryResult<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>;
+export const CreateNewUserDocument = gql`
+    mutation CreateNewUser($newUser: NewUserInput!) {
+  createNewUser(newUser: $newUser) {
+    success
+    message
+  }
+}
+    `;
+export type CreateNewUserMutationFn = Apollo.MutationFunction<CreateNewUserMutation, CreateNewUserMutationVariables>;
+
+/**
+ * __useCreateNewUserMutation__
+ *
+ * To run a mutation, you first call `useCreateNewUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNewUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNewUserMutation, { data, loading, error }] = useCreateNewUserMutation({
+ *   variables: {
+ *      newUser: // value for 'newUser'
+ *   },
+ * });
+ */
+export function useCreateNewUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateNewUserMutation, CreateNewUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateNewUserMutation, CreateNewUserMutationVariables>(CreateNewUserDocument, options);
+      }
+export type CreateNewUserMutationHookResult = ReturnType<typeof useCreateNewUserMutation>;
+export type CreateNewUserMutationResult = Apollo.MutationResult<CreateNewUserMutation>;
+export type CreateNewUserMutationOptions = Apollo.BaseMutationOptions<CreateNewUserMutation, CreateNewUserMutationVariables>;
 export const DeleteUserDocument = gql`
     mutation DeleteUser($userId: Int!) {
   deleteUser(userId: $userId) {

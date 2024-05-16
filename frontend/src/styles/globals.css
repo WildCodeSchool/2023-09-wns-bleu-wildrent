@@ -138,3 +138,12 @@ p {
     font-size: 1.375rem;
   }
 }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  background-color: rgba(0, 0, 0, 0.4);
+}

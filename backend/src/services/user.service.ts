@@ -92,4 +92,13 @@ export default class UserService {
       console.error((e as Error).message);
     }
   }
+
+  async createUserAdmin(newUser: User) {
+    try {
+      this.db.create(newUser);
+      return await this.db.save(newUser);
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+  }
 }
