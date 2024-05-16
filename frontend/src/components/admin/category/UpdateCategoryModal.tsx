@@ -1,7 +1,9 @@
 import React from 'react';
 import FormInput from '@/components/FormInput';
-import { useAddCategoryMutation } from '@/graphql/generated/schema';
+import { useUpdateCategoryMutation, AllCategoriesAdminQuery } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
+
+type Category = AllCategoriesAdminQuery['allCategories'][0];
 
 const fields = [
   {
@@ -24,41 +26,46 @@ const fields = [
   },
 ];
 
-function AddCategoryModal({
+function UpdateCategoryModal({
   isOpen,
   onClose,
-  onCategoryAdded,
+  category,
+  onCategoryUpdated,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onCategoryAdded: (category: any) => void;
+  category: Category | null;
+  onCategoryUpdated: (category: Category) => void;
 }) {
-  if (!isOpen) return null;
-  const [createCategory, { loading }] = useAddCategoryMutation();
+  if (!isOpen || !category) return null;
+  const [updateCategory, { loading, error }] = useUpdateCategoryMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
     const formJSON = Object.fromEntries(formData.entries());
 
     try {
-      const response = await createCategory({
+      const response = await updateCategory({
         variables: {
+          id: category.id,
           name: formJSON.name.toString(),
           image: formJSON.image.toString(),
           description: formJSON.description.toString(),
         },
       });
-      if (response.data?.addCategory) {
-        alert('Catégorie ajoutée avec succès');
-        onCategoryAdded(response.data.addCategory);
+
+      if (response.data?.updateCategory?.id) {
+        alert('Catégorie mise à jour avec succès');
+        onCategoryUpdated(response.data.updateCategory); // Utilisez la fonction ici
         onClose();
       } else {
-        alert('Erreur lors de l’ajout de la catégorie');
+        alert('Erreur lors de la mise à jour de la catégorie');
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout de la catégorie');
-      console.error('Erreur lors de l’ajout de la catégorie', error);
+      alert('Erreur réseau ou de requête lors de la mise à jour de la catégorie');
+      console.error('Erreur lors de la mise à jour de la catégorie', error);
     } finally {
       client.resetStore();
     }
@@ -75,7 +82,7 @@ function AddCategoryModal({
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Ajout d'une nouvelle catégorie</h3>
+          <h3 className="text-lg font-bold">Modifier une catégorie existante</h3>
           <form className="flex flex-col gap-4 p-4 border rounded" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <FormInput
@@ -84,10 +91,11 @@ function AddCategoryModal({
                 label={field.label}
                 placeholder={field.placeholder}
                 inputType={field.type}
+                defaultValue={category[field.id as keyof Category] as string}
               />
             ))}
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              Ajouter
+              Mettre à jour
             </button>
           </form>
         </div>
@@ -99,4 +107,4 @@ function AddCategoryModal({
   );
 }
 
-export default AddCategoryModal;
+export default UpdateCategoryModal;
