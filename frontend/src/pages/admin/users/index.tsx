@@ -70,6 +70,8 @@ export default function Page() {
   const cols = createColumnsFromData(users?.allUsers);
   const dataset = createDataset(users?.allUsers || [], cols);
 
+  console.log(cols, dataset);
+
   return (
     <LayoutDashboard>
       <main className="container">

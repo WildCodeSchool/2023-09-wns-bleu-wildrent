@@ -18,8 +18,16 @@ export type AdminTableProps = {
   columns: Column[];
   dataset: TableRow[];
   remove?: (id: number) => void;
-  edit?: (id: number) => void;
+  edit?: (data: any) => Promise<void>;
   create?: () => void;
+};
+
+export type AdminTableRowProps = {
+  row: TableRow;
+  edit?: (data: any) => Promise<void>;
+  setEditionMode: React.Dispatch<React.SetStateAction<boolean>>;
+  editionMode: boolean;
+  remove?: (id: number) => void;
 };
 
 export type AdminTableModalProps = {
