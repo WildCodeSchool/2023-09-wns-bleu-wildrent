@@ -15,6 +15,12 @@ export type Scalars = {
   Float: number;
 };
 
+/** The availability status of a product item */
+export enum Availability {
+  Available = 'Available',
+  Unavailable = 'Unavailable'
+}
+
 export type Category = {
   __typename?: 'Category';
   description?: Maybe<Scalars['String']>;
@@ -34,6 +40,7 @@ export type InputProductRef = {
   image: Scalars['String'];
   name: Scalars['String'];
   priceHT: Scalars['Float'];
+  quantity: Scalars['Int'];
   subCategoryId: Scalars['ID'];
 };
 
@@ -65,6 +72,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addCategory: Category;
   addProductRef: Message;
+  deleteProductItem: Message;
   deleteProductRef: Message;
   deleteUser: Message;
   login: Message;
@@ -83,6 +91,11 @@ export type MutationAddCategoryArgs = {
 
 export type MutationAddProductRefArgs = {
   newProductRef: InputProductRef;
+};
+
+
+export type MutationDeleteProductItemArgs = {
+  productItemId: Scalars['Int'];
 };
 
 
@@ -110,6 +123,13 @@ export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
 };
 
+export type ProductItem = {
+  __typename?: 'ProductItem';
+  availability: Availability;
+  id: Scalars['Int'];
+  productRef: ProductRef;
+};
+
 export type ProductRef = {
   __typename?: 'ProductRef';
   description: Scalars['String'];
@@ -117,8 +137,10 @@ export type ProductRef = {
   image: Scalars['String'];
   name: Scalars['String'];
   priceHT: Scalars['Float'];
+  productItems: Array<ProductItem>;
+  quantity: Scalars['Int'];
+  quantityAvailable: Scalars['Int'];
   subCategory: SubCategory;
-  subCategoryId: Scalars['Int'];
 };
 
 export type Profile = {
@@ -138,6 +160,7 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   allCategories: Array<Category>;
+  allProductItems: Array<ProductItem>;
   allProductRefs: Array<ProductRef>;
   allSubCategories: Array<SubCategory>;
   allUsers: Array<User>;
@@ -165,8 +188,7 @@ export type QuerySubCategoryByIdArgs = {
 
 export type SubCategory = {
   __typename?: 'SubCategory';
-  category: Category;
-  categoryId: Scalars['Int'];
+  category?: Maybe<Category>;
   description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   image: Scalars['String'];
@@ -196,14 +218,14 @@ export type AllProductRefsQuery = { __typename?: 'Query', allProductRefs: Array<
 export type AllProductRefsAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number }> };
+export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantity: number, quantityAvailable: number, subCategory: { __typename?: 'SubCategory', name: string, category?: { __typename?: 'Category', name: string } | null } }> };
 
 export type ProductRefByIdQueryVariables = Exact<{
   productRefId: Scalars['Int'];
 }>;
 
 
-export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number } };
+export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantity: number, quantityAvailable: number } };
 
 export type CheckIfLoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -332,6 +354,14 @@ export const AllProductRefsAdminDocument = gql`
     description
     image
     priceHT
+    subCategory {
+      name
+      category {
+        name
+      }
+    }
+    quantity
+    quantityAvailable
   }
 }
     `;
@@ -370,6 +400,8 @@ export const ProductRefByIdDocument = gql`
     description
     image
     priceHT
+    quantity
+    quantityAvailable
   }
 }
     `;

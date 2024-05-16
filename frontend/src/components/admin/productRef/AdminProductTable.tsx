@@ -48,31 +48,42 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
       <table className="min-w-full table-auto">
         <thead>
           <tr className="bg-gray-400 text-left text-white">
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Nom</th>
-            <th className="px-4 py-2">Desciption</th>
-            <th className="px-4 py-2">Prix</th>
+            <th className="px-4 py-2 text-center">ID</th>
+            <th className="px-4 py-2 text-center">Cat</th>
+            <th className="px-4 py-2 text-center">SubCat</th>
+            <th className="px-4 py-2 text-center">Image</th>
+            <th className="px-4 py-2 text-center">Nom</th>
+            <th className="px-4 py-2 text-center">Desciption</th>
+            <th className="px-4 py-2 text-center">Prix</th>
+            <th className="px-4 py-2 text-center">Quantité</th>
 
-            <th className="px-4 py-2">Actions</th>
+            <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {sortedProductRefs.map((product) => (
             <tr key={product.id} className={product.id % 2 === 0 ? 'bg-gray-200' : ''}>
-              <td className="px-4 py-2 border-b">{product.id}</td>
-              <td className="px-4 py-2 border-b">
-                <Image src={product.image} width={50} height={30} alt={product.name} />
+              <td className="px-4 py-2 border-b text-center">{product.id}</td>
+
+              <td className="px-4 py-2 border-b text-center">
+                {product.subCategory?.category?.name}
+              </td>
+              <td className="px-4 py-2 border-b text-center">{product.subCategory?.name}</td>
+              <td className="px-4 py-2 border-b text-center">
+                {/* <Image src={product?.image} width={50} height={30} alt={product.name} /> */}
               </td>
 
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 border-b text-center">
                 <button>{product.name}</button>
               </td>
 
-              <td className="px-4 py-2 border-b">{product.description.substring(0, 90)}...</td>
-              <td className="px-4 py-2 border-b">{product.priceHT}€ HT</td>
-              <td className="px-4 py-2 border-b">
-                <button className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+              <td className="px-4 py-2 border-b text-center">
+                {product.description.substring(0, 90)}...
+              </td>
+              <td className="px-4 py-2 border-b text-center">{product.priceHT}€ HT</td>
+              <td className="px-4 py-2 border-b text-center">{product.quantity}</td>
+              <td className="px-4 py-2 border-b text-center">
+                <button className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mb-3">
                   Modifier
                 </button>
                 <button

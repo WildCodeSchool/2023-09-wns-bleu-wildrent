@@ -14,5 +14,13 @@ query AllProductRefsAdmin {
     description
     image
     priceHT
+    subCategory {
+      name
+      category {
+        name
+      }
+    }
+    quantity
+    quantityAvailable
   }
 }
