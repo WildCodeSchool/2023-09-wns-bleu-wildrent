@@ -3,6 +3,7 @@ version: '3.8'
 services:
   db:
     container_name: postgres
+    stop_grace_period: 0s
     image: postgres:15-alpine
     environment:
       - POSTGRES_PASSWORD=postgres
@@ -15,6 +16,7 @@ services:
       - 5432:5432
 
   backend:
+    stop_grace_period: 0s
     depends_on:
       db:
         condition: service_healthy
@@ -29,6 +31,7 @@ services:
       - ./global.env
 
   frontend:
+    stop_grace_period: 0s
     build: frontend
     ports:
       - 3000:3000

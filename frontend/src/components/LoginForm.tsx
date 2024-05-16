@@ -20,7 +20,7 @@ const fields = [
 
 export default function LoginForm() {
   const router = useRouter();
-  const [login, { data, loading, error }] = useLoginMutation();
+  const [login] = useLoginMutation();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -32,14 +32,13 @@ export default function LoginForm() {
           user,
         },
       });
-
       if (response.data?.login.success) {
         router.push('/');
       }
     } catch (err) {
       console.error(`Could not create account: ${err}`);
     } finally {
-      client.resetStore();
+      await client.resetStore();
     }
   };
   return (

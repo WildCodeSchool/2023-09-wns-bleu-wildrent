@@ -104,6 +104,9 @@ export class Message {
 
   @Field()
   message: string;
+
+  @Field({ nullable: true })
+  isAdmin?: boolean;
 }
 
 // InputType pour la création d'un nouveau user

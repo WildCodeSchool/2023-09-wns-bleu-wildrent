@@ -32,18 +32,22 @@ function ProductRefDetails() {
                 <div className="mb-10">
                   <h1 className="font-bold uppercase text-2xl mb-5">{productRef?.name}</h1>
                   <p className="text-sm">{productRef?.description}</p>
+                </div>{' '}
+                <div className="mb-10">
+                  <p className="text-sm">Quantité totale possible : {productRef?.quantity}</p>
+                  <p className="text-sm">Quantité disponible: {productRef?.quantityAvailable}</p>
                 </div>
                 <div>
-                  <div className="inline-block align-bottom mr-5">
+                  <div className="inline-block align-bottom mr-5 mb-10">
                     <span className="text-2xl leading-none align-baseline">€</span>
                     <span className="font-bold text-5xl leading-none align-baseline">
                       {productRef?.priceHT}
                     </span>
-                    <span className="text-2xl leading-none align-baseline"> /jour</span>
+                    <span className="text-2xl leading-none align-baseline"> / jour / unité </span>
                   </div>
                   <div className="inline-block align-bottom">
                     <button className="btn btn-active btn-secondary">
-                      <i className="mdi mdi-cart -ml-2 mr-2"></i> Vérifier la disponibilité
+                      Vérifier la disponibilité
                     </button>
                   </div>
                 </div>

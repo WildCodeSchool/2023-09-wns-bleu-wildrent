@@ -9,9 +9,9 @@ export default class CategoryService {
     this.db = db.getRepository(Category);
   }
 
-  // Récupère toutes les catégories
+  // Récupère toutes les catégories avec tri et sous-catégories
   async getAllCategories() {
-    return await this.db.find();
+    return await this.db.find({ order: { id: 'desc' }, relations: ['subCategories'] });
   }
 
   // Trouve une catégorie par son ID

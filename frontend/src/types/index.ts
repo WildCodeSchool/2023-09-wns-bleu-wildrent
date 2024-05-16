@@ -7,12 +7,17 @@ export type CategoryCardProps = {
   link: string;
 };
 
+export type Message = {
+  success: boolean;
+  message: string;
+  isAdmin?: boolean;
+};
+
 export type Category = {
   id: number;
   name: string;
   description?: string | null;
   image: string;
-  // subCategories: SubCategory[];
 };
 
 export type SubCategory = {

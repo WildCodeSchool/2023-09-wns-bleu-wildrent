@@ -15,6 +15,12 @@ export type Scalars = {
   Float: number;
 };
 
+/** The availability status of a product item */
+export enum Availability {
+  Available = 'Available',
+  Unavailable = 'Unavailable'
+}
+
 export type Category = {
   __typename?: 'Category';
   description?: Maybe<Scalars['String']>;
@@ -34,6 +40,7 @@ export type InputProductRef = {
   image: Scalars['String'];
   name: Scalars['String'];
   priceHT: Scalars['Float'];
+  quantity: Scalars['Int'];
   subCategoryId: Scalars['ID'];
 };
 
@@ -56,6 +63,7 @@ export type InputUpdate = {
 
 export type Message = {
   __typename?: 'Message';
+  isAdmin?: Maybe<Scalars['Boolean']>;
   message: Scalars['String'];
   success: Scalars['Boolean'];
 };
@@ -65,7 +73,9 @@ export type Mutation = {
   addCategory: Category;
   addProductRef: Message;
   deleteCategory: Scalars['Boolean'];
+  deleteProductItem: Message;
   deleteProductRef: Message;
+  deleteUser: Message;
   login: Message;
   logout: Message;
   register: Message;
@@ -91,8 +101,18 @@ export type MutationDeleteCategoryArgs = {
 };
 
 
+export type MutationDeleteProductItemArgs = {
+  productItemId: Scalars['Int'];
+};
+
+
 export type MutationDeleteProductRefArgs = {
   productRefId: Scalars['Int'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  userId: Scalars['Int'];
 };
 
 
@@ -118,6 +138,13 @@ export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
 };
 
+export type ProductItem = {
+  __typename?: 'ProductItem';
+  availability: Availability;
+  id: Scalars['Int'];
+  productRef: ProductRef;
+};
+
 export type ProductRef = {
   __typename?: 'ProductRef';
   description: Scalars['String'];
@@ -125,8 +152,10 @@ export type ProductRef = {
   image: Scalars['String'];
   name: Scalars['String'];
   priceHT: Scalars['Float'];
+  productItems: Array<ProductItem>;
+  quantity: Scalars['Int'];
+  quantityAvailable: Scalars['Int'];
   subCategory: SubCategory;
-  subCategoryId: Scalars['Int'];
 };
 
 export type Profile = {
@@ -146,10 +175,12 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   allCategories: Array<Category>;
+  allProductItems: Array<ProductItem>;
   allProductRefs: Array<ProductRef>;
   allSubCategories: Array<SubCategory>;
   allUsers: Array<User>;
   categoryById?: Maybe<Category>;
+  checkIfLoggedIn: Message;
   getProfile: Profile;
   productRefById: ProductRef;
   subCategoryById: SubCategory;
@@ -172,8 +203,7 @@ export type QuerySubCategoryByIdArgs = {
 
 export type SubCategory = {
   __typename?: 'SubCategory';
-  category: Category;
-  categoryId: Scalars['Int'];
+  category?: Maybe<Category>;
   description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   image: Scalars['String'];
@@ -203,14 +233,19 @@ export type AllProductRefsQuery = { __typename?: 'Query', allProductRefs: Array<
 export type AllProductRefsAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number }> };
+export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantity: number, quantityAvailable: number, subCategory: { __typename?: 'SubCategory', name: string, category?: { __typename?: 'Category', name: string } | null } }> };
 
 export type ProductRefByIdQueryVariables = Exact<{
   productRefId: Scalars['Int'];
 }>;
 
 
-export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number } };
+export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantity: number, quantityAvailable: number } };
+
+export type CheckIfLoggedInQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CheckIfLoggedInQuery = { __typename?: 'Query', checkIfLoggedIn: { __typename?: 'Message', isAdmin?: boolean | null, message: string, success: boolean } };
 
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -231,6 +266,13 @@ export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllSubCategoriesQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> };
+
+export type DeleteUserMutationVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'Message', success: boolean, message: string } };
 
 export type UpdateUserMutationVariables = Exact<{
   updatedUser: InputUpdate;
@@ -344,6 +386,14 @@ export const AllProductRefsAdminDocument = gql`
     description
     image
     priceHT
+    subCategory {
+      name
+      category {
+        name
+      }
+    }
+    quantity
+    quantityAvailable
   }
 }
     `;
@@ -382,6 +432,8 @@ export const ProductRefByIdDocument = gql`
     description
     image
     priceHT
+    quantity
+    quantityAvailable
   }
 }
     `;
@@ -413,6 +465,42 @@ export function useProductRefByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type ProductRefByIdQueryHookResult = ReturnType<typeof useProductRefByIdQuery>;
 export type ProductRefByIdLazyQueryHookResult = ReturnType<typeof useProductRefByIdLazyQuery>;
 export type ProductRefByIdQueryResult = Apollo.QueryResult<ProductRefByIdQuery, ProductRefByIdQueryVariables>;
+export const CheckIfLoggedInDocument = gql`
+    query CheckIfLoggedIn {
+  checkIfLoggedIn {
+    isAdmin
+    message
+    success
+  }
+}
+    `;
+
+/**
+ * __useCheckIfLoggedInQuery__
+ *
+ * To run a query within a React component, call `useCheckIfLoggedInQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckIfLoggedInQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckIfLoggedInQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCheckIfLoggedInQuery(baseOptions?: Apollo.QueryHookOptions<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>(CheckIfLoggedInDocument, options);
+      }
+export function useCheckIfLoggedInLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>(CheckIfLoggedInDocument, options);
+        }
+export type CheckIfLoggedInQueryHookResult = ReturnType<typeof useCheckIfLoggedInQuery>;
+export type CheckIfLoggedInLazyQueryHookResult = ReturnType<typeof useCheckIfLoggedInLazyQuery>;
+export type CheckIfLoggedInQueryResult = Apollo.QueryResult<CheckIfLoggedInQuery, CheckIfLoggedInQueryVariables>;
 export const GetProfileDocument = gql`
     query GetProfile {
   getProfile {
@@ -565,6 +653,40 @@ export function useAllSubCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type AllSubCategoriesQueryHookResult = ReturnType<typeof useAllSubCategoriesQuery>;
 export type AllSubCategoriesLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesLazyQuery>;
 export type AllSubCategoriesQueryResult = Apollo.QueryResult<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>;
+export const DeleteUserDocument = gql`
+    mutation DeleteUser($userId: Int!) {
+  deleteUser(userId: $userId) {
+    success
+    message
+  }
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($updatedUser: InputUpdate!) {
   updateUser(updatedUser: $updatedUser) {

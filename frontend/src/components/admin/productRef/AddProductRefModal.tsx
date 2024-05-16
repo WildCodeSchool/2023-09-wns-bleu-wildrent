@@ -41,6 +41,12 @@ const fields = [
     type: 'select',
     placeholder: 'Ajouter le lien vers la photo du produit',
   },
+  {
+    label: 'Quantité disponible',
+    id: 'quantity',
+    type: 'number',
+    placeholder: '5',
+  },
 ];
 
 function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
@@ -57,12 +63,14 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
     const formJSON: any = Object.fromEntries(formData.entries());
     formJSON.priceHT = parseFloat(formJSON.priceHT);
     formJSON.subCategoryId = parseInt(formJSON.subCategoryId);
+    formJSON.quantity = parseInt(formJSON.quantity);
     try {
       const response = await createProduct({
         variables: {
           newProductRef: formJSON as InputProductRef,
         },
       });
+      console.log(response.data);
       if (response.data && response.data.addProductRef.success) {
         alert('Produit ajouté avec succès');
         onClose();
