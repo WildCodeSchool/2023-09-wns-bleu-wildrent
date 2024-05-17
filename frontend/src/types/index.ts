@@ -66,4 +66,5 @@ export type Column = {
 export type TableRow = {
   cells: string[];
   id: number;
+  defaultValue?: string;
 };

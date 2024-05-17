@@ -10,6 +10,7 @@ export default function FormInput({
   id,
   error,
   options,
+  defaultValue,
 }: FormInputProps) {
   const [type, setType] = useState(inputType);
 
@@ -29,9 +30,10 @@ export default function FormInput({
             id={id}
             name={id}
             placeholder={placeholder}
+            defaultValue={defaultValue}
           />
         ) : type === 'select' ? (
-          <select className="px-4 py-2 rounded-md" id={id} name={id} defaultValue="">
+          <select className="px-4 py-2 rounded-md" id={id} name={id} defaultValue={defaultValue}>
             <option disabled value="">
               Select an option
             </option>
@@ -49,6 +51,7 @@ export default function FormInput({
             id={id}
             name={id}
             placeholder={placeholder}
+            defaultValue={defaultValue}
           />
         )}
         {id.includes('password') && (
