@@ -27,7 +27,7 @@ export default function UserBadge({ isAdmin }: { isAdmin: boolean }) {
         {isAdmin && (
           <li>
             <Link href={'/admin'}>
-              <div className="justify-between" data-test-id="dashboard-id">
+              <div className="justify-between" data-test-id="wildrent-id">
                 Dashboard
               </div>
             </Link>

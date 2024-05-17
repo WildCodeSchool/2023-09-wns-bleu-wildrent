@@ -9,7 +9,7 @@ export default function SideBarLink({ href, text, testId }: LinkProps) {
   const isActive = (pathname: string) => router.pathname === pathname;
   return (
     <Link
-      data-test-id={testId}
+      data-test-id={`${testId}`}
       href={href}
       className={`${isActive(href) ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
     >
