@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { Arg, Authorized, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/user.service';
@@ -12,6 +11,10 @@ import User, {
 } from '../entities/user.entity';
 import { ContextType } from '../types';
 import db from '../db';
+import env from '../env';
+import mail from '../mail';
+import { GraphQLError } from 'graphql';
+import crypto from 'crypto';
 
 @Resolver()
 export default class UserResolver {
@@ -24,12 +27,36 @@ export default class UserResolver {
     } else {
       try {
         await this.userService.createUser(newUser);
+
+        const token = crypto.randomBytes(20).toString('hex');
+        newUser.emailConfirmationToken = token;
+
+        await mail.sendMail({
+          subject: 'Bienvenue sur Wildrent',
+          to: 'yohan.fabre40@hotmail.fr',
+          from: env.EMAIL_FROM,
+          text: 'Bievenue parmi nous ${newUser.nickname}. Merci de bien vouloir cliquer sur ce lien pour confirmer votre email : ${env.FRONTEND_URL}/emailConfirmation?token=${token}',
+        });
         return { success: true, message: 'Account Created !' };
       } catch (e) {
         console.error((e as Error).message);
       }
     }
   }
+
+  @Mutation(() => String)
+  async confirmEmail(@Arg('token') token: string): Promise<string> {
+    const user = await User.findOneBy({ emailConfirmationToken: token });
+
+    if (user === null) throw new GraphQLError('Le token est invalide ou expiré');
+
+    user.emailVerified = true;
+    user.emailConfirmationToken = null;
+    user.save();
+
+    return 'ok';
+  }
+
   @Mutation(() => Message)
   async login(@Arg('user') { email, password }: InputLogin, @Ctx() ctx: ContextType) {
     try {

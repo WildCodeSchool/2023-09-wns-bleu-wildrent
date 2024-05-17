@@ -6,6 +6,10 @@ type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
 @Entity()
 export default class User extends BaseEntity {
+  emailVerified: boolean;
+  @Field({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
+  emailConfirmationToken?: string | null;
   // static findUserById(id: number): User | PromiseLike<User | null> | null {
   //   throw new Error('Method not implemented.');
   // }
@@ -125,6 +129,14 @@ export class InputRegister {
 
   @Field()
   password: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true, type: 'varchar' })
+  emailConfirmationToken?: string | null;
+
+  @Field()
+  @Column({ default: false })
+  emailVerified: boolean;
 }
 
 // InputType pour la connexion
