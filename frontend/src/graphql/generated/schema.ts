@@ -41,7 +41,7 @@ export type InputProductRef = {
   name: Scalars['String'];
   priceHT: Scalars['Float'];
   quantity: Scalars['Int'];
-  subCategoryId: ObjectId;
+  subCategory: ObjectId;
 };
 
 export type InputRegister = {

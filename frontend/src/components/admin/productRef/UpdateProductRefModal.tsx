@@ -1,14 +1,15 @@
-import { SimpleSubCategory } from '@/types';
 import React from 'react';
 import { ProductRefModalProps } from './ProductRefModalDetails';
 import {
-  InputProductRef,
-  useAddProductRefMutation,
+  UpdateProductRef,
+  useUpdateProductRefMutation,
   useAllSubCategoriesQuery,
+  SubCategory,
+  useProductRefByIdQuery,
 } from '@/graphql/generated/schema';
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
-
+import { ProductRef, SimpleSubCategory } from '@/types';
 const fields = [
   {
     label: 'Nom du produit',
@@ -47,42 +48,46 @@ const fields = [
     placeholder: '5',
   },
 ];
+function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalProps) {
+  if (!isOpen || !productRef) return null;
+  const [UpdateProductRef, { loading }] = useUpdateProductRefMutation();
 
-function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
-  if (!isOpen) return null;
-  const [createProduct, { data, loading, error }] = useAddProductRefMutation();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    const formJSON: any = Object.fromEntries(formData.entries());
+    console.log('formJSON', formJSON);
+    formJSON.priceHT = parseFloat(formJSON.priceHT);
+    formJSON.subCategory = { id: parseInt(formJSON.subCategory) };
+    console.log('formJSON.subCategory', formJSON.subCategory);
+    formJSON.quantity = parseInt(formJSON.quantity);
+    try {
+      const response = await UpdateProductRef({
+        variables: {
+          productRefId: productRef.id,
+          data: formJSON as UpdateProductRef,
+        },
+      });
+      console.log(response.data);
+      if (response.data && response.data.updateProductRef.success) {
+        alert('Produit modifié avec succès');
+        onClose();
+      } else {
+        alert(`Erreur lors de la modification du produit`);
+      }
+    } catch (error) {
+      alert('Erreur réseau ou de requête lors de l’ajout du produit');
+      console.error('Erreur lors de la modification du produit', error);
+    } finally {
+      client.resetStore();
+    }
+  };
   const {
     data: subCategoriesData,
     loading: loadingSubCategories,
     error: errorSubCategories,
   } = useAllSubCategoriesQuery();
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const formJSON: any = Object.fromEntries(formData.entries());
-    formJSON.priceHT = parseFloat(formJSON.priceHT);
-    formJSON.subCategory = { id: parseInt(formJSON.subCategory) };
-    formJSON.quantity = parseInt(formJSON.quantity);
-    try {
-      const response = await createProduct({
-        variables: {
-          data: formJSON as InputProductRef,
-        },
-      });
-      console.log(response.data);
-      if (response.data && response.data.addProductRef.success) {
-        alert('Produit ajouté avec succès');
-        onClose();
-      } else {
-        alert(`Erreur lors de l'ajout du produit`);
-      }
-    } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout du produit');
-      console.error('Erreur lors de l’ajout du produit', error);
-    } finally {
-      client.resetStore();
-    }
-  };
 
   if (loadingSubCategories) return <p>Chargement des sous-catégories...</p>;
   if (errorSubCategories) return <p>Erreur lors du chargement des sous-catégories.</p>;
@@ -98,7 +103,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Ajout d'un nouveau produit</h3>
+          <h3 className="text-lg font-bold">Modification d'un produit</h3>
           <form className="flex flex-col gap-4 border rounded p-4" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <FormInput
@@ -107,6 +112,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
                 label={field.label}
                 placeholder={field.placeholder}
                 inputType={field.type}
+                defaultValue={productRef[field.id as keyof ProductRef] as string}
                 options={
                   subCategoriesData?.allSubCategories
                     ? subCategoriesData.allSubCategories.map((subCategory: SimpleSubCategory) => ({
@@ -118,7 +124,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
-              Ajouter
+              Modifier
             </button>
           </form>
         </div>
@@ -130,4 +136,4 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
   );
 }
 
-export default AddProductRefModal;
+export default UpdateProductRefModal;
