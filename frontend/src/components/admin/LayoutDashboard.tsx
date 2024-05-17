@@ -17,7 +17,3 @@ const LayoutDashboard: React.FC<LayoutDashboardProps> = ({ children }) => {
 };
 
 export default LayoutDashboard;
-
-export async function getStaticProps() {
-  return { props: { navItems: adminSideBarItems } };
-}
