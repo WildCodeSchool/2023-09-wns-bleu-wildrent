@@ -3,6 +3,7 @@ import { Column, Option, TableRow } from '..';
 export interface LinkProps {
   href: string;
   text: string;
+  testId?: string;
 }
 
 export type FormInputProps = {

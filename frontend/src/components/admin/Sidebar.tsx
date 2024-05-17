@@ -9,8 +9,8 @@ const Sidebar = () => {
       <h2 className="text-3xl font-semibold text-gray-800 dark:text-white">Dashboard</h2>
       <div className="flex flex-col justify-between flex-1 mt-6">
         <nav>
-          {adminSideBarItems.map(({ href, text }) => (
-            <SideBarLink key={href} href={href} text={text} />
+          {adminSideBarItems.map(({ href, text, testId }) => (
+            <SideBarLink key={href} href={href} text={text} data-test-id={testId} />
           ))}
           {/* Insérez d'autres liens dans /const/adminSidebarItems si nécessaire */}
         </nav>

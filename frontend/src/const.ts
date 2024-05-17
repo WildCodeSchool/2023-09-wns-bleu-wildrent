@@ -59,6 +59,7 @@ export const adminSideBarItems: LinkProps[] = [
   {
     href: '/',
     text: 'Wildrent',
+    testId: 'wildrent-id',
   },
 ];
 
