@@ -9,6 +9,7 @@ import Image from 'next/image';
 import ProductRefModalDetails from './ProductRefModalDetails';
 import AddProductRefModal from './AddProductRefModal';
 import client from '@/graphql/client';
+import UpdateProductRefModal from './UpdateProductRefModal/[productRefId]';
 
 // Étendez le type généré pour inclure __typename, qui est habituellement renvoyé par les requêtes GraphQL.
 type ProductRef = GeneratedProductRef & {
@@ -43,6 +44,15 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
     }
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <table className="min-w-full table-auto">
@@ -70,7 +80,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
               </td>
               <td className="px-4 py-2 border-b text-center">{product.subCategory?.name}</td>
               <td className="px-4 py-2 border-b text-center">
-                {/* <Image src={product?.image} width={50} height={30} alt={product.name} /> */}
+                <Image src={product?.image} width={50} height={30} alt={product.name} />
               </td>
 
               <td className="px-4 py-2 border-b text-center">
@@ -83,9 +93,13 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
               <td className="px-4 py-2 border-b text-center">{product.priceHT}€ HT</td>
               <td className="px-4 py-2 border-b text-center">{product.quantity}</td>
               <td className="px-4 py-2 border-b text-center">
-                <button className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mb-3">
+                <button
+                  className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mb-3"
+                  onClick={() => handleModal()}
+                >
                   Modifier
                 </button>
+                {<UpdateProductRefModal isOpen={isModalOpen} onClose={closeModal} />}
                 <button
                   onClick={(e) => handleDelete(product.id, e)}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
