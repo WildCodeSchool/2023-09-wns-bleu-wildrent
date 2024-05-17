@@ -9,10 +9,17 @@ export default class CategoryService {
     this.db = db.getRepository(Category);
   }
 
+  // Récupère toutes les catégories avec tri et sous-catégories
+  async getAllCategories() {
+    return await this.db.find({ order: { id: 'desc' }, relations: ['subCategories'] });
+  }
+
+  // Trouve une catégorie par son ID
   async findCategoryById(id: number) {
     return await this.db.findOneBy({ id });
   }
 
+  // Crée une nouvelle catégorie
   async createCategory({
     name,
     description,
@@ -26,7 +33,27 @@ export default class CategoryService {
     return await this.db.save(category);
   }
 
-  async getAllCategories() {
-    return await this.db.find({ order: { id: 'desc' }, relations: ['subCategories'] });
+  // Met à jour une catégorie existante
+  async updateCategory(
+    id: number,
+    categoryData: { name: string; description?: string; image: string },
+  ) {
+    const category = await this.db.findOneBy({ id });
+    if (!category) {
+      throw new Error('Category not found');
+    }
+    // Mettre à jour les champs de la catégorie avec les nouvelles valeurs
+    Object.assign(category, categoryData);
+    await this.db.save(category);
+    return category;
+  }
+
+  // Supprime une catégorie
+  async deleteCategory(id: number) {
+    const result = await this.db.delete(id);
+    if (result.affected !== null && result.affected !== undefined && result.affected === 0) {
+      throw new Error('No category found to delete');
+    }
+    return result.affected !== null && result.affected !== undefined && result.affected > 0;
   }
 }

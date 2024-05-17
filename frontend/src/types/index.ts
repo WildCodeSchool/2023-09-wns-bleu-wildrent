@@ -51,4 +51,5 @@ export type FormInputProps = {
   inputType?: string;
   error?: string;
   options?: Option[];
+  defaultValue?: string;
 };
