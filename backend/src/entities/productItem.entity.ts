@@ -1,6 +1,6 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne, Column, ObjectId } from 'typeorm';
 // import { Length, Min } from 'class-validator';
-import { ObjectType, Field, Int, registerEnumType } from 'type-graphql';
+import { ObjectType, Field, Int, registerEnumType, InputType } from 'type-graphql';
 import { ProductRef } from './productRef.entity';
 
 export enum Availability {
@@ -30,4 +30,10 @@ export class ProductItem extends BaseEntity {
   })
   @Field(() => Availability)
   availability: Availability;
+}
+
+@InputType()
+export class InputProductItem {
+  @Field(() => ObjectId, { nullable: false })
+  productRef: ObjectId;
 }

@@ -67,7 +67,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
     try {
       const response = await createProduct({
         variables: {
-          newProductRef: formJSON as InputProductRef,
+          data: formJSON as InputProductRef,
         },
       });
       console.log(response.data);

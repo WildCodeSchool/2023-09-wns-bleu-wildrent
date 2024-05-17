@@ -41,7 +41,7 @@ export type InputProductRef = {
   name: Scalars['String'];
   priceHT: Scalars['Float'];
   quantity: Scalars['Int'];
-  subCategoryId: Scalars['ID'];
+  subCategoryId: ObjectId;
 };
 
 export type InputRegister = {
@@ -78,6 +78,7 @@ export type Mutation = {
   login: Message;
   logout: Message;
   register: Message;
+  updateProductRef: Message;
   updateUser: Message;
 };
 
@@ -90,7 +91,7 @@ export type MutationAddCategoryArgs = {
 
 
 export type MutationAddProductRefArgs = {
-  newProductRef: InputProductRef;
+  data: InputProductRef;
 };
 
 
@@ -119,8 +120,18 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationUpdateProductRefArgs = {
+  data: UpdateProductRef;
+  productRefId: Scalars['Int'];
+};
+
+
 export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
+};
+
+export type ObjectId = {
+  id: Scalars['Int'];
 };
 
 export type ProductItem = {
@@ -137,7 +148,6 @@ export type ProductRef = {
   image: Scalars['String'];
   name: Scalars['String'];
   priceHT: Scalars['Float'];
-  productItems: Array<ProductItem>;
   quantity: Scalars['Int'];
   quantityAvailable: Scalars['Int'];
   subCategory: SubCategory;
@@ -194,6 +204,15 @@ export type SubCategory = {
   image: Scalars['String'];
   name: Scalars['String'];
   productRefs: Array<ProductRef>;
+};
+
+export type UpdateProductRef = {
+  description?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  priceHT?: InputMaybe<Scalars['Float']>;
+  quantity?: InputMaybe<Scalars['Int']>;
+  subCategory?: InputMaybe<ObjectId>;
 };
 
 export type User = {
@@ -295,7 +314,7 @@ export type AddCategoryMutationVariables = Exact<{
 export type AddCategoryMutation = { __typename?: 'Mutation', addCategory: { __typename?: 'Category', id: number, name: string, description?: string | null, image: string } };
 
 export type AddProductRefMutationVariables = Exact<{
-  newProductRef: InputProductRef;
+  data: InputProductRef;
 }>;
 
 
@@ -307,6 +326,14 @@ export type DeleteProductRefMutationVariables = Exact<{
 
 
 export type DeleteProductRefMutation = { __typename?: 'Mutation', deleteProductRef: { __typename?: 'Message', success: boolean, message: string } };
+
+export type UpdateProductRefMutationVariables = Exact<{
+  data: UpdateProductRef;
+  productRefId: Scalars['Int'];
+}>;
+
+
+export type UpdateProductRefMutation = { __typename?: 'Mutation', updateProductRef: { __typename?: 'Message', success: boolean, message: string } };
 
 
 export const AllProductRefsDocument = gql`
@@ -829,8 +856,8 @@ export type AddCategoryMutationHookResult = ReturnType<typeof useAddCategoryMuta
 export type AddCategoryMutationResult = Apollo.MutationResult<AddCategoryMutation>;
 export type AddCategoryMutationOptions = Apollo.BaseMutationOptions<AddCategoryMutation, AddCategoryMutationVariables>;
 export const AddProductRefDocument = gql`
-    mutation AddProductRef($newProductRef: InputProductRef!) {
-  addProductRef(newProductRef: $newProductRef) {
+    mutation AddProductRef($data: InputProductRef!) {
+  addProductRef(data: $data) {
     success
     message
   }
@@ -851,7 +878,7 @@ export type AddProductRefMutationFn = Apollo.MutationFunction<AddProductRefMutat
  * @example
  * const [addProductRefMutation, { data, loading, error }] = useAddProductRefMutation({
  *   variables: {
- *      newProductRef: // value for 'newProductRef'
+ *      data: // value for 'data'
  *   },
  * });
  */
@@ -896,3 +923,38 @@ export function useDeleteProductRefMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteProductRefMutationHookResult = ReturnType<typeof useDeleteProductRefMutation>;
 export type DeleteProductRefMutationResult = Apollo.MutationResult<DeleteProductRefMutation>;
 export type DeleteProductRefMutationOptions = Apollo.BaseMutationOptions<DeleteProductRefMutation, DeleteProductRefMutationVariables>;
+export const UpdateProductRefDocument = gql`
+    mutation UpdateProductRef($data: UpdateProductRef!, $productRefId: Int!) {
+  updateProductRef(data: $data, productRefId: $productRefId) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateProductRefMutationFn = Apollo.MutationFunction<UpdateProductRefMutation, UpdateProductRefMutationVariables>;
+
+/**
+ * __useUpdateProductRefMutation__
+ *
+ * To run a mutation, you first call `useUpdateProductRefMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProductRefMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProductRefMutation, { data, loading, error }] = useUpdateProductRefMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      productRefId: // value for 'productRefId'
+ *   },
+ * });
+ */
+export function useUpdateProductRefMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProductRefMutation, UpdateProductRefMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProductRefMutation, UpdateProductRefMutationVariables>(UpdateProductRefDocument, options);
+      }
+export type UpdateProductRefMutationHookResult = ReturnType<typeof useUpdateProductRefMutation>;
+export type UpdateProductRefMutationResult = Apollo.MutationResult<UpdateProductRefMutation>;
+export type UpdateProductRefMutationOptions = Apollo.BaseMutationOptions<UpdateProductRefMutation, UpdateProductRefMutationVariables>;

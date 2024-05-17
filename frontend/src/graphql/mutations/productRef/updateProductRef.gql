@@ -1,0 +1,6 @@
+mutation UpdateProductRef($data: UpdateProductRef!, $productRefId: Int!) {
+  updateProductRef(data: $data, productRefId: $productRefId) {
+    success
+    message
+  }
+}

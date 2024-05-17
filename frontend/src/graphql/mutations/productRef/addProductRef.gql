@@ -1,5 +1,5 @@
-mutation AddProductRef($newProductRef: InputProductRef!) {
-  addProductRef(newProductRef: $newProductRef) {
+mutation AddProductRef($data: InputProductRef!) {
+  addProductRef(data: $data) {
     success
     message
   }
