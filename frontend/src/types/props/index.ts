@@ -18,15 +18,13 @@ export type AdminTableProps = {
   columns: Column[];
   dataset: TableRow[];
   remove?: (id: number) => void;
-  edit?: (data: any) => Promise<void>;
+  edit?: (id: number) => void;
   create?: () => void;
 };
 
 export type AdminTableRowProps = {
   row: TableRow;
-  edit?: (data: any) => Promise<void>;
-  setEditionMode: React.Dispatch<React.SetStateAction<boolean>>;
-  editionMode: boolean;
+  edit?: (id: number) => void;
   remove?: (id: number) => void;
 };
 
@@ -35,4 +33,6 @@ export type AdminTableModalProps = {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  editionMode?: boolean;
+  id?: number;
 };

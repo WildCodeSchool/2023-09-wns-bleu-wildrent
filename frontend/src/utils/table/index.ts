@@ -11,7 +11,8 @@ export const createColumnsFromData = (data: any) => {
 
 export const createDataset = (data: any[], columns: any[]) => {
   return data.map((row) => {
+    const id = columns.findIndex((el) => el.title.toLowerCase() === 'id');
     const cells = columns.map((col) => row[col.title.toLowerCase()]);
-    return { id: row.id, cells };
+    return { id: cells[id] ? cells[id] : row.id, cells };
   });
 };

@@ -55,6 +55,19 @@ export type InputUpdate = {
   picture?: InputMaybe<Scalars['String']>;
 };
 
+export type InputUpdateAdmin = {
+  address?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  cp?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstname?: InputMaybe<Scalars['String']>;
+  id: Scalars['Float'];
+  lastname?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  picture?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['String']>;
+};
+
 export type Message = {
   __typename?: 'Message';
   isAdmin?: Maybe<Scalars['Boolean']>;
@@ -73,6 +86,7 @@ export type Mutation = {
   logout: Message;
   register: Message;
   updateUser: Message;
+  updateUserAdmin: Message;
 };
 
 
@@ -115,6 +129,11 @@ export type MutationRegisterArgs = {
 
 export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
+};
+
+
+export type MutationUpdateUserAdminArgs = {
+  updatedUser: InputUpdateAdmin;
 };
 
 export type NewUserInput = {
@@ -239,6 +258,13 @@ export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllSubCategoriesQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> };
+
+export type UpdateUserAdminMutationVariables = Exact<{
+  updatedUser: InputUpdateAdmin;
+}>;
+
+
+export type UpdateUserAdminMutation = { __typename?: 'Mutation', updateUserAdmin: { __typename?: 'Message', success: boolean, message: string } };
 
 export type CreateNewUserMutationVariables = Exact<{
   newUser: NewUserInput;
@@ -647,6 +673,40 @@ export function useAllSubCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type AllSubCategoriesQueryHookResult = ReturnType<typeof useAllSubCategoriesQuery>;
 export type AllSubCategoriesLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesLazyQuery>;
 export type AllSubCategoriesQueryResult = Apollo.QueryResult<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>;
+export const UpdateUserAdminDocument = gql`
+    mutation UpdateUserAdmin($updatedUser: InputUpdateAdmin!) {
+  updateUserAdmin(updatedUser: $updatedUser) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateUserAdminMutationFn = Apollo.MutationFunction<UpdateUserAdminMutation, UpdateUserAdminMutationVariables>;
+
+/**
+ * __useUpdateUserAdminMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserAdminMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserAdminMutation, { data, loading, error }] = useUpdateUserAdminMutation({
+ *   variables: {
+ *      updatedUser: // value for 'updatedUser'
+ *   },
+ * });
+ */
+export function useUpdateUserAdminMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserAdminMutation, UpdateUserAdminMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserAdminMutation, UpdateUserAdminMutationVariables>(UpdateUserAdminDocument, options);
+      }
+export type UpdateUserAdminMutationHookResult = ReturnType<typeof useUpdateUserAdminMutation>;
+export type UpdateUserAdminMutationResult = Apollo.MutationResult<UpdateUserAdminMutation>;
+export type UpdateUserAdminMutationOptions = Apollo.BaseMutationOptions<UpdateUserAdminMutation, UpdateUserAdminMutationVariables>;
 export const CreateNewUserDocument = gql`
     mutation CreateNewUser($newUser: NewUserInput!) {
   createNewUser(newUser: $newUser) {

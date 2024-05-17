@@ -6,6 +6,8 @@ export default function AdminTableModal({
   handleSubmit,
   open,
   setOpen,
+  editionMode,
+  id,
 }: AdminTableModalProps) {
   return (
     <>
@@ -15,6 +17,7 @@ export default function AdminTableModal({
           X
         </button>
         <form className="space-y-2 pt-8" onSubmit={handleSubmit}>
+          {editionMode && id && <h5 className="font-semibold text-xl py-4">Edition Item n°{id}</h5>}
           {fields.map(({ id, label, placeholder, inputType, options }) => (
             <FormInput
               key={id}

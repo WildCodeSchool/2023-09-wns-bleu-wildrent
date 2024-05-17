@@ -130,6 +130,15 @@ export class InputUpdate {
   picture?: string;
 }
 
+@InputType()
+export class InputUpdateAdmin extends InputUpdate {
+  @Field(() => String, { nullable: true })
+  password?: string;
+
+  @Field(() => String, { nullable: true })
+  role?: string;
+}
+
 @ObjectType()
 export class Message {
   @Field()

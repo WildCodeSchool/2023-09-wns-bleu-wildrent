@@ -4,10 +4,11 @@ import LayoutDashboard from '@/components/admin/LayoutDashboard';
 import AdminTableModal from '@/components/admin/table/AdminTableModal';
 import client from '@/graphql/client';
 import {
+  InputUpdate,
   NewUserInput,
   useCreateNewUserMutation,
   useGetAllUsersQuery,
-  useUpdateUserMutation,
+  useUpdateUserAdminMutation,
 } from '@/graphql/generated/schema';
 import { useDeleteUserMutation } from '@/graphql/generated/schema';
 import { createColumnsFromData, createDataset } from '@/utils/table';
@@ -17,10 +18,12 @@ import { newUserFields } from '@/const';
 export default function Page() {
   const [createUser] = useCreateNewUserMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const [updateUser] = useUpdateUserMutation();
+  const [updateUser] = useUpdateUserAdminMutation();
 
   const { data: users, loading, error } = useGetAllUsersQuery({});
   const [open, setOpen] = useState<boolean>(false);
+  const [editionMode, setEditionMode] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number>(0);
 
   if (loading) return <Loader />;
   if (error) return <p>{error.message}</p>;
@@ -29,7 +32,12 @@ export default function Page() {
     setOpen(!open);
   };
 
-  const registerNewUser = async (e: React.FormEvent) => {
+  const handleEdit = (id: number) => {
+    setUserId(id);
+    setEditionMode(!editionMode);
+  };
+
+  const registerNewUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const newUser = Object.fromEntries(formData.entries()) as NewUserInput;
@@ -41,8 +49,7 @@ export default function Page() {
       });
       if (res.data?.createNewUser.success) {
         setOpen(false);
-      } else {
-        return;
+        alert(res.data.createNewUser.message);
       }
     } catch (e) {
       console.error((e as Error).message);
@@ -51,7 +58,29 @@ export default function Page() {
     }
   };
 
-  const editUser = async (id: number) => {};
+  const editUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const updatedUser = Object.fromEntries(formData.entries());
+    try {
+      const res = await updateUser({
+        variables: {
+          updatedUser: {
+            id: userId,
+            ...updatedUser,
+          },
+        },
+      });
+      if (res.data?.updateUserAdmin.success) {
+        setEditionMode(false);
+        alert(res.data.updateUserAdmin.message);
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+    } finally {
+      client.resetStore();
+    }
+  };
 
   const removeUser = async (id: number) => {
     try {
@@ -60,6 +89,7 @@ export default function Page() {
           userId: id,
         },
       });
+      alert(res.data?.deleteUser.message);
     } catch (e) {
       console.error((e as Error).message);
     } finally {
@@ -70,8 +100,6 @@ export default function Page() {
   const cols = createColumnsFromData(users?.allUsers);
   const dataset = createDataset(users?.allUsers || [], cols);
 
-  console.log(cols, dataset);
-
   return (
     <LayoutDashboard>
       <main className="container">
@@ -81,7 +109,7 @@ export default function Page() {
             columns={cols}
             dataset={dataset}
             remove={removeUser}
-            edit={editUser}
+            edit={handleEdit}
             create={handleOpen}
           />
         </div>
@@ -91,6 +119,16 @@ export default function Page() {
             handleSubmit={registerNewUser}
             open={open}
             setOpen={setOpen}
+          />
+        )}
+        {editionMode && (
+          <AdminTableModal
+            fields={newUserFields}
+            handleSubmit={editUser}
+            open={editionMode}
+            setOpen={setEditionMode}
+            editionMode={editionMode}
+            id={userId}
           />
         )}
       </main>

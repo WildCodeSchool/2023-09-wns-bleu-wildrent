@@ -1,11 +1,8 @@
 import { TableRow } from '@/types';
 import { AdminTableProps } from '@/types/props';
-import { useState } from 'react';
 import AdminTableRow from './AdminTableRow';
 
 export default function AdminTable({ columns, dataset, remove, edit, create }: AdminTableProps) {
-  const [editionMode, setEditionMode] = useState<boolean>(false);
-
   return (
     <>
       <table className="min-w-full bg-white rounded-t overflow-hidden">
@@ -22,14 +19,7 @@ export default function AdminTable({ columns, dataset, remove, edit, create }: A
         </thead>
         <tbody>
           {dataset.map((row: TableRow) => (
-            <AdminTableRow
-              key={row.id}
-              remove={remove}
-              edit={edit}
-              editionMode={editionMode}
-              setEditionMode={setEditionMode}
-              row={row}
-            />
+            <AdminTableRow key={row.id} remove={remove} edit={edit} row={row} />
           ))}
         </tbody>
       </table>
