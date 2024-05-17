@@ -10,7 +10,7 @@ const Sidebar = () => {
       <div className="flex flex-col justify-between flex-1 mt-6">
         <nav>
           {adminSideBarItems.map(({ href, text, testId }) => (
-            <SideBarLink key={href} href={href} text={text} data-test-id={testId} />
+            <SideBarLink key={href} href={href} text={text} testId={testId} />
           ))}
           {/* Insérez d'autres liens dans /const/adminSidebarItems si nécessaire */}
         </nav>
