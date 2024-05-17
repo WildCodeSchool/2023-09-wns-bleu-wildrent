@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.highgest.fr',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.pixabay.com',
+      },
     ],
   },
   eslint: {
