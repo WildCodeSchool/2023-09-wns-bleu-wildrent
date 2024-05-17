@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import db from '../db';
-import { InputProductRef, ProductRef } from '../entities/productRef.entity';
+import { InputProductRef, ProductRef, UpdateProductRef } from '../entities/productRef.entity';
 import SubCategoryService from './subCategory.service';
 import { ProductItem } from '../entities/productItem.entity';
 import ProductItemService from './productItem.service';
@@ -20,6 +20,7 @@ export default class ProductRefService {
       console.error((e as Error).message);
     }
   }
+
   async getAllProductRefs() {
     return await this.db.find({
       order: { id: 'desc' },
@@ -29,7 +30,6 @@ export default class ProductRefService {
   async deleteProductRef(id: number): Promise<boolean> {
     try {
       const productRef = await this.db.findOneBy({ id });
-      console.log('productRef:', productRef?.productItems);
       if (!productRef) {
         console.error('ProductRef not found!');
         return false;
@@ -47,31 +47,56 @@ export default class ProductRefService {
     }
   }
 
-  async createProductRef({
-    name,
-    description,
-    image,
-    priceHT,
-    subCategoryId,
-    quantity,
-  }: InputProductRef) {
+  async updateProductRef(id: number, data: UpdateProductRef): Promise<boolean> {
     try {
-      const subCategory = await new SubCategoryService().findSubCategoryById(subCategoryId);
+      const productRefToUpdate = await this.db.findOneBy({ id });
+
+      if (!productRefToUpdate) {
+        console.error('ProductRef not found!');
+        return false;
+      }
+
+      console.log('data.quantity', data.quantity);
+      console.log('productRefToUpdate.quantity', productRefToUpdate.quantity);
+
+      if (data.quantity && data.quantity > productRefToUpdate.quantity) {
+        const productItems = Array.from(
+          { length: data.quantity - productRefToUpdate.quantity },
+          () => {
+            const productItem = new ProductItem();
+            productItem.productRef = productRefToUpdate;
+            return productItem;
+          },
+        );
+        await Promise.all(productItems.map((item) => item.save()));
+      } else {
+        return false;
+      }
+      console.log(data.quantity, productRefToUpdate.quantity);
+
+      // Mise à jour des champs de productRefToUpdate avec ceux de data
+      Object.assign(productRefToUpdate, data);
+
+      await this.db.save(productRefToUpdate);
+
+      return true;
+    } catch (e) {
+      console.error('Error updating productRef:', e);
+      return false;
+    }
+  }
+
+  async createProductRef(data: InputProductRef) {
+    try {
+      const subCategory = await new SubCategoryService().findSubCategoryById(data.subCategoryId.id);
       if (!subCategory) {
         console.error('subCategory not found!');
         return null;
       }
-      const newProductRef = this.db.create({
-        name,
-        description,
-        image,
-        priceHT,
-        subCategory,
-        quantity,
-      });
-      await this.db.save(newProductRef); // Assurez-vous que newProductRef est persisté avec un ID.
+      const newProductRef = this.db.create(data);
+      await this.db.save(newProductRef);
 
-      const productItems = Array.from({ length: quantity }, () => {
+      const productItems = Array.from({ length: data.quantity }, () => {
         const productItem = new ProductItem();
         productItem.productRef = newProductRef;
         return productItem;
@@ -86,7 +111,7 @@ export default class ProductRefService {
       return newProductRef;
     } catch (e) {
       console.error((e as Error).message);
-      throw new Error('Failed to create product reference');
+      throw new Error('Failed to create productRef');
     }
   }
 }

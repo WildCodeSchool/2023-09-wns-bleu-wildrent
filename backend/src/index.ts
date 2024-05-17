@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import 'reflect-metadata';
+import 'reflect-metadata'; // permet de stocker les types TS dans les metadata de JS
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
