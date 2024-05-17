@@ -5,5 +5,7 @@ query ProductRefById($productRefId: Int!) {
     description
     image
     priceHT
+    quantity
+    quantityAvailable
   }
 }
