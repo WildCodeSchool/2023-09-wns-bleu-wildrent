@@ -34,6 +34,9 @@ test('Login admin et user', async ({ page }) => {
   await page.click('[data-test-id="avatar"]');
   await page.click('[data-test-id="dashboard-id"]');
   await expect(page).toHaveURL('http://localhost:3000/admin');
+  // Ajout d'attente explicite pour l'élément wildrent-id
+  await page.waitForSelector('[data-test-id="wildrent-id"]', { state: 'visible' });
+
   await page.click('[data-test-id="wildrent-id"]');
 
   // Se déconnecter
