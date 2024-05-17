@@ -70,8 +70,6 @@ class ProductRefsResolver {
     try {
       const success = await this.productRefService.updateProductRef(id, data);
       if (success) {
-        console.log('data', data);
-
         return { success: true, message: 'ProductRef updated Successfully!' };
       } else {
         return { success: false, message: 'Failed to update ProductRef' };
