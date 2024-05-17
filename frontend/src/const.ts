@@ -27,6 +27,7 @@ export const adminSideBarItems: LinkProps[] = [
   {
     href: '/admin',
     text: 'Accueil dashboard',
+    testId: 'dashboard-id',
   },
   {
     href: '/admin/users',
