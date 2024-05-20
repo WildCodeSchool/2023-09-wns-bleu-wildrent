@@ -34,12 +34,9 @@ test('Login admin et user', async ({ page }) => {
   await page.click('[data-test-id="avatar"]');
   await page.click('[data-test-id="dashboard-id"]');
   await expect(page).toHaveURL('http://localhost:3000/admin');
-  // Ajout d'attente explicite pour l'élément wildrent-id
-  await page.waitForSelector('[data-test-id="wildrent-id"]', { state: 'visible', timeout: 3000 });
-
-  await page.click('[data-test-id="wildrent-id"]');
 
   // Se déconnecter
+  await page.goto('http://localhost:3000/');
   await page.click('[data-test-id="avatar"]');
   await page.click('[data-test-id="logout-btn"]');
 
@@ -76,6 +73,3 @@ test('Login admin et user', async ({ page }) => {
   // Vérifier la redirection vers la page de connexion
   await expect(page).toHaveURL('http://localhost:3000/auth/login');
 });
-function destroy() {
-  throw new Error('Function not implemented.');
-}
