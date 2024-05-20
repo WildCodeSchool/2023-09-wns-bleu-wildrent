@@ -57,6 +57,11 @@ export const adminSideBarItems: LinkProps[] = [
     href: '/myprofile',
     text: 'Profil',
   },
+  {
+    href: '/',
+    text: 'Wildrent',
+    testId: 'wildrent-id',
+  },
 ];
 
 export const newUserFields: FormInputProps[] = [

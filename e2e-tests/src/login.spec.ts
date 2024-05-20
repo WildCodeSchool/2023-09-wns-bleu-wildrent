@@ -31,14 +31,14 @@ test('Login admin et user', async ({ page }) => {
 
   // Vérifier la direction vers le / après la connexion et accès au Dashboard
   await expect(page).toHaveURL('http://localhost:3000/');
-  await page.click('[data-test-id="avatar"]');
-  await page.click('[data-test-id="dashboard-id"]');
+  await page.click("[data-test-id='avatar']");
+  await page.click("a[data-test-id='dashboard-id']");
   await expect(page).toHaveURL('http://localhost:3000/admin');
 
   // Se déconnecter
   await page.goto('http://localhost:3000/');
-  await page.click('[data-test-id="avatar"]');
-  await page.click('[data-test-id="logout-btn"]');
+  await page.click("[data-test-id='avatar']");
+  await page.click("[data-test-id='logout-btn']");
 
   // Vérifier la redirection vers la page de connexion
   await expect(page).toHaveURL('http://localhost:3000/auth/login');
@@ -63,7 +63,7 @@ test('Login admin et user', async ({ page }) => {
 
   // Vérifier la direction vers la page d'accueil et vérification de l'absence du Dashboard button
   await expect(page).toHaveURL('http://localhost:3000/');
-  await page.click('[data-test-id="avatar"]');
+  await page.click('a[data-test-id="avatar"]');
   const dashboardIsVisible = await page.isVisible('[data-test-id="dashboard-id"]');
   expect(dashboardIsVisible).toBeFalsy();
 

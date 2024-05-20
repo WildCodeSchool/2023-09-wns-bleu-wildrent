@@ -116,6 +116,8 @@ async function main() {
     picture: 'https://anniversaire-celebrite.com/upload/250x333/bart-simpson-250.jpg',
   });
   await customer.save();
+
+  await db.destroy();
 }
 
 main();
