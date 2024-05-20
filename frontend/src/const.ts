@@ -26,12 +26,8 @@ export const navData = [
 export const adminSideBarItems: LinkProps[] = [
   {
     href: '/admin',
-    text: 'Accueil dashboard',
+    text: 'Accueil',
     testId: 'dashboard-id',
-  },
-  {
-    href: '/admin/users',
-    text: 'Gestion des utilisateurs',
   },
   {
     href: '/admin/category',
@@ -40,6 +36,10 @@ export const adminSideBarItems: LinkProps[] = [
   {
     href: '/admin/sous-categorie',
     text: 'Sous-catégorie',
+  },
+  {
+    href: '/admin/users',
+    text: 'Gestion des utilisateurs',
   },
   {
     href: '/admin/products',
@@ -54,7 +54,7 @@ export const adminSideBarItems: LinkProps[] = [
     text: 'Réservation',
   },
   {
-    href: '/profile',
+    href: '/myprofile',
     text: 'Profil',
   },
 ];
