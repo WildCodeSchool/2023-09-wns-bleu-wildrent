@@ -19,7 +19,10 @@ export class ProductItem extends BaseEntity {
   @Field(() => Int)
   id: number;
 
-  @ManyToOne(() => ProductRef, (productRef) => productRef.productItems, { nullable: false })
+  @ManyToOne(() => ProductRef, (productRef) => productRef.productItems, {
+    nullable: false,
+    cascade: true,
+  })
   @Field(() => ProductRef)
   productRef: ProductRef;
 

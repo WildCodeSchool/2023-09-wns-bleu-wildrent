@@ -55,25 +55,20 @@ export default class ProductRefService {
         console.error('ProductRef not found!');
         return false;
       }
+      console.log(data);
 
-      console.log('data.quantity', data.quantity);
-      console.log('productRefToUpdate.quantity', productRefToUpdate.quantity);
-
-      if (data.quantity && data.quantity > productRefToUpdate.quantity) {
+      if (typeof data?.quantity === 'number' && data.quantity > productRefToUpdate.quantity) {
         const productItems = Array.from(
           { length: data.quantity - productRefToUpdate.quantity },
           () => {
             const productItem = new ProductItem();
-            productItem.productRef = productRefToUpdate;
+            // productItem.productRef = productRefToUpdate;
+            productItem.productRef = { id: productRefToUpdate.id } as ProductRef;
             return productItem;
           },
         );
         await Promise.all(productItems.map((item) => item.save()));
-      } else {
-        return false;
       }
-      console.log(data.quantity, productRefToUpdate.quantity);
-
       // Mise à jour des champs de productRefToUpdate avec ceux de data
       Object.assign(productRefToUpdate, data);
 
@@ -88,7 +83,7 @@ export default class ProductRefService {
 
   async createProductRef(data: InputProductRef) {
     try {
-      const subCategory = await new SubCategoryService().findSubCategoryById(data.subCategoryId.id);
+      const subCategory = await new SubCategoryService().findSubCategoryById(data.subCategory.id);
       if (!subCategory) {
         console.error('subCategory not found!');
         return null;
