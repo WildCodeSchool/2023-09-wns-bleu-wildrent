@@ -4,8 +4,6 @@ import { LinkProps } from '@/types/props';
 
 export default function SideBarLink({ href, text, testId }: LinkProps) {
   const router = useRouter();
-
-  console.log(document.querySelector("a[data-test-id='dashboard-id']"));
   // Cette fonction détermine si le lien est actif basé sur le chemin actuel
   const isActive = (pathname: string) => router.pathname === pathname;
   return (
