@@ -1,22 +1,17 @@
 export const navData = [
   {
-    text: 'Accueil',
+    text: 'Contact',
     alt: 'alt',
-    link: '/',
+    link: '/contact',
   },
   {
-    text: 'Catalogue',
-    alt: 'alt',
-    link: '/products',
-  },
-  {
-    text: 'A propos',
+    text: 'About us',
     alt: 'alt',
     link: '/about',
   },
   {
-    text: 'Contact',
+    text: 'Catalog',
     alt: 'alt',
-    link: '/contact',
+    link: '/products',
   },
 ];

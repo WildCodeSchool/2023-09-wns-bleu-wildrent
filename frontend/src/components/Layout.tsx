@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import Navbar from '../components/Navbar';
 
 import Footer from './Footer';
+import SelectDate from './SelectDate';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <div className="mx-auto max-w-5xl mb-10">
       <Navbar />
+      <SelectDate />
       <div className="container mx-auto px-4 min-h-full">{children}</div>
       <Footer />
     </div>
