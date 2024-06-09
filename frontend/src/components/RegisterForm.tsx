@@ -4,6 +4,7 @@ import FormInput from './FormInput';
 import client from '@/graphql/client';
 import React, { useEffect } from 'react';
 import { useRef } from 'react';
+import { log } from 'console';
 
 const fields = [
   {
@@ -42,7 +43,7 @@ interface RegisterFormProps {
 }
 export default function RegisterForm({ closeModal }: RegisterFormProps) {
   const router = useRouter();
-  const [register, { data, loading, error }] = useRegisterMutation();
+  const [register, { loading, error }] = useRegisterMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,8 +58,9 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
             newUser,
           },
         });
+        console.log(data?.register.success);
         if (data?.register.success && !error && !loading) {
-          router.push('/auth/login');
+          router.push('/');
           closeModal();
         }
       } catch (err) {
@@ -92,7 +94,12 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
                 inputType={field.type}
               />
             ))}
-            <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
+            <button
+              disabled={loading}
+              className="btn btn-active btn-secondary"
+              type="submit"
+              data-test-id="register-button"
+            >
               Sign up
             </button>
           </form>

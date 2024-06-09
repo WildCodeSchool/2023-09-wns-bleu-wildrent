@@ -26,7 +26,7 @@ interface LoginFormProps {
 
 export default function LoginForm({ closeModal, switchToRegister }: LoginFormProps) {
   const router = useRouter();
-  const [login] = useLoginMutation();
+  const [login, { loading, error }] = useLoginMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,6 +90,7 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
                 closeModal();
                 switchToRegister();
               }}
+              data-test-id="register1-button"
               className="font-semibold leading-6 text-primary hover:text-secondary cursor-pointer"
             >
               Sign up now

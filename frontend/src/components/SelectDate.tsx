@@ -5,7 +5,7 @@ function SelectDate() {
   const handleFilter = () => {};
   return (
     <div className="mb-5 p-2 flex flex-col gap-4 items-center border rounded-xl bg-secondary/50">
-      <div className="text-xl  text-primary">
+      <div className="text-xl text-primary text-center font-semibold">
         Select dates to explore our catalog of products available during that period:
       </div>
       <div className="flex items-center">

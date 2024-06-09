@@ -80,7 +80,11 @@ export default function Navbar() {
           {isLoggedIn ? (
             <UserBadge isAdmin={isAdmin} />
           ) : (
-            <button className="btn btn-secondary" onClick={handleLoginClick}>
+            <button
+              className="btn btn-secondary"
+              onClick={handleLoginClick}
+              data-test-id="nav-login-button"
+            >
               Login
             </button>
           )}
