@@ -60,19 +60,14 @@ export default class ProductRefService {
       if (typeof data?.quantity === 'number' && data.quantity > productRefToUpdate.quantity) {
         const productItems = Array.from(
           { length: data.quantity - productRefToUpdate.quantity },
-          () => {
-            const productItem = new ProductItem();
-            // productItem.productRef = productRefToUpdate;
-            productItem.productRef = { id: productRefToUpdate.id } as ProductRef;
-            return productItem;
-          },
+          () => new ProductItem(),
         );
-        await Promise.all(productItems.map((item) => item.save()));
+        productItems.forEach((pi) => productRefToUpdate.productItems.push(pi));
       }
       // Mise à jour des champs de productRefToUpdate avec ceux de data
       Object.assign(productRefToUpdate, data);
 
-      await this.db.save(productRefToUpdate);
+      await productRefToUpdate.save();
 
       return true;
     } catch (e) {
