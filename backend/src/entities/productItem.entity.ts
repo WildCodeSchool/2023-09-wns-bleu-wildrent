@@ -21,7 +21,6 @@ export class ProductItem extends BaseEntity {
 
   @ManyToOne(() => ProductRef, (productRef) => productRef.productItems, {
     nullable: false,
-    cascade: true,
   })
   @Field(() => ProductRef)
   productRef: ProductRef;

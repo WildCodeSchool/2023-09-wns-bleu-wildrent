@@ -45,6 +45,7 @@ export class ProductRef extends BaseEntity {
 
   @OneToMany(() => ProductItem, (productItem) => productItem.productRef, {
     eager: true,
+    cascade: true,
   }) // cette relation sera chargée chaque fois que productRef sera chargé
   productItems: ProductItem[];
 

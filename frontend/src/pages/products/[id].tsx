@@ -32,10 +32,9 @@ function ProductRefDetails() {
                 <div className="mb-10">
                   <h1 className="font-bold uppercase text-2xl mb-5">{productRef?.name}</h1>
                   <p className="text-sm">{productRef?.description}</p>
-                </div>{' '}
+                </div>
                 <div className="mb-10">
-                  <p className="text-sm">Quantité totale possible : {productRef?.quantity}</p>
-                  <p className="text-sm">Quantité disponible: {productRef?.quantityAvailable}</p>
+                  <p className="text-sm">Quantités disponibles : {productRef?.quantity}</p>
                 </div>
                 <div>
                   <div className="inline-block align-bottom mr-5 mb-10">

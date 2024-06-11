@@ -1,7 +1,6 @@
 import Layout from '@/components/Layout';
 import React from 'react';
 import {
-  GetProfileDocument,
   useDeleteUserMutation,
   useGetProfileQuery,
   useLogoutMutation,
@@ -63,15 +62,11 @@ function MyProfile() {
     <Layout>
       <section className="">
         <div className="card card-compact w-full bg-base-100 shadow-xl p-5 m-5">
-          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-            Historique des commandes
-          </h2>
+          <h2 className="mb-4 text-xl font-bold dark:text-white">Historique des commandes</h2>
           <p> Aucune commande à ce jour</p>
         </div>
         <div className="card card-compact w-full bg-base-100 shadow-xl p-5  m-5">
-          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-            Modifier votre profil
-          </h2>
+          <h2 className="mb-4 text-xl font-bold dark:text-white">Modifier votre profil</h2>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
               <div className="w-full">
