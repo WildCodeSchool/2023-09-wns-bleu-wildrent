@@ -1,5 +1,5 @@
 'use client';
-
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FormInputProps } from '@/types';
 import { useState } from 'react';
 
@@ -20,13 +20,13 @@ export default function FormInput({
 
   return (
     <div className="max-w-sm flex flex-col gap-2">
-      <label className="underline underline-offset-2 font-semibold" htmlFor={id}>
+      <label className="font-semibold text-center" htmlFor={id}>
         {label}
       </label>
-      <div className="ml-4 space-x-4">
+      <div className="relative w-full space-x-4">
         {type === 'textarea' ? (
           <textarea
-            className="px-4 py-2 rounded-md placeholder:italic placeholder:font-light"
+            className="px-4 py-2 w-full pr-10 rounded-md placeholder:italic placeholder:font-light"
             id={id}
             name={id}
             placeholder={placeholder}
@@ -46,7 +46,7 @@ export default function FormInput({
           </select>
         ) : (
           <input
-            className="px-4 py-2 rounded-md placeholder:italic placeholder:font-light"
+            className="w-full px-4 py-2 rounded-md placeholder:italic placeholder:font-light"
             type={type || 'text'}
             id={id}
             name={id}
@@ -55,8 +55,12 @@ export default function FormInput({
           />
         )}
         {id.includes('password') && (
-          <button onClick={handleShow} type="button">
-            {type === 'text' ? 'hide' : 'show'}
+          <button
+            onClick={handleShow}
+            type="button"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+          >
+            {type === 'text' ? <FaEyeSlash /> : <FaEye />}
           </button>
         )}
       </div>

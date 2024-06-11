@@ -9,7 +9,7 @@ function ProductList() {
   const productRefs = data?.allProductRefs || [];
   return (
     <Layout>
-      <div className="flex flex-wrap justify-between">
+      <div className="mt-6 flex flex-wrap justify-between">
         {productRefs.map((prodRef) => (
           <ProductCard key={prodRef.id} productRef={prodRef} link={`/products/${prodRef.id}`} />
         ))}

@@ -5,6 +5,8 @@ import SubCategoryResolver from './resolvers/subcategory.resolver';
 import UserResolver from './resolvers/user.resolver';
 import { buildSchema } from 'type-graphql';
 import { authChecker } from './authChecker';
+import OrderResolver from './resolvers/order.resolver';
+import OrderItemResolver from './resolvers/orderItem.resolver';
 
 export default buildSchema({
   resolvers: [
@@ -13,6 +15,8 @@ export default buildSchema({
     UserResolver,
     SubCategoryResolver,
     ProductItemsResolver,
+    OrderResolver,
+    OrderItemResolver,
   ],
   authChecker: authChecker,
 });

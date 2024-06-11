@@ -6,7 +6,7 @@ export type ProductRefModalProps = {
   productRef?: ProductRef;
 };
 
-function ProductRefModalDetails({ isOpen, onClose, productRef }: ProductRefModalProps) {
+function OrderModalDetails({ isOpen, onClose, productRef }: ProductRefModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -32,4 +32,4 @@ function ProductRefModalDetails({ isOpen, onClose, productRef }: ProductRefModal
   );
 }
 
-export default ProductRefModalDetails;
+export default OrderModalDetails;

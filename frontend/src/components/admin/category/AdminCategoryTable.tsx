@@ -6,6 +6,7 @@ import Image from 'next/image';
 import UpdateCategoryModal from '@/components/admin/category/UpdateCategoryModal';
 import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
 import client from '@/graphql/client';
+import { IoIosAdd } from 'react-icons/io';
 
 // Définition de la mutation GraphQL pour la suppression
 const DELETE_CATEGORY_MUTATION = gql`
@@ -74,12 +75,10 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
 
   return (
     <>
-      <button
-        onClick={handleAddCategoryClick}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Ajouter Catégorie
+      <button className="btn btn-circle btn-accent" onClick={handleAddCategoryClick}>
+        <IoIosAdd size={50} />
       </button>
+
       {isAddModalOpen && (
         <AddCategoryModal
           isOpen={isAddModalOpen}
