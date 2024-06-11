@@ -6,6 +6,7 @@ import Image from 'next/image';
 import UpdateSubCategoryModal from '@/components/admin/subCategory/UpdateSubCategoryModal';
 import AddSubCategoryModal from '@/components/admin/subCategory/AddSubCategoryModal';
 import client from '@/graphql/client';
+import { IoIosAdd } from 'react-icons/io';
 
 const DELETE_SUBCATEGORY_MUTATION = gql`
   mutation DeleteSubCategory($id: Int!) {
@@ -73,12 +74,10 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
 
   return (
     <>
-      <button
-        onClick={handleAddSubCategoryClick}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Ajouter Sous-catégorie
+      <button className="btn btn-circle btn-accent" onClick={handleAddSubCategoryClick}>
+        <IoIosAdd size={50} />
       </button>
+
       {isAddModalOpen && (
         <AddSubCategoryModal
           isOpen={isAddModalOpen}

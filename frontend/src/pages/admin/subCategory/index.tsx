@@ -22,9 +22,6 @@ const SubCategoriesAdmin = () => {
 
   return (
     <LayoutDashboard>
-      <button className="btn btn-circle btn-accent" onClick={handleModal}>
-        <IoIosAdd size={50} />
-      </button>
       {data?.allSubCategories && (
         <AdminSubCategoryTable initialSubCategories={data.allSubCategories as any} />
       )}
