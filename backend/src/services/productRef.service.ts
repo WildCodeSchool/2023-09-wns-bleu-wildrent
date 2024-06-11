@@ -65,8 +65,6 @@ export default class ProductRefService {
           () => new ProductItem(),
         );
         productItems.forEach((pi) => productRefToUpdate.productItems.push(pi));
-
-        console.log('test', { productItems });
       }
       // Mise à jour des champs de productRefToUpdate avec ceux de data
       Object.assign(productRefToUpdate, data);

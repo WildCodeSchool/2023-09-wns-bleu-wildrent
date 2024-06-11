@@ -39,9 +39,8 @@ const Sidebar = () => {
             Produits
           </Link>
           <Link
-            // href="/admin/reservation"
-            href="/admin"
-            className={`${isActive('/admin/reservation') ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
+            href="/admin/orders"
+            className={`${isActive('/admin/orders') ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
           >
             Réservation
           </Link>

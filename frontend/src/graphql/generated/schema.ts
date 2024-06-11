@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  DateTimeISO: any;
 };
 
 /** The availability status of a product item */
@@ -149,6 +150,32 @@ export type ObjectId = {
   id: Scalars['Int'];
 };
 
+export type Order = {
+  __typename?: 'Order';
+  billingAddress?: Maybe<Scalars['String']>;
+  endDate: Scalars['DateTimeISO'];
+  id: Scalars['Int'];
+  items: Array<OrderItem>;
+  numberOfDays: Scalars['Int'];
+  orderDate: Scalars['DateTimeISO'];
+  paymentMethod: Scalars['String'];
+  paymentStatus: Scalars['String'];
+  shippingAddress?: Maybe<Scalars['String']>;
+  startDate: Scalars['DateTimeISO'];
+  totalAmount: Scalars['Float'];
+  user: User;
+};
+
+export type OrderItem = {
+  __typename?: 'OrderItem';
+  id: Scalars['Int'];
+  order: Order;
+  productItem: ProductItem;
+  productRef: ProductRef;
+  quantity: Scalars['Int'];
+  unitPrice: Scalars['Float'];
+};
+
 export type ProductItem = {
   __typename?: 'ProductItem';
   availability: Availability;
@@ -177,6 +204,7 @@ export type Profile = {
   firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   lastname?: Maybe<Scalars['String']>;
+  orders: Array<Order>;
   password?: Maybe<Scalars['String']>;
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -185,6 +213,7 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   allCategories: Array<Category>;
+  allOrders: Array<Order>;
   allProductItems: Array<ProductItem>;
   allProductRefs: Array<ProductRef>;
   allSubCategories: Array<SubCategory>;
@@ -192,6 +221,7 @@ export type Query = {
   categoryById?: Maybe<Category>;
   checkIfLoggedIn: Message;
   getProfile: Profile;
+  orderById: Order;
   productRefById: ProductRef;
   subCategoryById: SubCategory;
 };
@@ -199,6 +229,11 @@ export type Query = {
 
 export type QueryCategoryByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryOrderByIdArgs = {
+  orderId: Scalars['Int'];
 };
 
 
@@ -239,6 +274,7 @@ export type User = {
   firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   lastname?: Maybe<Scalars['String']>;
+  orders: Array<Order>;
   password: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -280,6 +316,18 @@ export type AllCategoriesAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllCategoriesAdminQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, image: string }> };
+
+export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllOrdersQuery = { __typename?: 'Query', allOrders: Array<{ __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, paymentMethod: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, billingAddress?: string | null, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }>, user: { __typename?: 'User', id: number, email: string } }> };
+
+export type OrderByIdQueryVariables = Exact<{
+  orderId: Scalars['Int'];
+}>;
+
+
+export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, paymentMethod: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, billingAddress?: string | null, user: { __typename?: 'User', id: number, email: string }, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }> } };
 
 export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -645,6 +693,115 @@ export function useAllCategoriesAdminLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AllCategoriesAdminQueryHookResult = ReturnType<typeof useAllCategoriesAdminQuery>;
 export type AllCategoriesAdminLazyQueryHookResult = ReturnType<typeof useAllCategoriesAdminLazyQuery>;
 export type AllCategoriesAdminQueryResult = Apollo.QueryResult<AllCategoriesAdminQuery, AllCategoriesAdminQueryVariables>;
+export const AllOrdersDocument = gql`
+    query AllOrders {
+  allOrders {
+    id
+    totalAmount
+    paymentStatus
+    paymentMethod
+    orderDate
+    startDate
+    endDate
+    numberOfDays
+    shippingAddress
+    billingAddress
+    items {
+      quantity
+      unitPrice
+      productRef {
+        name
+      }
+    }
+    user {
+      id
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllOrdersQuery__
+ *
+ * To run a query within a React component, call `useAllOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllOrdersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllOrdersQuery(baseOptions?: Apollo.QueryHookOptions<AllOrdersQuery, AllOrdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllOrdersQuery, AllOrdersQueryVariables>(AllOrdersDocument, options);
+      }
+export function useAllOrdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllOrdersQuery, AllOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllOrdersQuery, AllOrdersQueryVariables>(AllOrdersDocument, options);
+        }
+export type AllOrdersQueryHookResult = ReturnType<typeof useAllOrdersQuery>;
+export type AllOrdersLazyQueryHookResult = ReturnType<typeof useAllOrdersLazyQuery>;
+export type AllOrdersQueryResult = Apollo.QueryResult<AllOrdersQuery, AllOrdersQueryVariables>;
+export const OrderByIdDocument = gql`
+    query OrderById($orderId: Int!) {
+  orderById(orderId: $orderId) {
+    id
+    user {
+      id
+      email
+    }
+    items {
+      productRef {
+        name
+      }
+      quantity
+      unitPrice
+    }
+    totalAmount
+    paymentStatus
+    paymentMethod
+    orderDate
+    startDate
+    endDate
+    numberOfDays
+    shippingAddress
+    billingAddress
+  }
+}
+    `;
+
+/**
+ * __useOrderByIdQuery__
+ *
+ * To run a query within a React component, call `useOrderByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderByIdQuery({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useOrderByIdQuery(baseOptions: Apollo.QueryHookOptions<OrderByIdQuery, OrderByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderByIdQuery, OrderByIdQueryVariables>(OrderByIdDocument, options);
+      }
+export function useOrderByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderByIdQuery, OrderByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderByIdQuery, OrderByIdQueryVariables>(OrderByIdDocument, options);
+        }
+export type OrderByIdQueryHookResult = ReturnType<typeof useOrderByIdQuery>;
+export type OrderByIdLazyQueryHookResult = ReturnType<typeof useOrderByIdLazyQuery>;
+export type OrderByIdQueryResult = Apollo.QueryResult<OrderByIdQuery, OrderByIdQueryVariables>;
 export const AllSubCategoriesDocument = gql`
     query AllSubCategories {
   allSubCategories {
