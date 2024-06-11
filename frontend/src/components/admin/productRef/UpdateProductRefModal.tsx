@@ -125,7 +125,7 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
-              Modifier
+              Save
             </button>
           </form>
         </div>

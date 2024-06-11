@@ -35,7 +35,8 @@
     "react-icons": "^5.1.0",
     "tailwind-merge": "^2.2.1",
     "ts-node": "^10.9.2",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "use-persistent-state": "^1.1.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",

@@ -119,7 +119,7 @@ function UpdateSubCategoryModal({
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Modifier une sous-catégorie existante</h3>
+          <h3 className="text-lg font-bold">Edit an existing subcategory</h3>
           <form className="flex flex-col gap-4 p-4 border rounded" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <FormInput
