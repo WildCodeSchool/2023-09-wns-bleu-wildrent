@@ -141,23 +141,20 @@ async function main() {
   const order1 = Order.create({
     user: customer1,
     paymentStatus: 'Paid',
-    paymentMethod: 'Credit Card',
     orderDate: new Date(),
     startDate: new Date('2024-06-14'),
     endDate: new Date('2024-06-16'),
     shippingAddress: '742 Evergreen Terrace, Springfield',
-    billingAddress: '742 Evergreen Terrace, Springfield',
   });
   await order1.save();
   const order2 = Order.create({
     user: customer1,
     paymentStatus: 'Paid',
-    paymentMethod: 'Credit Card',
+
     orderDate: new Date(),
     startDate: new Date('2024-06-25'),
     endDate: new Date('2024-06-30'),
     shippingAddress: '742 Evergreen Terrace, Springfield',
-    billingAddress: '742 Evergreen Terrace, Springfield',
   });
   await order2.save();
 

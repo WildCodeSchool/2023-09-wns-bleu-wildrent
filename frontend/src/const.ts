@@ -2,12 +2,12 @@ export const navData = [
   {
     text: 'Contact',
     alt: 'alt',
-    link: '/contact',
+    link: '/',
   },
   {
     text: 'About us',
     alt: 'alt',
-    link: '/about',
+    link: '/',
   },
   {
     text: 'Catalog',

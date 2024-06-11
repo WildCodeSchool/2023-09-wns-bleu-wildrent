@@ -36,10 +36,6 @@ export class Order extends BaseEntity {
   @Field()
   paymentStatus: string;
 
-  @Column()
-  @Field()
-  paymentMethod: string;
-
   @CreateDateColumn()
   @Field()
   orderDate: Date;
@@ -59,10 +55,6 @@ export class Order extends BaseEntity {
   @Column({ nullable: true })
   @Field({ nullable: true })
   shippingAddress: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  billingAddress: string;
 
   @BeforeInsert()
   @BeforeUpdate()

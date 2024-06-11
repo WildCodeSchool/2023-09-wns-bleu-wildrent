@@ -33,14 +33,13 @@ export default function UserBadge({ isAdmin }: { isAdmin: boolean }) {
             </Link>
           </li>
         )}
-        <li>
-          <Link href={'/myprofile'}>
-            <div className="justify-between">Mon compte</div>
-          </Link>
-        </li>
-        <li>
-          <a>Settings</a>
-        </li>
+        {!isAdmin && (
+          <li>
+            <Link href={'/myprofile'}>
+              <div className="justify-between">My account</div>
+            </Link>
+          </li>
+        )}
         <li data-test-id="logout-btn">
           <LogoutBtn />
         </li>
