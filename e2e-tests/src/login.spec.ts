@@ -63,7 +63,7 @@ test('Login admin et user', async ({ page }) => {
 
   // Vérifier la direction vers la page d'accueil et vérification de l'absence du Dashboard button
   await expect(page).toHaveURL('http://localhost:3000/');
-  await page.click('a[data-test-id="avatar"]');
+  await page.click('[data-test-id="avatar"]');
   const dashboardIsVisible = await page.isVisible('[data-test-id="dashboard-id"]');
   expect(dashboardIsVisible).toBeFalsy();
 
