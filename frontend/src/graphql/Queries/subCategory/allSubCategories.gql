@@ -2,5 +2,24 @@ query AllSubCategories {
   allSubCategories {
     id
     name
+    description
+    image
+    category {
+      id
+      name
+    }
+  }
+}
+
+query AllSubCategoriesAdmin {
+  allSubCategories {
+    id
+    name
+    description
+    image
+    category {
+      id
+      name
+    }
   }
 }
