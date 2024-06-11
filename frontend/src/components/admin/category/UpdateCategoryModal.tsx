@@ -51,14 +51,14 @@ function UpdateCategoryModal({
         variables: {
           id: category.id,
           name: formJSON.name.toString(),
-          image: formJSON.image.toString(),
-          description: formJSON.description.toString(),
+          image: formJSON.image?.toString(),
+          description: formJSON.description?.toString(),
         },
       });
 
       if (response.data?.updateCategory?.id) {
         alert('Catégorie mise à jour avec succès');
-        onCategoryUpdated(response.data.updateCategory); // Utilisez la fonction ici
+        onCategoryUpdated(response.data.updateCategory);
         onClose();
       } else {
         alert('Erreur lors de la mise à jour de la catégorie');
