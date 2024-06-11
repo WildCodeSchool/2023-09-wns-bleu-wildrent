@@ -26,8 +26,8 @@ const Sidebar = () => {
             Catégorie
           </Link>
           <Link
-            href="/admin/sous-categorie"
-            className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin/sous-categorie') ? 'bg-base-300' : ''}`}
+            href="/admin/subCategory"
+            className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin/subCategory') ? 'bg-base-300' : ''}`}
           >
             Sous-catégorie
           </Link>

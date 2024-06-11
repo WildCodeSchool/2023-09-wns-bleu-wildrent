@@ -1,0 +1,12 @@
+mutation AddSubCategory($name: String!, $description: String, $image: String!, $categoryId: Int!) {
+  addSubCategory(name: $name, description: $description, image: $image, categoryId: $categoryId) {
+    id
+    name
+    description
+    image
+    category {
+      id
+      name
+    }
+  }
+}
