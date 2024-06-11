@@ -2,10 +2,11 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { useAllCategoriesQuery } from '../graphql/generated/schema';
 import CategoryCard from '@/components/CategoryCard';
+import Loader from '@/components/Loader';
 
 export default function Home() {
   const { data, loading, error } = useAllCategoriesQuery();
-  if (loading) return 'Chargement...';
+  if (loading) return <Loader />;
   if (error) return <p>Une erreur s'est produite : {error.message}</p>;
   const categories = data?.allCategories || [];
   return (

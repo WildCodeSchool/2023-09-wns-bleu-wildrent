@@ -108,14 +108,14 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
                   className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mb-3"
                   onClick={() => handleEditClick(productRef)}
                 >
-                  Modifier
+                  Edit
                 </button>
 
                 <button
                   onClick={(e) => handleDelete(productRef.id, e)}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                 >
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>

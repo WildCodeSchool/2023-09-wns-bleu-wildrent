@@ -127,13 +127,13 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
                   className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleEditClick(subCategory)}
                 >
-                  Modifier
+                  Edit
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleDeleteSubCategoryClick(subCategory.id)}
                 >
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>
