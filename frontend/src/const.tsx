@@ -1,3 +1,5 @@
+import { IoCart } from 'react-icons/io5';
+
 export const navData = [
   {
     text: 'Contact',
@@ -13,5 +15,10 @@ export const navData = [
     text: 'Catalog',
     alt: 'alt',
     link: '/products',
+  },
+  {
+    text: <IoCart size={25} />,
+    alt: 'alt',
+    link: '/cart',
   },
 ];

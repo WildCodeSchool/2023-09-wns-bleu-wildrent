@@ -1,7 +1,8 @@
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { useProductRefByIdQuery } from '@/graphql/generated/schema';
+import { BiSolidCartAdd } from 'react-icons/bi';
 
 function ProductRefDetails() {
   const router = useRouter();
@@ -11,7 +12,19 @@ function ProductRefDetails() {
     skip: typeof id === 'undefined',
   });
   const productRef = data?.productRefById;
+  // const { addToCart } = useCart();
 
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAddToCart = () => {
+    // addToCart({
+    //   id: productRef.id,
+    //   name: productRef.name,
+    //   price: productRef.priceHT,
+    //   quantity,
+    //   image: productRef.image,
+    // });
+  };
   return (
     <Layout>
       <div>
@@ -44,10 +57,22 @@ function ProductRefDetails() {
                     </span>
                     <span className="text-2xl leading-none align-baseline"> / jour / unité </span>
                   </div>
-                  <div className="inline-block align-bottom">
-                    <button className="btn btn-active btn-secondary">
-                      Vérifier la disponibilité
-                    </button>
+                  <div className="flex">
+                    <input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => setQuantity(parseInt(e.target.value))}
+                      min="1"
+                      max={productRef?.quantity}
+                      className="mt-2 p-1 border rounded w-16"
+                    />
+
+                    <BiSolidCartAdd
+                      className="m-4 text-secondary hover:text-secondary/50 cursor-pointer"
+                      onClick={handleAddToCart}
+                      type="button"
+                      size={25}
+                    />
                   </div>
                 </div>
               </div>

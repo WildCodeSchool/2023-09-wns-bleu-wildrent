@@ -23,32 +23,32 @@ const Sidebar = () => {
             href="/admin/category"
             className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin/category') ? 'bg-base-300' : ''}`}
           >
-            Catégorie
+            Categories
           </Link>
           <Link
             // href="/admin/sous-categorie"
             href="/admin"
             className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin/sous-categorie') ? 'bg-base-300' : ''}`}
           >
-            Sous-catégorie
+            SubCategories
           </Link>
           <Link
             href="/admin/products"
             className={`flex items-center px-4 py-2 cursor-pointer ${isActive('/admin/products') ? 'bg-base-300' : ''}`}
           >
-            Produits
+            Products
           </Link>
           <Link
             href="/admin/orders"
             className={`${isActive('/admin/orders') ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
           >
-            Réservation
+            Orders
           </Link>
           <Link
-            href="/myprofile"
+            href="/admin/users"
             className={`${isActive('/profile') ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
           >
-            Profil
+            Users
           </Link>
           <Link
             href="/"

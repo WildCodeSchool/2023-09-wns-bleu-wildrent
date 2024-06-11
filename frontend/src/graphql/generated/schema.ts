@@ -152,13 +152,11 @@ export type ObjectId = {
 
 export type Order = {
   __typename?: 'Order';
-  billingAddress?: Maybe<Scalars['String']>;
   endDate: Scalars['DateTimeISO'];
   id: Scalars['Int'];
   items: Array<OrderItem>;
   numberOfDays: Scalars['Int'];
   orderDate: Scalars['DateTimeISO'];
-  paymentMethod: Scalars['String'];
   paymentStatus: Scalars['String'];
   shippingAddress?: Maybe<Scalars['String']>;
   startDate: Scalars['DateTimeISO'];
@@ -320,14 +318,14 @@ export type AllCategoriesAdminQuery = { __typename?: 'Query', allCategories: Arr
 export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllOrdersQuery = { __typename?: 'Query', allOrders: Array<{ __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, paymentMethod: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, billingAddress?: string | null, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }>, user: { __typename?: 'User', id: number, email: string } }> };
+export type AllOrdersQuery = { __typename?: 'Query', allOrders: Array<{ __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }>, user: { __typename?: 'User', id: number, email: string } }> };
 
 export type OrderByIdQueryVariables = Exact<{
   orderId: Scalars['Int'];
 }>;
 
 
-export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, paymentMethod: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, billingAddress?: string | null, user: { __typename?: 'User', id: number, email: string }, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }> } };
+export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, user: { __typename?: 'User', id: number, email: string }, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }> } };
 
 export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -699,13 +697,11 @@ export const AllOrdersDocument = gql`
     id
     totalAmount
     paymentStatus
-    paymentMethod
     orderDate
     startDate
     endDate
     numberOfDays
     shippingAddress
-    billingAddress
     items {
       quantity
       unitPrice
@@ -764,13 +760,11 @@ export const OrderByIdDocument = gql`
     }
     totalAmount
     paymentStatus
-    paymentMethod
     orderDate
     startDate
     endDate
     numberOfDays
     shippingAddress
-    billingAddress
   }
 }
     `;
