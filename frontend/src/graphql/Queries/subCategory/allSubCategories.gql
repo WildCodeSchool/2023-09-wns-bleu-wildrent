@@ -23,3 +23,12 @@ query AllSubCategoriesAdmin {
     }
   }
 }
+
+query GetSubCategoriesByCategoryId($categoryId: Int!) {
+  subCategoriesByCategoryId(categoryId: $categoryId) {
+    id
+    name
+    description
+    image
+  }
+}

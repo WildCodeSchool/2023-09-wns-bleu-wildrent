@@ -11,14 +11,17 @@ export default function Home() {
   const categories = data?.allCategories || [];
   return (
     <Layout>
-      <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
-        {categories.map((cat) => (
-          <CategoryCard
-            key={cat.id}
-            category={{ ...cat, description: cat.description ?? '' }}
-            link={`/categories/${cat.id}`}
-          />
-        ))}
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold text-center my-6">Catégories</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((cat) => (
+            <CategoryCard
+              key={cat.id}
+              category={{ ...cat, description: cat.description ?? '' }}
+              link={`/categories/${cat.id}`}
+            />
+          ))}
+        </div>
       </div>
     </Layout>
   );
