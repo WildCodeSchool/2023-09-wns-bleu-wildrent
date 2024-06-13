@@ -5,6 +5,8 @@ import { SubCategory } from './entities/subcategory.entity';
 import { ProductRef } from './entities/productRef.entity';
 import User from './entities/user.entity';
 import { ProductItem } from './entities/productItem.entity';
+import { Order } from './entities/order.entity';
+import { OrderItem } from './entities/orderItem.entity';
 const { DB_USER, DB_PASS, DB_NAME, DB_PORT, DB_HOST } = env;
 
 const db = new DataSource({
@@ -14,7 +16,7 @@ const db = new DataSource({
   username: DB_USER,
   password: DB_PASS,
   database: DB_NAME,
-  entities: [Category, SubCategory, ProductRef, User, ProductItem],
+  entities: [Category, SubCategory, ProductRef, User, ProductItem, Order, OrderItem],
   synchronize: true,
   logging: env.NODE_ENV !== 'test',
 });

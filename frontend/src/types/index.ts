@@ -36,10 +36,11 @@ export type Category = {
 export type SubCategory = {
   id: number;
   name: string;
-  description?: string;
+  description?: string | null;
   image?: string;
-  productRef?: ProductRef[];
+  category?: Category | null;
 };
+
 export type SimpleSubCategory = {
   id: number;
   name: string;

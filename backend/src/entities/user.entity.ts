@@ -1,6 +1,14 @@
-import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Field, InputType, Int, ObjectType } from 'type-graphql';
 import { argon2id, verify, hash } from 'argon2';
+import { Order } from './order.entity';
 
 type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
@@ -63,6 +71,12 @@ export default class User extends BaseEntity {
   @Field()
   @Column()
   password: string;
+
+  @OneToMany(() => Order, (order) => order.user, {
+    eager: true,
+  })
+  @Field(() => [Order])
+  orders: Order[];
 }
 
 // Profile = User mais sans la key 'password'

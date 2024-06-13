@@ -1,16 +1,54 @@
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useProductRefByIdQuery } from '@/graphql/generated/schema';
+import { BiSolidCartAdd } from 'react-icons/bi';
+import { CartItemProps } from '@/components/CartItem';
 
 function ProductRefDetails() {
+  const cartLocalStorage = JSON.parse(localStorage.getItem('cartList') || '[]');
+  const [quantity, setQuantity] = useState(1);
   const router = useRouter();
   const { id } = router.query;
   const { data } = useProductRefByIdQuery({
     variables: { productRefId: typeof id === 'string' ? parseInt(id, 10) : 0 },
     skip: typeof id === 'undefined',
   });
+
+  const [cartList, setCartList] = useState(cartLocalStorage);
+  const [showDialog, setShowDialog] = useState(false);
+  const continueShopping = () => {
+    router.push('/');
+  };
+  const goToCart = () => {
+    router.push('/cart');
+  };
+  useEffect(() => {
+    localStorage.setItem('cartList', JSON.stringify(cartList));
+  }, [cartList]);
   const productRef = data?.productRefById;
+
+  if (!productRef) {
+    console.error('productRef is undefined');
+    return <p>Product not found</p>;
+  }
+
+  const { id: productRefId, name, image, priceHT } = productRef;
+  const handleAddToCart = () => {
+    const existingItemIndex = cartList.findIndex(
+      (item: CartItemProps['item']) => item.productRefId === productRefId,
+    );
+
+    if (existingItemIndex >= 0) {
+      const updatedCartList = cartList.map((item: CartItemProps['item'], index: number) =>
+        index === existingItemIndex ? { ...item, quantity: item.quantity + quantity } : item,
+      );
+      setCartList(updatedCartList);
+    } else {
+      setCartList([...cartList, { productRefId, name, image, priceHT, quantity }]);
+    }
+    setShowDialog(true);
+  };
 
   return (
     <Layout>
@@ -32,10 +70,9 @@ function ProductRefDetails() {
                 <div className="mb-10">
                   <h1 className="font-bold uppercase text-2xl mb-5">{productRef?.name}</h1>
                   <p className="text-sm">{productRef?.description}</p>
-                </div>{' '}
+                </div>
                 <div className="mb-10">
-                  <p className="text-sm">Quantité totale possible : {productRef?.quantity}</p>
-                  <p className="text-sm">Quantité disponible: {productRef?.quantityAvailable}</p>
+                  <p className="text-sm">Quantités disponibles : {productRef?.quantity}</p>
                 </div>
                 <div>
                   <div className="inline-block align-bottom mr-5 mb-10">
@@ -43,12 +80,50 @@ function ProductRefDetails() {
                     <span className="font-bold text-5xl leading-none align-baseline">
                       {productRef?.priceHT}
                     </span>
-                    <span className="text-2xl leading-none align-baseline"> / jour / unité </span>
+                    <span className="text-2xl leading-none align-baseline">
+                      {' '}
+                      per day and per unit
+                    </span>
                   </div>
-                  <div className="inline-block align-bottom">
-                    <button className="btn btn-active btn-secondary">
-                      Vérifier la disponibilité
-                    </button>
+                  <div className="flex">
+                    <input
+                      type="number"
+                      value={quantity}
+                      onChange={() => {
+                        setQuantity(quantity + 1);
+                      }}
+                      min="1"
+                      max={productRef?.quantity}
+                      className="mt-2 p-1 border rounded w-16"
+                    />
+
+                    <BiSolidCartAdd
+                      className="m-4 text-secondary hover:text-secondary/50 cursor-pointer"
+                      onClick={handleAddToCart}
+                      type="button"
+                      size={25}
+                    />
+                    {showDialog && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">
+                        <div className="bg-warning p-6 rounded shadow-lg text-center">
+                          <p>Item added to cart. What would you like to do next?</p>
+                          <div className="mt-4">
+                            <button
+                              className="px-4 py-2 bg-success font-semibold rounded mr-2"
+                              onClick={goToCart}
+                            >
+                              Go to Cart
+                            </button>
+                            <button
+                              className="px-4 py-2 bg-primary font-semibold rounded"
+                              onClick={continueShopping}
+                            >
+                              Continue
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

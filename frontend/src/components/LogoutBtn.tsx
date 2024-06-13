@@ -18,7 +18,7 @@ export default function LogoutBtn() {
     } catch (e) {
       console.error((e as Error).message);
     } finally {
-      router.push('/auth/login');
+      router.push('/');
     }
   };
 

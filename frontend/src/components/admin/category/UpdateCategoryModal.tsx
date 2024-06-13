@@ -51,14 +51,14 @@ function UpdateCategoryModal({
         variables: {
           id: category.id,
           name: formJSON.name.toString(),
-          image: formJSON.image.toString(),
-          description: formJSON.description.toString(),
+          image: formJSON.image?.toString(),
+          description: formJSON.description?.toString(),
         },
       });
 
       if (response.data?.updateCategory?.id) {
         alert('Catégorie mise à jour avec succès');
-        onCategoryUpdated(response.data.updateCategory); // Utilisez la fonction ici
+        onCategoryUpdated(response.data.updateCategory);
         onClose();
       } else {
         alert('Erreur lors de la mise à jour de la catégorie');
@@ -82,7 +82,7 @@ function UpdateCategoryModal({
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Modifier une catégorie existante</h3>
+          <h3 className="text-lg font-bold">Edit an existing category</h3>
           <form className="flex flex-col gap-4 p-4 border rounded" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <FormInput

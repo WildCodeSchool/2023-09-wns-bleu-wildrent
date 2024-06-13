@@ -10,6 +10,7 @@ import {
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
 import { ProductRef, SimpleSubCategory } from '@/types';
+import Loader from '@/components/Loader';
 const fields = [
   {
     label: 'Nom du produit',
@@ -89,8 +90,8 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
     error: errorSubCategories,
   } = useAllSubCategoriesQuery();
 
-  if (loadingSubCategories) return <p>Chargement des sous-catégories...</p>;
-  if (errorSubCategories) return <p>Erreur lors du chargement des sous-catégories.</p>;
+  if (loadingSubCategories) return <Loader />;
+  if (errorSubCategories) return <Loader />;
 
   return (
     <div>
@@ -124,7 +125,7 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
-              Modifier
+              Save
             </button>
           </form>
         </div>

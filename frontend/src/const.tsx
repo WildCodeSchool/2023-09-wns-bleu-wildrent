@@ -1,25 +1,26 @@
+import { IoCart } from 'react-icons/io5';
 import { FormInputProps, LinkProps } from './types/props';
 
 export const navData = [
   {
-    text: 'Accueil',
+    text: 'Contact',
     alt: 'alt',
     link: '/',
   },
   {
-    text: 'Catalogue',
+    text: 'About us',
+    alt: 'alt',
+    link: '/',
+  },
+  {
+    text: 'Catalog',
     alt: 'alt',
     link: '/products',
   },
   {
-    text: 'A propos',
+    text: <IoCart size={25} />,
     alt: 'alt',
-    link: '/about',
-  },
-  {
-    text: 'Contact',
-    alt: 'alt',
-    link: '/contact',
+    link: '/cart',
   },
 ];
 
@@ -31,23 +32,27 @@ export const adminSideBarItems: LinkProps[] = [
   },
   {
     href: '/admin/category',
-    text: 'Catégorie',
+    text: 'Categories',
   },
   {
     href: '/admin/sous-categorie',
-    text: 'Sous-catégorie',
+    text: 'SubCategories',
   },
   {
     href: '/admin/users',
-    text: 'Gestion des utilisateurs',
+    text: 'Users',
   },
   {
     href: '/admin/products',
-    text: 'Articles',
+    text: 'Products',
   },
   {
     href: '/admin/productref',
     text: 'ProductRef',
+  },
+  {
+    href: '/admin/orders',
+    text: 'Orders',
   },
   {
     href: '/admin/reservation',

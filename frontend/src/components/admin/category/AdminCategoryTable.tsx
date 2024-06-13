@@ -61,7 +61,6 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
         variables: { id: categoryId },
       });
       if (data.deleteCategory) {
-        // Mise à jour immédiate de l'affichage des catégories dans le composant
         setCategories(categories.filter((category) => category.id !== categoryId));
         alert('Catégorie supprimée avec succès');
         client.resetStore();
@@ -110,7 +109,12 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
             <tr key={category.id} className={category.id % 2 === 0 ? 'bg-gray-200' : ''}>
               <td className="px-4 py-2 border-b">{category.id}</td>
               <td className="px-4 py-2 border-b">
-                <Image src={category.image} width={50} height={30} alt={category.name} />
+                <Image
+                  src={category.image || '/path/to/default/image.jpg'} // Utilisez une image par défaut si `image` est `undefined`
+                  width={50}
+                  height={30}
+                  alt={category.name}
+                />
               </td>
               <td className="px-4 py-2 border-b">{category.name}</td>
               <td className="px-4 py-2 border-b">{category.description}</td>
@@ -119,13 +123,13 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
                   className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleEditClick(category)}
                 >
-                  Modifier
+                  Edit
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleDeleteCategoryClick(category.id)}
                 >
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>

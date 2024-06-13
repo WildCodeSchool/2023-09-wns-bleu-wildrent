@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  DateTimeISO: any;
 };
 
 /** The availability status of a product item */
@@ -86,16 +87,19 @@ export type Mutation = {
   __typename?: 'Mutation';
   addCategory: Category;
   addProductRef: Message;
+  addSubCategory: SubCategory;
   deleteCategory: Scalars['Boolean'];
   deleteProductItem: Message;
   createNewUser: Message;
   deleteProductRef: Message;
+  deleteSubCategory: Scalars['Boolean'];
   deleteUser: Message;
   login: Message;
   logout: Message;
   register: Message;
   updateCategory: Category;
   updateProductRef: Message;
+  updateSubCategory: SubCategory;
   updateUser: Message;
   updateUserAdmin: Message;
 };
@@ -110,6 +114,14 @@ export type MutationAddCategoryArgs = {
 
 export type MutationAddProductRefArgs = {
   data: InputProductRef;
+};
+
+
+export type MutationAddSubCategoryArgs = {
+  categoryId: Scalars['Int'];
+  description?: InputMaybe<Scalars['String']>;
+  image: Scalars['String'];
+  name: Scalars['String'];
 };
 
 
@@ -130,6 +142,11 @@ export type MutationCreateNewUserArgs = {
 
 export type MutationDeleteProductRefArgs = {
   productRefId: Scalars['Int'];
+};
+
+
+export type MutationDeleteSubCategoryArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -162,12 +179,45 @@ export type MutationUpdateProductRefArgs = {
 };
 
 
+export type MutationUpdateSubCategoryArgs = {
+  categoryId: Scalars['Int'];
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
+  image: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
 export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
 };
 
 export type ObjectId = {
   id: Scalars['Int'];
+};
+
+export type Order = {
+  __typename?: 'Order';
+  endDate: Scalars['DateTimeISO'];
+  id: Scalars['Int'];
+  items: Array<OrderItem>;
+  numberOfDays: Scalars['Int'];
+  orderDate: Scalars['DateTimeISO'];
+  paymentStatus: Scalars['String'];
+  shippingAddress?: Maybe<Scalars['String']>;
+  startDate: Scalars['DateTimeISO'];
+  totalAmount: Scalars['Float'];
+  user: User;
+};
+
+export type OrderItem = {
+  __typename?: 'OrderItem';
+  id: Scalars['Int'];
+  order: Order;
+  productItem: ProductItem;
+  productRef: ProductRef;
+  quantity: Scalars['Int'];
+  unitPrice: Scalars['Float'];
 };
 
 export type ProductItem = {
@@ -215,6 +265,7 @@ export type Profile = {
   firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   lastname?: Maybe<Scalars['String']>;
+  orders: Array<Order>;
   password?: Maybe<Scalars['String']>;
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -223,6 +274,7 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   allCategories: Array<Category>;
+  allOrders: Array<Order>;
   allProductItems: Array<ProductItem>;
   allProductRefs: Array<ProductRef>;
   allSubCategories: Array<SubCategory>;
@@ -230,13 +282,19 @@ export type Query = {
   categoryById?: Maybe<Category>;
   checkIfLoggedIn: Message;
   getProfile: Profile;
+  orderById: Order;
   productRefById: ProductRef;
-  subCategoryById: SubCategory;
+  subCategoryById?: Maybe<SubCategory>;
 };
 
 
 export type QueryCategoryByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryOrderByIdArgs = {
+  orderId: Scalars['Int'];
 };
 
 
@@ -246,7 +304,7 @@ export type QueryProductRefByIdArgs = {
 
 
 export type QuerySubCategoryByIdArgs = {
-  subCategoryId: Scalars['Int'];
+  id: Scalars['Int'];
 };
 
 export type SubCategory = {
@@ -277,6 +335,7 @@ export type User = {
   firstname?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   lastname?: Maybe<Scalars['String']>;
+  orders: Array<Order>;
   password: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
   role: Scalars['String'];
@@ -324,10 +383,27 @@ export type AllCategoriesAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AllCategoriesAdminQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, image: string }> };
 
+export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllOrdersQuery = { __typename?: 'Query', allOrders: Array<{ __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }>, user: { __typename?: 'User', id: number, email: string } }> };
+
+export type OrderByIdQueryVariables = Exact<{
+  orderId: Scalars['Int'];
+}>;
+
+
+export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, user: { __typename?: 'User', id: number, email: string }, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }> } };
+
 export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllSubCategoriesQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string }> };
+export type AllSubCategoriesQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string, description?: string | null, image: string, category?: { __typename?: 'Category', id: number, name: string } | null }> };
+
+export type AllSubCategoriesAdminQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllSubCategoriesAdminQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string, description?: string | null, image: string, category?: { __typename?: 'Category', id: number, name: string } | null }> };
 
 export type UpdateUserAdminMutationVariables = Exact<{
   updatedUser: InputUpdateAdmin;
@@ -423,6 +499,34 @@ export type UpdateProductRefMutationVariables = Exact<{
 
 
 export type UpdateProductRefMutation = { __typename?: 'Mutation', updateProductRef: { __typename?: 'Message', success: boolean, message: string } };
+
+export type AddSubCategoryMutationVariables = Exact<{
+  name: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  image: Scalars['String'];
+  categoryId: Scalars['Int'];
+}>;
+
+
+export type AddSubCategoryMutation = { __typename?: 'Mutation', addSubCategory: { __typename?: 'SubCategory', id: number, name: string, description?: string | null, image: string, category?: { __typename?: 'Category', id: number, name: string } | null } };
+
+export type DeleteSubCategoryMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteSubCategoryMutation = { __typename?: 'Mutation', deleteSubCategory: boolean };
+
+export type UpdateSubCategoryMutationVariables = Exact<{
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  image: Scalars['String'];
+  categoryId: Scalars['Int'];
+}>;
+
+
+export type UpdateSubCategoryMutation = { __typename?: 'Mutation', updateSubCategory: { __typename?: 'SubCategory', id: number, name: string, description?: string | null, image: string, category?: { __typename?: 'Category', id: number, name: string, image: string } | null } };
 
 
 export const AllProductRefsDocument = gql`
@@ -743,11 +847,122 @@ export function useAllCategoriesAdminLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AllCategoriesAdminQueryHookResult = ReturnType<typeof useAllCategoriesAdminQuery>;
 export type AllCategoriesAdminLazyQueryHookResult = ReturnType<typeof useAllCategoriesAdminLazyQuery>;
 export type AllCategoriesAdminQueryResult = Apollo.QueryResult<AllCategoriesAdminQuery, AllCategoriesAdminQueryVariables>;
+export const AllOrdersDocument = gql`
+    query AllOrders {
+  allOrders {
+    id
+    totalAmount
+    paymentStatus
+    orderDate
+    startDate
+    endDate
+    numberOfDays
+    shippingAddress
+    items {
+      quantity
+      unitPrice
+      productRef {
+        name
+      }
+    }
+    user {
+      id
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllOrdersQuery__
+ *
+ * To run a query within a React component, call `useAllOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllOrdersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllOrdersQuery(baseOptions?: Apollo.QueryHookOptions<AllOrdersQuery, AllOrdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllOrdersQuery, AllOrdersQueryVariables>(AllOrdersDocument, options);
+      }
+export function useAllOrdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllOrdersQuery, AllOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllOrdersQuery, AllOrdersQueryVariables>(AllOrdersDocument, options);
+        }
+export type AllOrdersQueryHookResult = ReturnType<typeof useAllOrdersQuery>;
+export type AllOrdersLazyQueryHookResult = ReturnType<typeof useAllOrdersLazyQuery>;
+export type AllOrdersQueryResult = Apollo.QueryResult<AllOrdersQuery, AllOrdersQueryVariables>;
+export const OrderByIdDocument = gql`
+    query OrderById($orderId: Int!) {
+  orderById(orderId: $orderId) {
+    id
+    user {
+      id
+      email
+    }
+    items {
+      productRef {
+        name
+      }
+      quantity
+      unitPrice
+    }
+    totalAmount
+    paymentStatus
+    orderDate
+    startDate
+    endDate
+    numberOfDays
+    shippingAddress
+  }
+}
+    `;
+
+/**
+ * __useOrderByIdQuery__
+ *
+ * To run a query within a React component, call `useOrderByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderByIdQuery({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useOrderByIdQuery(baseOptions: Apollo.QueryHookOptions<OrderByIdQuery, OrderByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderByIdQuery, OrderByIdQueryVariables>(OrderByIdDocument, options);
+      }
+export function useOrderByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderByIdQuery, OrderByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderByIdQuery, OrderByIdQueryVariables>(OrderByIdDocument, options);
+        }
+export type OrderByIdQueryHookResult = ReturnType<typeof useOrderByIdQuery>;
+export type OrderByIdLazyQueryHookResult = ReturnType<typeof useOrderByIdLazyQuery>;
+export type OrderByIdQueryResult = Apollo.QueryResult<OrderByIdQuery, OrderByIdQueryVariables>;
 export const AllSubCategoriesDocument = gql`
     query AllSubCategories {
   allSubCategories {
     id
     name
+    description
+    image
+    category {
+      id
+      name
+    }
   }
 }
     `;
@@ -778,6 +993,47 @@ export function useAllSubCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type AllSubCategoriesQueryHookResult = ReturnType<typeof useAllSubCategoriesQuery>;
 export type AllSubCategoriesLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesLazyQuery>;
 export type AllSubCategoriesQueryResult = Apollo.QueryResult<AllSubCategoriesQuery, AllSubCategoriesQueryVariables>;
+export const AllSubCategoriesAdminDocument = gql`
+    query AllSubCategoriesAdmin {
+  allSubCategories {
+    id
+    name
+    description
+    image
+    category {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllSubCategoriesAdminQuery__
+ *
+ * To run a query within a React component, call `useAllSubCategoriesAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllSubCategoriesAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllSubCategoriesAdminQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllSubCategoriesAdminQuery(baseOptions?: Apollo.QueryHookOptions<AllSubCategoriesAdminQuery, AllSubCategoriesAdminQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllSubCategoriesAdminQuery, AllSubCategoriesAdminQueryVariables>(AllSubCategoriesAdminDocument, options);
+      }
+export function useAllSubCategoriesAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllSubCategoriesAdminQuery, AllSubCategoriesAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllSubCategoriesAdminQuery, AllSubCategoriesAdminQueryVariables>(AllSubCategoriesAdminDocument, options);
+        }
+export type AllSubCategoriesAdminQueryHookResult = ReturnType<typeof useAllSubCategoriesAdminQuery>;
+export type AllSubCategoriesAdminLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesAdminLazyQuery>;
+export type AllSubCategoriesAdminQueryResult = Apollo.QueryResult<AllSubCategoriesAdminQuery, AllSubCategoriesAdminQueryVariables>;
 export const UpdateUserAdminDocument = gql`
     mutation UpdateUserAdmin($updatedUser: InputUpdateAdmin!) {
   updateUserAdmin(updatedUser: $updatedUser) {
@@ -1226,3 +1482,133 @@ export function useUpdateProductRefMutation(baseOptions?: Apollo.MutationHookOpt
 export type UpdateProductRefMutationHookResult = ReturnType<typeof useUpdateProductRefMutation>;
 export type UpdateProductRefMutationResult = Apollo.MutationResult<UpdateProductRefMutation>;
 export type UpdateProductRefMutationOptions = Apollo.BaseMutationOptions<UpdateProductRefMutation, UpdateProductRefMutationVariables>;
+export const AddSubCategoryDocument = gql`
+    mutation AddSubCategory($name: String!, $description: String, $image: String!, $categoryId: Int!) {
+  addSubCategory(
+    name: $name
+    description: $description
+    image: $image
+    categoryId: $categoryId
+  ) {
+    id
+    name
+    description
+    image
+    category {
+      id
+      name
+    }
+  }
+}
+    `;
+export type AddSubCategoryMutationFn = Apollo.MutationFunction<AddSubCategoryMutation, AddSubCategoryMutationVariables>;
+
+/**
+ * __useAddSubCategoryMutation__
+ *
+ * To run a mutation, you first call `useAddSubCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddSubCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addSubCategoryMutation, { data, loading, error }] = useAddSubCategoryMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *      image: // value for 'image'
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useAddSubCategoryMutation(baseOptions?: Apollo.MutationHookOptions<AddSubCategoryMutation, AddSubCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddSubCategoryMutation, AddSubCategoryMutationVariables>(AddSubCategoryDocument, options);
+      }
+export type AddSubCategoryMutationHookResult = ReturnType<typeof useAddSubCategoryMutation>;
+export type AddSubCategoryMutationResult = Apollo.MutationResult<AddSubCategoryMutation>;
+export type AddSubCategoryMutationOptions = Apollo.BaseMutationOptions<AddSubCategoryMutation, AddSubCategoryMutationVariables>;
+export const DeleteSubCategoryDocument = gql`
+    mutation DeleteSubCategory($id: Int!) {
+  deleteSubCategory(id: $id)
+}
+    `;
+export type DeleteSubCategoryMutationFn = Apollo.MutationFunction<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>;
+
+/**
+ * __useDeleteSubCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteSubCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSubCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSubCategoryMutation, { data, loading, error }] = useDeleteSubCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteSubCategoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>(DeleteSubCategoryDocument, options);
+      }
+export type DeleteSubCategoryMutationHookResult = ReturnType<typeof useDeleteSubCategoryMutation>;
+export type DeleteSubCategoryMutationResult = Apollo.MutationResult<DeleteSubCategoryMutation>;
+export type DeleteSubCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>;
+export const UpdateSubCategoryDocument = gql`
+    mutation UpdateSubCategory($id: Int!, $name: String!, $description: String, $image: String!, $categoryId: Int!) {
+  updateSubCategory(
+    id: $id
+    name: $name
+    description: $description
+    image: $image
+    categoryId: $categoryId
+  ) {
+    id
+    name
+    description
+    image
+    category {
+      id
+      name
+      image
+    }
+  }
+}
+    `;
+export type UpdateSubCategoryMutationFn = Apollo.MutationFunction<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>;
+
+/**
+ * __useUpdateSubCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubCategoryMutation, { data, loading, error }] = useUpdateSubCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *      image: // value for 'image'
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useUpdateSubCategoryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>(UpdateSubCategoryDocument, options);
+      }
+export type UpdateSubCategoryMutationHookResult = ReturnType<typeof useUpdateSubCategoryMutation>;
+export type UpdateSubCategoryMutationResult = Apollo.MutationResult<UpdateSubCategoryMutation>;
+export type UpdateSubCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateSubCategoryMutation, UpdateSubCategoryMutationVariables>;

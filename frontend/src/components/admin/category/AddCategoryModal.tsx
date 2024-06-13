@@ -87,12 +87,12 @@ function AddCategoryModal({
               />
             ))}
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              Ajouter
+              Add
             </button>
           </form>
         </div>
         <label className="modal-backdrop" htmlFor="category_modal" onClick={onClose}>
-          Fermer
+          Close
         </label>
       </div>
     </div>
