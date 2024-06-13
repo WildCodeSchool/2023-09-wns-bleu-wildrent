@@ -1,6 +1,14 @@
-import { BaseEntity, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Field, InputType, Int, ObjectType } from 'type-graphql';
 import { argon2id, verify, hash } from 'argon2';
+import { Order } from './order.entity';
 
 type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
@@ -70,6 +78,12 @@ export default class User extends BaseEntity {
   @Field()
   @Column()
   password: string;
+
+  @OneToMany(() => Order, (order) => order.user, {
+    eager: true,
+  })
+  @Field(() => [Order])
+  orders: Order[];
 }
 
 // Profile = User mais sans la key 'password'
@@ -79,9 +93,42 @@ export class Profile extends User {
   declare password: never;
 }
 
+@InputType()
+export class NewUserInput {
+  @Field({ nullable: true })
+  email?: string;
+
+  @Field({ nullable: true })
+  password?: string;
+
+  @Field({ nullable: true })
+  role?: 'USER' | 'ADMIN';
+
+  @Field({ nullable: true })
+  firstname?: string;
+
+  @Field({ nullable: true })
+  lastname?: string;
+
+  @Field({ nullable: true })
+  address?: string;
+
+  @Field({ nullable: true })
+  city?: string;
+
+  @Field({ nullable: true })
+  cp?: string;
+
+  @Field({ nullable: true })
+  picture?: string;
+}
+
 // Input modification des infos du user
 @InputType()
 export class InputUpdate {
+  @Field()
+  id: number;
+
   @Field({ nullable: true })
   email?: string;
 
@@ -105,6 +152,15 @@ export class InputUpdate {
 
   @Field({ nullable: true })
   emailConfirmationToken?: string;
+}
+
+@InputType()
+export class InputUpdateAdmin extends InputUpdate {
+  @Field(() => String, { nullable: true })
+  password?: string;
+
+  @Field(() => String, { nullable: true })
+  role?: string;
 }
 
 @ObjectType()

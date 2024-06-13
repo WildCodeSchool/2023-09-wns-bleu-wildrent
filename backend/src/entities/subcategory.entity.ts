@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ObjectType, Field, InputType, Int } from 'type-graphql';
 import { Length } from 'class-validator';
 import { Category } from './category.entity';
@@ -8,13 +8,9 @@ import { ProductRef } from './productRef.entity';
 @Entity()
 @ObjectType()
 export class SubCategory extends BaseCategory {
-  @ManyToOne(() => Category, (category) => category.subCategories)
-  @Field(() => Category)
+  @ManyToOne(() => Category, (category) => category.subCategories, { eager: true })
+  @Field(() => Category, { nullable: true })
   category: Category;
-
-  @Column()
-  @Field(() => Int)
-  categoryId: number;
 
   @OneToMany(() => ProductRef, (productRef) => productRef.subCategory)
   @Field(() => [ProductRef])

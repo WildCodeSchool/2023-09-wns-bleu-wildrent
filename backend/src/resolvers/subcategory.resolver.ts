@@ -1,22 +1,55 @@
-import { Resolver, Arg, Query, Int } from 'type-graphql';
-import { GraphQLError } from 'graphql';
+import { Resolver, Query, Mutation, Arg, Int } from 'type-graphql';
 import { SubCategory } from '../entities/subcategory.entity';
+import SubCategoryService from '../services/subCategory.service';
 
 @Resolver(SubCategory)
-class SubCategoryResolver {
+export default class SubCategoryResolver {
+  private subCategoryService = new SubCategoryService();
+
   @Query(() => [SubCategory])
   async allSubCategories() {
-    return await SubCategory.find({ order: { id: 'desc' } });
+    return await this.subCategoryService.getAllSubCategories();
   }
 
-  @Query(() => SubCategory)
-  async subCategoryById(@Arg('subCategoryId', () => Int) id: number) {
-    const subCategory = await SubCategory.findOneBy({ id });
-    if (!subCategory) {
-      throw new GraphQLError('Not Found');
-    }
-    return subCategory;
+  @Query(() => SubCategory, { nullable: true })
+  async subCategoryById(@Arg('id', () => Int) id: number) {
+    return await this.subCategoryService.findSubCategoryById(id);
+  }
+
+  @Mutation(() => SubCategory)
+  async addSubCategory(
+    @Arg('name') name: string,
+    @Arg('description', { nullable: true }) description: string,
+    @Arg('image') image: string,
+    @Arg('categoryId', () => Int) categoryId: number,
+  ) {
+    return await this.subCategoryService.createSubCategory({
+      name,
+      description,
+      image,
+      categoryId,
+    });
+  }
+
+  @Mutation(() => SubCategory)
+  async updateSubCategory(
+    @Arg('id', () => Int) id: number,
+    @Arg('name') name: string,
+    @Arg('description', { nullable: true }) description: string,
+    @Arg('image') image: string,
+    @Arg('categoryId', () => Int) categoryId: number,
+  ) {
+    return await this.subCategoryService.updateSubCategory({
+      id,
+      name,
+      description,
+      image,
+      categoryId,
+    });
+  }
+
+  @Mutation(() => Boolean)
+  async deleteSubCategory(@Arg('id', () => Int) id: number) {
+    return await this.subCategoryService.deleteSubCategory(id);
   }
 }
-
-export default SubCategoryResolver;

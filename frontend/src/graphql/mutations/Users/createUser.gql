@@ -1,0 +1,6 @@
+mutation CreateNewUser($newUser: NewUserInput!) {
+  createNewUser(newUser: $newUser) {
+    success
+    message
+  }
+}

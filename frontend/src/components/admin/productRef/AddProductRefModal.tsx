@@ -1,11 +1,10 @@
-import { ProductRef, SimpleSubCategory } from '@/types';
+import { SimpleSubCategory } from '@/types';
 import React from 'react';
 import { ProductRefModalProps } from './ProductRefModalDetails';
 import {
   InputProductRef,
   useAddProductRefMutation,
   useAllSubCategoriesQuery,
-  SubCategory,
 } from '@/graphql/generated/schema';
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
@@ -37,9 +36,15 @@ const fields = [
   },
   {
     label: 'Type',
-    id: 'subCategoryId',
+    id: 'subCategory',
     type: 'select',
     placeholder: 'Ajouter le lien vers la photo du produit',
+  },
+  {
+    label: 'Quantité disponible',
+    id: 'quantity',
+    type: 'number',
+    placeholder: '5',
   },
 ];
 
@@ -56,13 +61,15 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     formJSON.priceHT = parseFloat(formJSON.priceHT);
-    formJSON.subCategoryId = parseInt(formJSON.subCategoryId);
+    formJSON.subCategory = { id: parseInt(formJSON.subCategory) };
+    formJSON.quantity = parseInt(formJSON.quantity);
     try {
       const response = await createProduct({
         variables: {
-          newProductRef: formJSON as InputProductRef,
+          data: formJSON as InputProductRef,
         },
       });
+      console.log(response.data);
       if (response.data && response.data.addProductRef.success) {
         alert('Produit ajouté avec succès');
         onClose();
@@ -111,7 +118,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
-              Ajouter
+              Add
             </button>
           </form>
         </div>

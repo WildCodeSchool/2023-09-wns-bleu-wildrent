@@ -5,7 +5,6 @@ query GetProfile {
     lastname
     role
     email
-    password
     address
     city
     cp

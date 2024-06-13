@@ -1,10 +1,11 @@
 // pages/admin/products.tsx
 import React, { useState } from 'react';
-import LayoutDashboard from '../../../components/admin/LayoutDashboard';
-import AdminProductTable from '../../../components/admin/productRef/AdminProductTable';
-import { useAllProductRefsAdminQuery } from '../../../graphql/generated/schema';
+import LayoutDashboard from '@/components/admin/LayoutDashboard';
+import AdminProductTable from '@/components/admin/productRef/AdminProductTable';
+import { useAllProductRefsAdminQuery } from '@/graphql/generated/schema';
 import { IoIosAdd } from 'react-icons/io';
 import AddProductRefModal from '@/components/admin/productRef/AddProductRefModal';
+import Loader from '@/components/Loader';
 
 const ProductsAdmin = () => {
   const { data, loading, error } = useAllProductRefsAdminQuery();
@@ -17,7 +18,7 @@ const ProductsAdmin = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  if (loading) return <p>Chargement...</p>;
+  if (loading) return <Loader />;
   if (error) return <p>Erreur: {error.message}</p>;
   return (
     <LayoutDashboard>

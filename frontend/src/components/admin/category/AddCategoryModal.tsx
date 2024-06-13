@@ -1,6 +1,6 @@
 import React from 'react';
 import FormInput from '@/components/FormInput';
-import { useAddCategoryMutation } from '@/graphql/generated/schema'; // Assurez-vous d'importer correctement les types nécessaires
+import { useAddCategoryMutation } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
 
 const fields = [
@@ -24,14 +24,22 @@ const fields = [
   },
 ];
 
-function AddCategoryModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+function AddCategoryModal({
+  isOpen,
+  onClose,
+  onCategoryAdded,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onCategoryAdded: (category: any) => void;
+}) {
   if (!isOpen) return null;
-  const [createCategory, { data, loading, error }] = useAddCategoryMutation();
+  const [createCategory, { loading }] = useAddCategoryMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const formJSON = Object.fromEntries(formData.entries()); // Supprimez la déclaration de type ici si CategoryInput n'est pas disponible
+    const formJSON = Object.fromEntries(formData.entries());
 
     try {
       const response = await createCategory({
@@ -41,9 +49,9 @@ function AddCategoryModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           description: formJSON.description.toString(),
         },
       });
-      if (response.data?.addCategory?.id) {
-        // Vérifiez si l'ID de la nouvelle catégorie est retournée
+      if (response.data?.addCategory) {
         alert('Catégorie ajoutée avec succès');
+        onCategoryAdded(response.data.addCategory);
         onClose();
       } else {
         alert('Erreur lors de l’ajout de la catégorie');
@@ -79,12 +87,12 @@ function AddCategoryModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               />
             ))}
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              Ajouter
+              Add
             </button>
           </form>
         </div>
         <label className="modal-backdrop" htmlFor="category_modal" onClick={onClose}>
-          Fermer
+          Close
         </label>
       </div>
     </div>

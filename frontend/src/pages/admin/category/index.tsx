@@ -22,11 +22,7 @@ const CategoriesAdmin = () => {
 
   return (
     <LayoutDashboard>
-      <button className="btn btn-circle btn-accent" onClick={() => handleModal()}>
-        <IoIosAdd size={50} />
-      </button>
-      {data?.allCategories && <AdminCategoryTable categories={data.allCategories as any} />}
-      {<AddCategoryModal isOpen={isModalOpen} onClose={closeModal} />}
+      {data?.allCategories && <AdminCategoryTable initialCategories={data.allCategories as any} />}
     </LayoutDashboard>
   );
 };

@@ -24,4 +24,19 @@ export class CategoryResolver {
   ) {
     return await this.categoryService.createCategory({ name, description, image });
   }
+
+  @Mutation(() => Category)
+  async updateCategory(
+    @Arg('id', () => Int) id: number,
+    @Arg('name') name: string,
+    @Arg('description', { nullable: true }) description: string,
+    @Arg('image') image: string,
+  ) {
+    return await this.categoryService.updateCategory(id, { name, description, image });
+  }
+
+  @Mutation(() => Boolean)
+  async deleteCategory(@Arg('id', () => Int) id: number) {
+    return await this.categoryService.deleteCategory(id);
+  }
 }
