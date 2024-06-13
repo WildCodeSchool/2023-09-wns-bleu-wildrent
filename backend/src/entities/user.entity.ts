@@ -14,6 +14,13 @@ type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
 @Entity()
 export default class User extends BaseEntity {
+  @Field({ nullable: true })
+  @Column({ nullable: true, type: 'boolean' })
+  emailVerified?: boolean;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  emailConfirmationToken?: string;
   // static findUserById(id: number): User | PromiseLike<User | null> | null {
   //   throw new Error('Method not implemented.');
   // }
@@ -142,6 +149,9 @@ export class InputUpdate {
 
   @Field({ nullable: true })
   picture?: string;
+
+  @Field({ nullable: true })
+  emailConfirmationToken?: string;
 }
 
 @InputType()
@@ -181,6 +191,10 @@ export class InputRegister {
 
   @Field()
   password: string;
+
+  @Field({ nullable: true })
+  @Column({ default: false })
+  emailVerified?: boolean;
 }
 
 // InputType pour la connexion

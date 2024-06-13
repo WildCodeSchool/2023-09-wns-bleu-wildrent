@@ -13,4 +13,10 @@ export default load({
   DB_USER: { type: String, optional: true, default: 'postgres' },
   DB_PASS: { type: String, optional: true, default: 'postgres' },
   DB_NAME: { type: String, optional: true, default: 'postgres' },
+  SMTP_HOST: { type: String, optional: true, default: 'in-v3.mailjet.com' },
+  SMTP_PORT: { type: Number, optional: true, default: 465 },
+  SMTP_USER: String,
+  SMTP_PASS: String,
+  EMAIL_FROM: { type: String, optional: true, default: 'contactwildrent@gmail.com' },
+  FRONTEND_URL: String,
 });

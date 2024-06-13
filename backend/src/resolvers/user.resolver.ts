@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { Arg, Authorized, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/user.service';
@@ -9,11 +8,13 @@ import User, {
   Message,
   Profile,
   InputUpdate,
-  NewUserInput,
-  InputUpdateAdmin,
 } from '../entities/user.entity';
 import { ContextType } from '../types';
 import db from '../db';
+import env from '../env';
+import mail from '../mail';
+import { GraphQLError } from 'graphql';
+import crypto from 'crypto';
 
 @Resolver()
 export default class UserResolver {
@@ -25,13 +26,53 @@ export default class UserResolver {
       return { success: false, message: 'Already Registered' };
     } else {
       try {
+        const token = crypto.randomBytes(20).toString('hex');
+        console.log(token);
         await this.userService.createUser(newUser);
+        const user = await this.userService.findUserByEmail(newUser.email);
+
+        if (user && (user as User).id) {
+          await this.userService.updateUser((user as User).id, {
+            ...user,
+            emailConfirmationToken: token,
+          });
+        } else {
+          console.error('User ID is undefined');
+        }
+        console.log(user, 'usererror');
+        const isOk = await mail.verify();
+        if (isOk) {
+          await mail.sendMail({
+            subject: 'Bienvenue sur Wildrent',
+            to: newUser.email,
+            from: env.EMAIL_FROM,
+            text: `Bienvenue parmi nous ${newUser.firstname}. Merci de bien vouloir cliquer sur ce lien pour confirmer votre email : ${env.FRONTEND_URL}/auth/emailConfirmation?token=${token}`,
+          });
+        } else {
+          console.error('erreur mail');
+        }
+
         return { success: true, message: 'Account Created !' };
       } catch (e) {
         console.error((e as Error).message);
       }
     }
   }
+
+  @Mutation(() => String)
+  async confirmEmail(@Arg('token') token: string): Promise<string> {
+    const user = await db.getRepository(User).findOne({ where: { emailConfirmationToken: token } });
+    console.log(token, user);
+
+    if (user === null) throw new GraphQLError('Le token est invalide ou expiré');
+
+    user.emailVerified = true;
+    user.emailConfirmationToken = '';
+    user.save();
+
+    return 'ok';
+  }
+
   @Mutation(() => Message)
   async login(@Arg('user') { email, password }: InputLogin, @Ctx() ctx: ContextType) {
     try {
@@ -70,22 +111,6 @@ export default class UserResolver {
     }
   }
 
-  @Authorized(['ADMIN'])
-  @Mutation(() => Message)
-  async createNewUser(@Arg('newUser') newUser: NewUserInput): Promise<Message> {
-    try {
-      if (newUser) {
-        await this.userService.createUserAdmin(newUser as User);
-        return { success: true, message: 'User created successfully' };
-      } else {
-        return { success: false, message: 'newUser not defined' };
-      }
-    } catch (e) {
-      console.error((e as Error).message);
-      return { success: false, message: `Cannot create User: ${(e as Error).message}` };
-    }
-  }
-
   @Authorized()
   @Mutation(() => Message)
   async updateUser(
@@ -96,24 +121,7 @@ export default class UserResolver {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
-      if (currentUser.id !== updatedUser.id) {
-        return { success: false, message: 'Unauthorized' };
-      }
       const updated = await this.userService.updateUser(currentUser.id, updatedUser);
-      if (!updated) {
-        return { success: false, message: 'cannot update user' };
-      }
-      return { success: true, message: 'user updated successfully' };
-    } catch (e) {
-      console.error((e as Error).message);
-      return { success: false, message: `Error updating user: ${(e as Error).message}` };
-    }
-  }
-  @Authorized(['ADMIN'])
-  @Mutation(() => Message)
-  async updateUserAdmin(@Arg('updatedUser') updatedUser: InputUpdateAdmin): Promise<Message> {
-    try {
-      const updated = await this.userService.updateUserAdmin(updatedUser.id, updatedUser);
       if (!updated) {
         return { success: false, message: 'cannot update user' };
       }
@@ -146,14 +154,10 @@ export default class UserResolver {
     }
   }
 
-  @Authorized(['ADMIN'])
-  @Query(() => [Profile])
-  async allUsers(): Promise<Profile[] | Message> {
-    try {
-      return (await this.userService.getAllUsers()) as Profile[];
-    } catch (error) {
-      return { success: false, message: 'Only admin can get all users data', isAdmin: false };
-    }
+  @Authorized()
+  @Query(() => [User])
+  async allUsers() {
+    return await User.find({ order: { id: 'desc' } });
   }
 
   @Query(() => Message)
