@@ -18,14 +18,6 @@ const config: Config = {
           success: '#B2C9AB',
           warning: '#F0D97E',
           error: '#E18989',
-          'btn-twitter': {
-            'background-color': '#1EA1F1',
-            'border-color': '#1EA1F1',
-          },
-          'btn-twitter:hover': {
-            'background-color': '#1C96E1',
-            'border-color': '#1C96E1',
-          },
         },
       },
     ],
