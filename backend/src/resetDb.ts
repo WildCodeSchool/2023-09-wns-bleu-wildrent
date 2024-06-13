@@ -191,6 +191,8 @@ async function main() {
   order2.calculateTotalAmount();
   await order1.save();
   await order2.save();
+
+  await db.destroy();
 }
 
 main();

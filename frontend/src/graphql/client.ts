@@ -11,7 +11,9 @@ const httpLink = new HttpLink({
 const client = new ApolloClient({
   link: httpLink,
   credentials: 'include',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    addTypename: false, // Permet de retirer la propriété __typename
+  }),
 });
 
 export default client;

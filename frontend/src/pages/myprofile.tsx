@@ -44,6 +44,7 @@ function MyProfile() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
+    formJSON.id = user?.id;
     try {
       const res = await updateUser({
         variables: {
