@@ -199,7 +199,11 @@ function MyProfile() {
             </div>
           </form>
         </div>
-        <button className="bg-red-600 px-4 py-2" onClick={deleteAccount} type="button">
+        <button
+          className="btn btn-error text-primary mt-4 ml-4 px-6 py-2 "
+          onClick={deleteAccount}
+          type="button"
+        >
           Delete your account
         </button>
       </section>

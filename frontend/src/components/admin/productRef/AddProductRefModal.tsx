@@ -118,7 +118,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
-              Ajouter
+              Add
             </button>
           </form>
         </div>
