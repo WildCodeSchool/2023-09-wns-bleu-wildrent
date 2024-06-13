@@ -39,18 +39,29 @@ const fields = [
 export default function RegisterForm() {
   const router = useRouter();
   const [register, { data, loading, error }] = useRegisterMutation();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+
     if (formData.get('password') === formData.get('confirm_password')) {
       formData.delete('confirm_password');
-      const newUser = Object.fromEntries(formData.entries()) as InputRegister;
+
+      // Convert FormData to InputRegister type
+      const newUser: InputRegister = {
+        email: formData.get('email') as string,
+        firstname: formData.get('firstname') as string,
+        lastname: formData.get('lastname') as string,
+        password: formData.get('password') as string,
+      };
+
       try {
         const { data } = await register({
           variables: {
             newUser,
           },
         });
+        console.log(data?.register, error);
         if (data?.register.success && !error && !loading) {
           router.push('/auth/login');
         }
@@ -61,6 +72,7 @@ export default function RegisterForm() {
       }
     }
   };
+
   return (
     <form className="flex flex-col gap-4 border rounded p-4" onSubmit={handleSubmit}>
       {fields.map((field) => (

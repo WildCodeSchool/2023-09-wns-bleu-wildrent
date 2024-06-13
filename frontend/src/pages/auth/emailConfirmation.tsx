@@ -1,4 +1,5 @@
 import RootLayout from '@/app/layout';
+import { useConfirmEmailMutation } from '@/graphql/generated/schema';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -7,12 +8,13 @@ export default function EmailConfirmation() {
   const [confirmEmail] = useConfirmEmailMutation();
 
   const token = router.query.token as string;
+  console.log(token);
 
   useEffect(() => {
     if (token)
       confirmEmail({ variables: { token } }).then(() => {
         setTimeout(() => {
-          router.push('/login');
+          router.push('/auth/login');
         }, 5000);
       });
   }, [token]);
@@ -25,7 +27,4 @@ export default function EmailConfirmation() {
       </p>
     </RootLayout>
   );
-}
-function useConfirmEmailMutation(): [any] {
-  throw new Error('Function not implemented.');
 }

@@ -56,6 +56,9 @@ export default class UserService {
         if (updatedUser.picture) {
           currentUser.picture = updatedUser.picture;
         }
+        if (updatedUser.emailConfirmationToken) {
+          currentUser.emailConfirmationToken = updatedUser.emailConfirmationToken;
+        }
         await currentUser.save();
         return currentUser;
       } else {

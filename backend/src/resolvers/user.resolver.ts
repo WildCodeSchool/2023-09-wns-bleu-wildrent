@@ -26,17 +26,27 @@ export default class UserResolver {
       return { success: false, message: 'Already Registered' };
     } else {
       try {
-        await this.userService.createUser(newUser);
-
         const token = crypto.randomBytes(20).toString('hex');
-        newUser.emailConfirmationToken = token;
-
-        await mail.sendMail({
-          subject: 'Bienvenue sur Wildrent',
-          to: 'yohan.fabre40@hotmail.fr',
-          from: env.EMAIL_FROM,
-          text: 'Bievenue parmi nous ${newUser.nickname}. Merci de bien vouloir cliquer sur ce lien pour confirmer votre email : ${env.FRONTEND_URL}/emailConfirmation?token=${token}',
+        console.log(token);
+        await this.userService.createUser(newUser);
+        const user = await this.userService.findUserByEmail(newUser.email);
+        await this.userService.updateUser((user as User).id, {
+          ...user,
+          emailConfirmationToken: token,
         });
+        console.log(user, 'usererror');
+        const isOk = await mail.verify();
+        if (isOk) {
+          await mail.sendMail({
+            subject: 'Bienvenue sur Wildrent',
+            to: newUser.email,
+            from: env.EMAIL_FROM,
+            text: `Bienvenue parmi nous ${newUser.firstname}. Merci de bien vouloir cliquer sur ce lien pour confirmer votre email : ${env.FRONTEND_URL}/auth/emailConfirmation?token=${token}`,
+          });
+        } else {
+          console.error('erreur mail');
+        }
+
         return { success: true, message: 'Account Created !' };
       } catch (e) {
         console.error((e as Error).message);
@@ -46,12 +56,13 @@ export default class UserResolver {
 
   @Mutation(() => String)
   async confirmEmail(@Arg('token') token: string): Promise<string> {
-    const user = await User.findOneBy({ emailConfirmationToken: token });
+    const user = await db.getRepository(User).findOne({ where: { emailConfirmationToken: token } });
+    console.log(token, user);
 
     if (user === null) throw new GraphQLError('Le token est invalide ou expiré');
 
     user.emailVerified = true;
-    user.emailConfirmationToken = null;
+    user.emailConfirmationToken = '';
     user.save();
 
     return 'ok';
