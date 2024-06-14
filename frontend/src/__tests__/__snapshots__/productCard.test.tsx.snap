@@ -35,3 +35,4 @@ exports[`ProductCard Component renders correctly 1`] = `
     </a>
   </div>
 </body>
+`;
