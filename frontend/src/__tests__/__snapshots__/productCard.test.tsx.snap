@@ -7,11 +7,12 @@ exports[`ProductCard Component renders correctly 1`] = `
       href="/products/1"
     >
       <div
-        class="card card-compact w-96 bg-base-100 shadow-xl"
+        class="card card-compact w-full bg-base-100 shadow-xl mb-6"
       >
         <figure>
           <img
             alt="Guirlande"
+            class="h-48 w-full object-cover"
             src="https://img.com/i.png"
           />
         </figure>
@@ -34,4 +35,3 @@ exports[`ProductCard Component renders correctly 1`] = `
     </a>
   </div>
 </body>
-`;
