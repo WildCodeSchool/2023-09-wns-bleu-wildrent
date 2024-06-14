@@ -22,6 +22,11 @@ export enum Availability {
   Unavailable = 'Unavailable'
 }
 
+export type AvailableProducts = {
+  __typename?: 'AvailableProducts';
+  items: Array<ProductRef>;
+};
+
 export type Category = {
   __typename?: 'Category';
   description?: Maybe<Scalars['String']>;
@@ -88,9 +93,9 @@ export type Mutation = {
   addCategory: Category;
   addProductRef: Message;
   addSubCategory: SubCategory;
+  createNewUser: Message;
   deleteCategory: Scalars['Boolean'];
   deleteProductItem: Message;
-  createNewUser: Message;
   deleteProductRef: Message;
   deleteSubCategory: Scalars['Boolean'];
   deleteUser: Message;
@@ -125,6 +130,11 @@ export type MutationAddSubCategoryArgs = {
 };
 
 
+export type MutationCreateNewUserArgs = {
+  newUser: NewUserInput;
+};
+
+
 export type MutationDeleteCategoryArgs = {
   id: Scalars['Int'];
 };
@@ -132,11 +142,6 @@ export type MutationDeleteCategoryArgs = {
 
 export type MutationDeleteProductItemArgs = {
   productItemId: Scalars['Int'];
-};
-
-
-export type MutationCreateNewUserArgs = {
-  newUser: NewUserInput;
 };
 
 
@@ -192,6 +197,23 @@ export type MutationUpdateUserArgs = {
   updatedUser: InputUpdate;
 };
 
+
+export type MutationUpdateUserAdminArgs = {
+  updatedUser: InputUpdateAdmin;
+};
+
+export type NewUserInput = {
+  address?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  cp?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstname?: InputMaybe<Scalars['String']>;
+  lastname?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  picture?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['String']>;
+};
+
 export type ObjectId = {
   id: Scalars['Int'];
 };
@@ -225,23 +247,6 @@ export type ProductItem = {
   availability: Availability;
   id: Scalars['Int'];
   productRef: ProductRef;
-};
-
-
-export type MutationUpdateUserAdminArgs = {
-  updatedUser: InputUpdateAdmin;
-};
-
-export type NewUserInput = {
-  address?: InputMaybe<Scalars['String']>;
-  city?: InputMaybe<Scalars['String']>;
-  cp?: InputMaybe<Scalars['String']>;
-  email?: InputMaybe<Scalars['String']>;
-  firstname?: InputMaybe<Scalars['String']>;
-  lastname?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
-  picture?: InputMaybe<Scalars['String']>;
-  role?: InputMaybe<Scalars['String']>;
 };
 
 export type ProductRef = {
@@ -281,6 +286,7 @@ export type Query = {
   allUsers: Array<Profile>;
   categoryById?: Maybe<Category>;
   checkIfLoggedIn: Message;
+  getProductAvailableByDateRange: AvailableProducts;
   getProfile: Profile;
   orderById: Order;
   productRefById: ProductRef;
@@ -290,6 +296,12 @@ export type Query = {
 
 export type QueryCategoryByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryGetProductAvailableByDateRangeArgs = {
+  endDate?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -382,6 +394,14 @@ export type AllCategoriesAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllCategoriesAdminQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, image: string }> };
+
+export type GetProductAvailableByDateRangeQueryVariables = Exact<{
+  endDate?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetProductAvailableByDateRangeQuery = { __typename?: 'Query', getProductAvailableByDateRange: { __typename?: 'AvailableProducts', items: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantityAvailable: number }> } };
 
 export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -847,6 +867,49 @@ export function useAllCategoriesAdminLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AllCategoriesAdminQueryHookResult = ReturnType<typeof useAllCategoriesAdminQuery>;
 export type AllCategoriesAdminLazyQueryHookResult = ReturnType<typeof useAllCategoriesAdminLazyQuery>;
 export type AllCategoriesAdminQueryResult = Apollo.QueryResult<AllCategoriesAdminQuery, AllCategoriesAdminQueryVariables>;
+export const GetProductAvailableByDateRangeDocument = gql`
+    query GetProductAvailableByDateRange($endDate: String, $startDate: String) {
+  getProductAvailableByDateRange(endDate: $endDate, startDate: $startDate) {
+    items {
+      id
+      name
+      description
+      image
+      priceHT
+      quantityAvailable
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProductAvailableByDateRangeQuery__
+ *
+ * To run a query within a React component, call `useGetProductAvailableByDateRangeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductAvailableByDateRangeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductAvailableByDateRangeQuery({
+ *   variables: {
+ *      endDate: // value for 'endDate'
+ *      startDate: // value for 'startDate'
+ *   },
+ * });
+ */
+export function useGetProductAvailableByDateRangeQuery(baseOptions?: Apollo.QueryHookOptions<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>(GetProductAvailableByDateRangeDocument, options);
+      }
+export function useGetProductAvailableByDateRangeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>(GetProductAvailableByDateRangeDocument, options);
+        }
+export type GetProductAvailableByDateRangeQueryHookResult = ReturnType<typeof useGetProductAvailableByDateRangeQuery>;
+export type GetProductAvailableByDateRangeLazyQueryHookResult = ReturnType<typeof useGetProductAvailableByDateRangeLazyQuery>;
+export type GetProductAvailableByDateRangeQueryResult = Apollo.QueryResult<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>;
 export const AllOrdersDocument = gql`
     query AllOrders {
   allOrders {

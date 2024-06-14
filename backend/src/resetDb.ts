@@ -179,7 +179,7 @@ async function main() {
     order: order2,
     productRef: productRef2,
 
-    quantity: 5,
+    quantity: 15,
     unitPrice: 10,
   });
   await order2Item1.save();

@@ -3,6 +3,10 @@ import { GraphQLError } from 'graphql';
 import { InputProductRef, ProductRef, UpdateProductRef } from '../entities/productRef.entity';
 import { Message } from '../entities/user.entity';
 import ProductRefService from '../services/productRef.service';
+import { AvailableProducts } from '../entities/productItem.entity';
+import { In } from 'typeorm';
+import db from '../db';
+import { Order } from '../entities/order.entity';
 
 @Resolver(ProductRef)
 class ProductRefsResolver {
@@ -77,6 +81,92 @@ class ProductRefsResolver {
     } catch (e) {
       console.error((e as Error).message);
       return { success: false, message: (e as Error).message };
+    }
+  }
+
+  @Query(() => AvailableProducts)
+  async getProductAvailableByDateRange(
+    @Arg('startDate', () => String, { nullable: true }) startDate: string | null,
+    @Arg('endDate', () => String, { nullable: true }) endDate: string | null,
+  ): Promise<AvailableProducts> {
+    try {
+      if (!startDate && !endDate) {
+        return {
+          items: await this.allProductRefs(),
+        };
+      } else if (startDate && endDate) {
+        // Recuperer les items de toutes les order sur une plage de date
+        const allOrderByDateRange = await db
+          .getRepository(Order)
+          .createQueryBuilder('order')
+          .leftJoinAndSelect('order.items', 'orderItem')
+          .leftJoinAndSelect('orderItem.productRef', 'productRef')
+          .where(
+            '(order.startDate BETWEEN :startDate AND :endDate OR order.endDate BETWEEN :startDate AND :endDate)',
+            { startDate: new Date(startDate), endDate: new Date(endDate) },
+          )
+          .orWhere('(order.startDate <= :startDate AND order.endDate >= :endDate)', {
+            startDate,
+            endDate,
+          })
+          .getMany();
+
+        // Associer les quantités commandés au productRef.id
+        const allProductsOrdered = allOrderByDateRange
+          .flatMap((order) => order.items)
+          .map(({ id, quantity, productRef }) => ({ productId: id, quantity, productRef }));
+
+        // Map des quantités avec le productRef.id en tant que key
+        const quantitiesMap: { [id: number]: number } = {};
+
+        for (const product of allProductsOrdered) {
+          const { quantity, productRef } = product;
+          const { id } = productRef;
+
+          // Vérifier si l'id existe déjà dans quantitiesMap
+          if (quantitiesMap[id]) {
+            // Ajouter la quantité à l'id existant
+            quantitiesMap[id] += quantity;
+          } else {
+            // Initialiser la quantité pour cet id
+            quantitiesMap[id] = quantity;
+          }
+        }
+
+        // Convertir la map en un array
+        const aggregatedQuantities = Object.keys(quantitiesMap).map((id) => ({
+          id: Number(id),
+          quantity: quantitiesMap[Number(id)],
+        }));
+
+        // Recuperer les productRef avec des quantité dispo et available
+        const productRefs = await ProductRef.find({
+          where: {
+            id: In(aggregatedQuantities.map(({ id }) => id)),
+          },
+        });
+
+        const items: ProductRef[] = [];
+
+        // Mise à jour des quantités en retirant les produits commandés
+        for (let i = 0; i < aggregatedQuantities.length; i++) {
+          const { id, quantity } = aggregatedQuantities[i];
+          const productRef = productRefs.find((pr) => pr.id === id);
+          if (productRef) {
+            productRef.quantityAvailable -= quantity;
+          }
+          items.push(productRef as ProductRef);
+        }
+
+        console.log(items);
+        return {
+          items: items.filter((item) => item.quantityAvailable > 0),
+        };
+      } else {
+        throw new Error('Both startDate and endDate must be provided together');
+      }
+    } catch (e) {
+      throw new GraphQLError((e as Error).message);
     }
   }
 }

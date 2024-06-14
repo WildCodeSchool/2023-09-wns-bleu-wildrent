@@ -39,3 +39,9 @@ export class InputProductItem {
   @Field(() => ObjectId, { nullable: false })
   productRef: ObjectId;
 }
+
+@ObjectType()
+export class AvailableProducts {
+  @Field(() => [ProductRef])
+  items: ProductRef[];
+}

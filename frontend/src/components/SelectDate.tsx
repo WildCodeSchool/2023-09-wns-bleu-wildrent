@@ -1,68 +1,65 @@
+import client from '@/graphql/client';
+import {
+  AllProductRefsDocument,
+  useGetProductAvailableByDateRangeQuery,
+} from '@/graphql/generated/schema';
 import React, { useEffect, useState } from 'react';
 import { MdCheck } from 'react-icons/md';
 
 function SelectDate() {
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
   const nbDaysLocalStorage = JSON.parse(localStorage.getItem('nbDays') || '0');
   const [nbDays, setNbDays] = useState(nbDaysLocalStorage);
+  const [filter, setFilter] = useState<any>({ startDate: '', endDate: '' });
 
-  const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newStartDate = event.target.value;
-    setStartDate(newStartDate);
-  };
-
+  const { data, loading, error, refetch } = useGetProductAvailableByDateRangeQuery({
+    variables: filter,
+    onCompleted: (data) => {
+      client.writeQuery({
+        query: AllProductRefsDocument,
+        data: {
+          allProductRefs: data.getProductAvailableByDateRange.items,
+        },
+      });
+    },
+  });
   useEffect(() => {
     localStorage.setItem('nbDays', JSON.stringify(nbDays));
   }, [nbDays]);
-  const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newEndDate = event.target.value;
-    setEndDate(newEndDate);
-  };
 
-  const calculateNbDays = () => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const nbDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return nbDays;
-  };
+  const handleFilter = (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const filter = Object.fromEntries(formData.entries());
 
-  const handleFilter = () => {
-    console.log('🚀 ~ SelectDate ~ nbDays', calculateNbDays());
-    setNbDays(calculateNbDays());
+      setFilter(filter);
+    } catch (e) {
+      console.error((e as Error).message);
+    } finally {
+      refetch();
+    }
   };
   return (
     <div className="mb-5 p-2 flex flex-col gap-4 items-center border rounded-xl bg-secondary/50">
       <div className="text-xl text-primary text-center font-semibold">
         Select dates to explore our catalog of products available during that period:
       </div>
-      <div className="flex items-center">
+      <form onSubmit={handleFilter} className="flex items-center">
         <div className="relative">
-          <input
-            name="start"
-            type="date"
-            className="input input-bordered w-full max-w-xs"
-            onChange={handleStartDateChange}
-          />
+          <input name="startDate" type="date" className="input input-bordered w-full max-w-xs" />
         </div>
         <span className="mx-4 text-primary">to</span>
         <div className="relative">
-          <input
-            name="end"
-            type="date"
-            className="input input-bordered w-full max-w-xs"
-            onChange={handleEndDateChange}
-          />
+          <input name="endDate" type="date" className="input input-bordered w-full max-w-xs" />
         </div>
         <button
-          onClick={handleFilter}
-          type="button"
+          disabled={loading}
+          type="submit"
           className="mx-4 text-primary btn btn-circle btn-secondary"
         >
           <MdCheck type="button" size={25} />
         </button>
-      </div>
+      </form>
     </div>
   );
 }
