@@ -9,6 +9,8 @@ import User, {
   Message,
   Profile,
   InputUpdate,
+  NewUserInput,
+  InputUpdateAdmin,
 } from '../entities/user.entity';
 import { ContextType } from '../types';
 import db from '../db';
@@ -68,6 +70,22 @@ export default class UserResolver {
     }
   }
 
+  @Authorized(['ADMIN'])
+  @Mutation(() => Message)
+  async createNewUser(@Arg('newUser') newUser: NewUserInput): Promise<Message> {
+    try {
+      if (newUser) {
+        await this.userService.createUserAdmin(newUser as User);
+        return { success: true, message: 'User created successfully' };
+      } else {
+        return { success: false, message: 'newUser not defined' };
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Cannot create User: ${(e as Error).message}` };
+    }
+  }
+
   @Authorized()
   @Mutation(() => Message)
   async updateUser(
@@ -78,7 +96,24 @@ export default class UserResolver {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
+      if (currentUser.id !== updatedUser.id) {
+        return { success: false, message: 'Unauthorized' };
+      }
       const updated = await this.userService.updateUser(currentUser.id, updatedUser);
+      if (!updated) {
+        return { success: false, message: 'cannot update user' };
+      }
+      return { success: true, message: 'user updated successfully' };
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Error updating user: ${(e as Error).message}` };
+    }
+  }
+  @Authorized(['ADMIN'])
+  @Mutation(() => Message)
+  async updateUserAdmin(@Arg('updatedUser') updatedUser: InputUpdateAdmin): Promise<Message> {
+    try {
+      const updated = await this.userService.updateUserAdmin(updatedUser.id, updatedUser);
       if (!updated) {
         return { success: false, message: 'cannot update user' };
       }
@@ -111,10 +146,14 @@ export default class UserResolver {
     }
   }
 
-  @Authorized()
-  @Query(() => [User])
-  async allUsers() {
-    return await User.find({ order: { id: 'desc' } });
+  @Authorized(['ADMIN'])
+  @Query(() => [Profile])
+  async allUsers(): Promise<Profile[] | Message> {
+    try {
+      return (await this.userService.getAllUsers()) as Profile[];
+    } catch (error) {
+      return { success: false, message: 'Only admin can get all users data', isAdmin: false };
+    }
   }
 
   @Query(() => Message)

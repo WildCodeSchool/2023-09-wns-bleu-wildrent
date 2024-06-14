@@ -7,6 +7,19 @@ export type CategoryCardProps = {
   link: string;
 };
 
+export interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  address: string;
+  city: string;
+  cp: string;
+  picture: string;
+  role: 'USER' | 'ADMIN';
+}
+
 export type Message = {
   success: boolean;
   message: string;
@@ -42,15 +55,17 @@ export type ProductRef = {
 };
 
 export interface Option {
-  value: number;
+  value: number | string;
   label: string;
 }
-export type FormInputProps = {
-  label: string;
-  id: string;
-  placeholder: string;
-  inputType?: string;
-  error?: string;
-  options?: Option[];
+
+export type Column = {
+  title: string;
+  id: number;
+};
+
+export type TableRow = {
+  cells: string[];
+  id: number;
   defaultValue?: string;
 };

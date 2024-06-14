@@ -1,6 +1,6 @@
 'use client';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FormInputProps } from '@/types';
+import { FormInputProps } from '@/types/props';
 import { useState } from 'react';
 
 export default function FormInput({

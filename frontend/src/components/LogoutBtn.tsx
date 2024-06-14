@@ -22,5 +22,7 @@ export default function LogoutBtn() {
     }
   };
 
-  return <Button text="Logout" onClick={handleClick} style="bg-secondary" />;
+  return (
+    <Button testId="logout-btn" text="Se déconnecter" onClick={handleClick} style="text-white" />
+  );
 }
