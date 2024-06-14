@@ -2,12 +2,15 @@ import { ProductCardProps } from '../types/index';
 import Link from 'next/link';
 import React from 'react';
 
-function ProductCard({ productRef: { name, image, priceHT }, link }: ProductCardProps) {
+const ProductCard: React.FC<ProductCardProps> = ({
+  productRef: { name, image, priceHT },
+  link,
+}) => {
   return (
     <Link href={link}>
-      <div className="card card-compact w-96 bg-base-100 shadow-xl">
+      <div className="card card-compact w-full bg-base-100 shadow-xl mb-6">
         <figure>
-          <img src={image} alt={name} />
+          <img src={image} alt={name} className="h-48 w-full object-cover" />
         </figure>
         <div className="card-body">
           <h2 className="card-title text-center">{name}</h2>
@@ -16,6 +19,6 @@ function ProductCard({ productRef: { name, image, priceHT }, link }: ProductCard
       </div>
     </Link>
   );
-}
+};
 
 export default ProductCard;
