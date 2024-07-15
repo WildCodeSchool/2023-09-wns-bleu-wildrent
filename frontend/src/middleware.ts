@@ -23,7 +23,7 @@ async function checkToken(token: string | undefined, request: NextRequest) {
   let response: NextResponse<unknown>;
   if (!token) {
     if (request.nextUrl.pathname.startsWith('/admin')) {
-      response = NextResponse.redirect(new URL('/auth/login', request.url));
+      response = NextResponse.redirect(new URL('/', request.url));
     } else {
       response = NextResponse.next();
     }

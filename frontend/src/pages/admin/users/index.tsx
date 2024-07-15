@@ -4,7 +4,6 @@ import LayoutDashboard from '@/components/admin/LayoutDashboard';
 import AdminTableModal from '@/components/admin/table/AdminTableModal';
 import client from '@/graphql/client';
 import {
-  InputUpdate,
   NewUserInput,
   useCreateNewUserMutation,
   useGetAllUsersQuery,
@@ -24,9 +23,6 @@ export default function Page() {
   const [open, setOpen] = useState<boolean>(false);
   const [editionMode, setEditionMode] = useState<boolean>(false);
   const [userId, setUserId] = useState<number>(0);
-
-  if (loading) return <Loader />;
-  if (error) return <p>{error.message}</p>;
 
   const handleOpen = () => {
     setOpen(!open);
@@ -96,6 +92,9 @@ export default function Page() {
       client.resetStore();
     }
   };
+
+  if (loading) return <Loader />;
+  if (error) return <p>{error.message}</p>;
 
   const cols = createColumnsFromData(users?.allUsers);
   const dataset = createDataset(users?.allUsers || [], cols);
