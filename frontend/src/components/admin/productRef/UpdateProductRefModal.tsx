@@ -59,10 +59,8 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
     const formData = new FormData(e.target as HTMLFormElement);
 
     const formJSON: any = Object.fromEntries(formData.entries());
-    console.log('formJSON', formJSON);
     formJSON.priceHT = parseFloat(formJSON.priceHT);
     formJSON.subCategory = { id: parseInt(formJSON.subCategory) };
-    console.log('formJSON.subCategory', formJSON.subCategory);
     formJSON.quantity = parseInt(formJSON.quantity);
     try {
       const response = await UpdateProductRef({
@@ -71,7 +69,6 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
           data: formJSON as UpdateProductRef,
         },
       });
-      console.log(response.data);
       if (response.data && response.data.updateProductRef.success) {
         showAlert('success', 'Produit modifié avec succès', 3000);
 

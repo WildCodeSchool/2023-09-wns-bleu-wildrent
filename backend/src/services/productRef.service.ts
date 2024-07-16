@@ -76,11 +76,8 @@ export default class ProductRefService {
         console.error('ProductRef not found!');
         return false;
       }
-      console.log(data);
 
       if (typeof data?.quantity === 'number' && data.quantity > productRefToUpdate.quantity) {
-        console.log('test', productRefToUpdate.productItems);
-
         const productItems = Array.from(
           { length: data.quantity - productRefToUpdate.quantity },
           () => new ProductItem(),

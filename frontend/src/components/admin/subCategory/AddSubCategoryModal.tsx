@@ -76,7 +76,6 @@ function AddSubCategoryModal({
           categoryId,
         },
       });
-      console.log('Mutation response:', response);
 
       if (response.data && response.data.addSubCategory) {
         showAlert('success', 'Sous-catégorie ajoutée avec succès', 3000);

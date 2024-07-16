@@ -20,7 +20,7 @@ const OrdersAdmin = () => {
   };
   if (loading) return <Loader />;
   if (error) return <p>Erreur: {error.message}</p>;
-  console.log('data', data);
+
   return (
     <LayoutDashboard>
       {/* <button className="btn btn-circle btn-accent" onClick={() => handleModal()}>

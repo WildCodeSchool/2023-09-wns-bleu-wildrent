@@ -1,6 +1,5 @@
 import { Config } from 'tailwindcss';
 import daisyui from 'daisyui';
-import { error } from 'console';
 
 const config: Config = {
   content: ['./src/pages/**/*.{js,ts,jsx,tsx,mdx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}'],
@@ -9,7 +8,7 @@ const config: Config = {
     themes: [
       {
         lemonade: {
-          ...require('daisyui/src/theming/themes')['lemonade'],
+          ...require('daisyui/src/theming/themes')['[data-theme=lemonade]'],
           primary: '#4D6E74',
           secondary: '#D0B77A',
           success: '#B2C9AB',

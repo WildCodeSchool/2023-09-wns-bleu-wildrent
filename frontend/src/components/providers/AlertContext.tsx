@@ -20,15 +20,13 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [alertMessage, setAlertMessage] = useState('');
 
   const closeAlert = useCallback(() => {
-    console.log('Closing alert');
     setAlertOpen(false);
   }, []);
 
   const showAlert = useCallback(
     (type: 'success' | 'error' | 'warning' | 'info', message: string, duration: number) => {
-      console.log('Showing alert:', type, message, duration);
-      console.log('Showing alert:', type, message, duration);
       setAlertType(type);
+
       setAlertMessage(message);
       setAlertOpen(true);
 
@@ -40,12 +38,12 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     },
     [closeAlert],
   );
-
+  console.log('🚀 ~ alertType:', alertType);
   return (
     <AlertContext.Provider value={{ showAlert, closeAlert, alertOpen, alertType, alertMessage }}>
       {children}
       {alertOpen && (
-        <div className="toast toast-end">
+        <div className="toast toast-top toast-center">
           <div className={`alert alert-${alertType}`}>
             <span>{alertMessage}</span>
           </div>

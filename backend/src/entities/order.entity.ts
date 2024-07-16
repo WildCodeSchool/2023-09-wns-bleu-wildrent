@@ -62,7 +62,7 @@ export class Order extends BaseEntity {
   @Field()
   endDate: Date;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: false })
   @Field(() => Int)
   numberOfDays: number;
 
@@ -74,8 +74,13 @@ export class Order extends BaseEntity {
   @BeforeUpdate()
   validateDates() {
     const today = new Date();
-    if (this.startDate && this.endDate && this.startDate > this.endDate && this.startDate > today) {
-      throw new Error('Start date must be before end date');
+    if (this.startDate && this.endDate) {
+      if (this.startDate > this.endDate && this.startDate != today) {
+        throw new Error('Start date must be before end date');
+      }
+      if (this.startDate.getTime() === this.endDate.getTime()) {
+        throw new Error('Start date and end date cannot be the same');
+      }
     }
     this.calculateTotalAmount();
   }
