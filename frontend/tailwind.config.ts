@@ -14,6 +14,7 @@ const config: Config = {
           success: '#B2C9AB',
           warning: '#F0D97E',
           error: '#E18989',
+          info: '#A3B8C4',
         },
       },
     ],

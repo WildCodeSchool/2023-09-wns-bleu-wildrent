@@ -44,8 +44,11 @@ class OrderResolver {
   }
 
   @Mutation(() => Message)
-  async createOrder(@Arg('data') data: OrderInput) {
+  async createOrder(@Arg('data') data: OrderInput, @Ctx() { currentUser }: ContextType) {
     try {
+      if (!currentUser) {
+        throw new GraphQLError('Unauthorized');
+      }
       const success = await new OrderService().addOrder(data);
       if (success) {
         return { success: true, message: 'order Created !' };

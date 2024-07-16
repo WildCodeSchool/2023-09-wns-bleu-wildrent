@@ -97,15 +97,13 @@ function UpdateSubCategoryModal({
       // Tentative de mise à jour de la sous-catégorie via GraphQL
       const response = await updateSubCategory({ variables });
       if (response.data?.updateSubCategory) {
-        alert('Sous-catégorie mise à jour avec succès');
-        showAlert('error', 'Veuillez sélectionner une catégorie valide.', 3000);
+        showAlert('error', 'Subcategory updated successfully', 3000);
         onSubCategoryUpdated(response.data.updateSubCategory);
         onClose();
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de la mise à jour de la sous-catégorie');
-      showAlert('error', 'Veuillez sélectionner une catégorie valide.', 3000);
-      console.error('Erreur lors de la mise à jour de la sous-catégorie', error);
+      showAlert('error', 'error updating subcategory', 3000);
+      console.error('Error updating subcategory', error);
     }
   };
 

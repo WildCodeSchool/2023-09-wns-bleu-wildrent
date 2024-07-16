@@ -51,15 +51,16 @@ function AddCategoryModal({
         },
       });
       if (response.data?.addCategory) {
-        showAlert('success', 'Catégorie ajoutée avec succès', 3000);
+        console.log('🚀 ~ handleSubmit ~ response.data?.addCategory:', response.data?.addCategory);
+        showAlert('success', 'Category added successfully', 3000);
         onCategoryAdded(response.data.addCategory);
         onClose();
       } else {
-        showAlert('error', 'Erreur lors de l’ajout de la catégorie', 3000);
+        showAlert('error', 'Error adding category', 3000);
       }
     } catch (error) {
-      showAlert('error', 'Erreur réseau ou de requête lors de l’ajout de la catégorie', 3000);
-      console.error('Erreur lors de l’ajout de la catégorie', error);
+      showAlert('error', 'Network or query error while adding category', 3000);
+      console.error('Error adding category', error);
     } finally {
       client.resetStore();
     }

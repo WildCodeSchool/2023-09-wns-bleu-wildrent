@@ -63,15 +63,15 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
       });
       if (data.deleteCategory) {
         setCategories(categories.filter((category) => category.id !== categoryId));
-        showAlert('success', 'Catégorie supprimée avec succès', 3000);
+        showAlert('success', 'Category successfully deleted', 3000);
 
         client.resetStore();
       } else {
-        showAlert('error', 'Échec de la suppression de la catégorie', 3000);
+        showAlert('error', 'Failed to delete category', 3000);
       }
     } catch (error) {
-      console.error('Erreur lors de la suppression de la catégorie', error);
-      showAlert('error', 'Erreur lors de la suppression de la catégorie', 3000);
+      console.error('Error deleting category', error);
+      showAlert('error', 'Error deleting category', 3000);
     }
   };
 
@@ -111,12 +111,7 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
             <tr key={category.id} className={category.id % 2 === 0 ? 'bg-gray-200' : ''}>
               <td className="px-4 py-2 border-b">{category.id}</td>
               <td className="px-4 py-2 border-b">
-                <Image
-                  src={category.image || '/path/to/default/image.jpg'} // Utilisez une image par défaut si `image` est `undefined`
-                  width={50}
-                  height={30}
-                  alt={category.name}
-                />
+                <Image src={category.image} width={50} height={30} alt={category.name} />
               </td>
               <td className="px-4 py-2 border-b">{category.name}</td>
               <td className="px-4 py-2 border-b">{category.description}</td>

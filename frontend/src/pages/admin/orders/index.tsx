@@ -6,10 +6,11 @@ import { IoIosAdd } from 'react-icons/io';
 import AddProductRefModal from '@/components/admin/productRef/AddProductRefModal';
 import Loader from '@/components/Loader';
 import AdminOrdersTable from '@/components/admin/orders/AdminOrdersTable';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const OrdersAdmin = () => {
   const { data, loading, error } = useAllOrdersQuery();
-
+  const { showAlert } = useAlert();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
     setIsModalOpen(true);
@@ -19,7 +20,7 @@ const OrdersAdmin = () => {
     setIsModalOpen(false);
   };
   if (loading) return <Loader />;
-  if (error) return <p>Erreur: {error.message}</p>;
+  if (error) return showAlert('error', error.message, 3000);
 
   return (
     <LayoutDashboard>

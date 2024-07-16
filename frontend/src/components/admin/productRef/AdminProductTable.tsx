@@ -34,13 +34,13 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
       try {
         const { data } = await deleteProductRef({ variables: { productRefId: id } });
         if (data?.deleteProductRef.success) {
-          showAlert('success', 'Produit supprimé avec succès !', 3000);
+          showAlert('success', 'Category updated successfully', 3000);
         } else {
           const message = data?.deleteProductRef?.message ?? 'An error occurred';
           showAlert('error', message, 3000);
         }
       } catch (e) {
-        showAlert('error', 'Erreur lors de la suppression du produit', 3000);
+        showAlert('error', 'Error deleting product', 3000);
         console.error(e);
       } finally {
         client.resetStore();
@@ -65,7 +65,6 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           productRef={selectedProductRef}
-          // onCategoryUpdated={handleCategoryUpdated}
         />
       )}
       <table className="min-w-full table-auto">
