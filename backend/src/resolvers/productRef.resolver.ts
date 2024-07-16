@@ -90,9 +90,10 @@ class ProductRefsResolver {
     @Arg('endDate', () => String, { nullable: true }) endDate: string | null,
   ): Promise<AvailableProducts> {
     try {
+      const allProductRefs = await this.productRefService.getAllProductRefs();
       if (!startDate && !endDate) {
         return {
-          items: await this.allProductRefs(),
+          items: allProductRefs,
         };
       } else if (startDate && endDate) {
         // Recuperer les items de toutes les order sur une plage de date
@@ -158,9 +159,16 @@ class ProductRefsResolver {
           items.push(productRef as ProductRef);
         }
 
-        console.log(items);
+        // Retourne tout les produits sans les produits non disponible
+        const result = allProductRefs.filter(
+          ({ id }) =>
+            !items
+              .filter((item) => item.quantityAvailable < 1)
+              .map((item) => item.id)
+              .includes(id),
+        );
         return {
-          items: items.filter((item) => item.quantityAvailable > 0),
+          items: result,
         };
       } else {
         throw new Error('Both startDate and endDate must be provided together');

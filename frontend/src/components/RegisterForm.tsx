@@ -58,7 +58,6 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
             newUser,
           },
         });
-        console.log(data?.register.success);
         if (data?.register.success && !error && !loading) {
           router.push('/');
           closeModal();

@@ -69,7 +69,6 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
           data: formJSON as InputProductRef,
         },
       });
-      console.log(response.data);
       if (response.data && response.data.addProductRef.success) {
         alert('Produit ajouté avec succès');
         onClose();

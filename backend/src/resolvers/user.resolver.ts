@@ -109,6 +109,7 @@ export default class UserResolver {
       return { success: false, message: `Error updating user: ${(e as Error).message}` };
     }
   }
+
   @Authorized(['ADMIN'])
   @Mutation(() => Message)
   async updateUserAdmin(@Arg('updatedUser') updatedUser: InputUpdateAdmin): Promise<Message> {

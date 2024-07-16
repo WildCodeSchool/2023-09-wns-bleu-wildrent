@@ -15,14 +15,22 @@ import { useState } from 'react';
 import { newUserFields } from '@/const';
 
 export default function Page() {
+  const [open, setOpen] = useState<boolean>(false);
+  const [editionMode, setEditionMode] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number>(0);
+
   const [createUser] = useCreateNewUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserAdminMutation();
 
   const { data: users, loading, error } = useGetAllUsersQuery({});
-  const [open, setOpen] = useState<boolean>(false);
-  const [editionMode, setEditionMode] = useState<boolean>(false);
-  const [userId, setUserId] = useState<number>(0);
+
+  if (loading) return <Loader />;
+
+  if (error) return <p>{error.message}</p>;
+
+  const cols = createColumnsFromData(users?.allUsers);
+  const dataset = createDataset(users?.allUsers || [], cols);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -92,12 +100,6 @@ export default function Page() {
       client.resetStore();
     }
   };
-
-  if (loading) return <Loader />;
-  if (error) return <p>{error.message}</p>;
-
-  const cols = createColumnsFromData(users?.allUsers);
-  const dataset = createDataset(users?.allUsers || [], cols);
 
   return (
     <LayoutDashboard>

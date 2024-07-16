@@ -17,7 +17,6 @@ const Cart = () => {
   useEffect(() => {
     localStorage.setItem('cartList', JSON.stringify(cartItems));
   }, [cartItems]);
-  console.log('🚀 ~ Cart ~ cartItems:', cartItems);
 
   const router = useRouter();
   const { id } = router.query;

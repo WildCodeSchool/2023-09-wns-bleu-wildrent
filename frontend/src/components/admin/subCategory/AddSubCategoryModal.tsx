@@ -66,8 +66,6 @@ function AddSubCategoryModal({
       return;
     }
 
-    console.log('Submitting with categoryId:', categoryId);
-
     try {
       const response = await addSubCategory({
         variables: {
@@ -77,7 +75,6 @@ function AddSubCategoryModal({
           categoryId,
         },
       });
-      console.log('Mutation response:', response);
 
       if (response.data && response.data.addSubCategory) {
         alert('Sous-catégorie ajoutée avec succès');
