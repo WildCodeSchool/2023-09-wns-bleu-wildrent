@@ -1,7 +1,16 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne, Column, ObjectId } from 'typeorm';
+import {
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  ObjectId,
+  ManyToMany,
+} from 'typeorm';
 // import { Length, Min } from 'class-validator';
 import { ObjectType, Field, Int, registerEnumType, InputType } from 'type-graphql';
 import { ProductRef } from './productRef.entity';
+import { OrderItem } from './orderItem.entity';
 
 export enum Availability {
   Unavailable = 'unavailable',
@@ -32,6 +41,9 @@ export class ProductItem extends BaseEntity {
   })
   @Field(() => Availability)
   availability: Availability;
+
+  @ManyToMany(() => OrderItem, (orderItem) => orderItem.productItems)
+  orderItems: OrderItem[];
 }
 
 @InputType()

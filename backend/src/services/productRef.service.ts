@@ -12,6 +12,14 @@ export default class ProductRefService {
     this.db = db.getRepository(ProductRef);
     this.productItemService = new ProductItemService();
   }
+  async findProductRefById(id: number) {
+    try {
+      return await this.db.findOneBy({ id });
+    } catch (e) {
+      console.error((e as Error).message);
+      throw new Error('Failed to find ProductRef');
+    }
+  }
 
   async findProductRefByName(name: string) {
     try {
@@ -27,6 +35,7 @@ export default class ProductRefService {
       relations: ['subCategory', 'productItems'],
     });
   }
+
   async deleteProductRef(id: number): Promise<boolean> {
     try {
       const productRef = await this.db.findOneBy({ id });

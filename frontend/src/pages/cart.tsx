@@ -3,8 +3,10 @@ import Layout from '@/components/Layout';
 import React, { useEffect, useState } from 'react';
 import { useProductRefByIdQuery } from '@/graphql/generated/schema';
 import { useRouter } from 'next/router';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const Cart = () => {
+  const { showAlert } = useAlert();
   const numberOfDays = 3;
 
   const [cartItems, setCartItems] = useState<CartItemProps['item'][]>(() => {
@@ -17,7 +19,6 @@ const Cart = () => {
   useEffect(() => {
     localStorage.setItem('cartList', JSON.stringify(cartItems));
   }, [cartItems]);
-  console.log('🚀 ~ Cart ~ cartItems:', cartItems);
 
   const router = useRouter();
   const { id } = router.query;
@@ -39,6 +40,7 @@ const Cart = () => {
 
   const clearCart = () => {
     setCartItems([]);
+    showAlert('success', 'Cart cleared', 3000);
   };
 
   const calculateTotal = () => {
@@ -46,6 +48,23 @@ const Cart = () => {
       (total, item) => total + item.priceHT * item.quantity * numberOfDays,
       0,
     );
+  };
+
+  const handleSubmit = () => {
+    console.log('cartItems', cartItems);
+    console.log('total', calculateTotal());
+    const order = {
+      items: cartItems.map((item) => ({
+        productRefId: item.productRefId,
+        quantity: item.quantity,
+        unitPrice: item.priceHT,
+      })),
+      totalAmount: calculateTotal(),
+      paymentStatus: 'pending',
+      startDate: new Date(),
+      endDate: new Date(),
+      numberOfDays,
+    };
   };
 
   return (
@@ -68,7 +87,10 @@ const Cart = () => {
             </div>
             <div className="mt-6 text-right">
               <h3 className="text-xl font-semibold">Total: {calculateTotal()} €</h3>
-              <button className="btn btn-secondary text-primary mt-4 ml-4 px-6 py-2 ">
+              <button
+                onClick={handleSubmit}
+                className="btn btn-secondary text-primary mt-4 ml-4 px-6 py-2 "
+              >
                 Reserve
               </button>
               <button

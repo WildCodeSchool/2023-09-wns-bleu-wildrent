@@ -3,12 +3,15 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 
 import ClientProvider from '@/graphql/ClientProvider';
+import { AlertProvider } from '@/components/providers/AlertContext';
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <ClientProvider>
-      <Component {...pageProps} />
-    </ClientProvider>
+    <AlertProvider>
+      <ClientProvider>
+        <Component {...pageProps} />
+      </ClientProvider>
+    </AlertProvider>
   );
 }
 
