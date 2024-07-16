@@ -16,6 +16,11 @@ export default class SubCategoryResolver {
     return await this.subCategoryService.findSubCategoryById(id);
   }
   @Authorized(['ADMIN'])
+  @Query(() => [SubCategory])
+  async subCategoriesByCategoryId(@Arg('categoryId', () => Int) categoryId: number) {
+    return await this.subCategoryService.getSubCategoriesByCategoryId(categoryId);
+  }
+
   @Mutation(() => SubCategory)
   async addSubCategory(
     @Arg('name') name: string,

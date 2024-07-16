@@ -24,3 +24,13 @@ query AllProductRefsAdmin {
     quantityAvailable
   }
 }
+
+query getProductsBySubCategoryId($subCategoryId: Int!) {
+  getProductsBySubCategoryId(subCategoryId: $subCategoryId) {
+    id
+    name
+    description
+    priceHT
+    image
+  }
+}

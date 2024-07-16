@@ -29,6 +29,18 @@ export default class ProductRefService {
     }
   }
 
+  async getProductsBySubCategoryId(subCategoryId: number) {
+    try {
+      return await this.db
+        .createQueryBuilder('productRef')
+        .leftJoinAndSelect('productRef.subCategory', 'subCategory')
+        .where('subCategory.id = :subCategoryId', { subCategoryId })
+        .getMany();
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+  }
+
   async getAllProductRefs() {
     return await this.db.find({
       order: { id: 'desc' },
