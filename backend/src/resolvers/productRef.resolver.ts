@@ -31,6 +31,12 @@ class ProductRefsResolver {
     }
     return productRef;
   }
+
+  @Query(() => [ProductRef])
+  async getProductsBySubCategoryId(@Arg('subCategoryId', () => Int) subCategoryId: number) {
+    return await this.productRefService.getProductsBySubCategoryId(subCategoryId);
+  }
+
   @Authorized(['ADMIN'])
   @Mutation(() => Message)
   async addProductRef(@Arg('data') data: InputProductRef) {

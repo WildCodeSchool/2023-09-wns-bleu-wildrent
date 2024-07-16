@@ -102,4 +102,19 @@ export default class SubCategoryService {
 
     return true; // Si 'affected' est positif, la suppression a réussi
   }
+
+  async getSubCategoriesByCategoryId(categoryId: number) {
+    const category = await this.categoryRepository.findOneBy({ id: categoryId });
+    if (!category) {
+      throw new Error('Category not found');
+    }
+
+    return await this.db.find({
+      where: {
+        category,
+      },
+      order: { id: 'DESC' },
+      relations: ['category'],
+    });
+  }
 }
