@@ -11,21 +11,12 @@ import { IoCart } from 'react-icons/io5';
 import { CiMenuBurger } from 'react-icons/ci';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import { useAuthModal } from './hooks/useAuthModal';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
-
-  const handleLoginClick = () => {
-    setShowLoginForm(true);
-    setShowRegisterForm(false);
-  };
-
-  const handleRegisterClick = () => {
-    setShowRegisterForm(true);
-    setShowLoginForm(false);
-  };
+  const { showLoginForm, showRegisterForm, handleLoginClick, handleRegisterClick, closeModal } =
+    useAuthModal();
 
   function checkIsActive(link: string, router: unknown) {
     return link === router;
@@ -116,12 +107,9 @@ export default function Navbar() {
         </div>
       )}
       {showLoginForm && (
-        <LoginForm
-          closeModal={() => setShowLoginForm(false)}
-          switchToRegister={handleRegisterClick}
-        />
+        <LoginForm closeModal={closeModal} switchToRegister={handleRegisterClick} />
       )}
-      {showRegisterForm && <RegisterForm closeModal={() => setShowRegisterForm(false)} />}
+      {showRegisterForm && <RegisterForm closeModal={closeModal} />}
     </>
   );
 }

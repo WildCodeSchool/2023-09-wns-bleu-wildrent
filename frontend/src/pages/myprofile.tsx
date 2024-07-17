@@ -10,6 +10,7 @@ import router from 'next/router';
 import Link from 'next/link';
 import client from '@/graphql/client';
 import Orders from '@/components/Orders';
+import { useAlert } from '@/components/providers/AlertContext';
 
 function MyProfile() {
   const { data } = useGetProfileQuery();
@@ -17,7 +18,7 @@ function MyProfile() {
   const [deleteUser] = useDeleteUserMutation();
   const [logout] = useLogoutMutation();
   const user = data?.getProfile;
-
+  const { showAlert } = useAlert();
   const deleteAccount = async () => {
     try {
       if (user && user.id) {
@@ -32,12 +33,10 @@ function MyProfile() {
         }
         return alert(res.data?.deleteUser.message);
       } else {
-        return alert('User not exist');
+        return showAlert('error', 'User not exist', 3000);
       }
     } catch (e) {
       console.error(`Something wrong with account delete: ${(e as Error).message}`);
-    } finally {
-      router.push('/auth/register');
     }
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,11 +50,14 @@ function MyProfile() {
           updatedUser: formJSON as any,
         },
       });
-      const message = res.data?.updateUser.message;
-      alert(message);
+      if (res.data?.updateUser) {
+        showAlert('success', 'User updated successfully', 3000);
+      } else {
+        showAlert('error', 'Error updated user', 3000);
+      }
     } catch (e) {
       console.error((e as Error).message);
-      alert((e as Error).message || 'Une erreur est survenue lors de la mise à jour du profil.');
+      showAlert('error', 'An error occurred while updating the profile.', 3000);
     } finally {
       await client.resetStore();
     }

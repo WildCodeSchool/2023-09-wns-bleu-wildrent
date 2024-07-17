@@ -1,0 +1,10 @@
+query GetSubCategoryName($subCategoryId: Int!) {
+  subCategoryById(id: $subCategoryId) {
+    name
+    description
+    category {
+      id
+      name
+    }
+  }
+}

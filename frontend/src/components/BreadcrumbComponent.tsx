@@ -19,7 +19,7 @@ const BreadcrumbComponent: React.FC<BreadcrumbProps> = ({ items }) => {
                 {item.label}
               </Link>
             ) : (
-              <span className="inline-flex items-center text-sm font-medium text-gray-900 font-bold">
+              <span className="inline-flex items-center text-sm font-medium text-gray-900">
                 {item.label}
               </span>
             )}
