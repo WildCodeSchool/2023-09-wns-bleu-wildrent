@@ -94,6 +94,7 @@ export type Mutation = {
   addProductRef: Message;
   addSubCategory: SubCategory;
   createNewUser: Message;
+  createOrder: Message;
   deleteCategory: Scalars['Boolean'];
   deleteProductItem: Message;
   deleteProductRef: Message;
@@ -132,6 +133,11 @@ export type MutationAddSubCategoryArgs = {
 
 export type MutationCreateNewUserArgs = {
   newUser: NewUserInput;
+};
+
+
+export type MutationCreateOrderArgs = {
+  data: OrderInput;
 };
 
 
@@ -222,22 +228,34 @@ export type Order = {
   __typename?: 'Order';
   endDate: Scalars['DateTimeISO'];
   id: Scalars['Int'];
-  items: Array<OrderItem>;
   numberOfDays: Scalars['Int'];
   orderDate: Scalars['DateTimeISO'];
-  paymentStatus: Scalars['String'];
+  orderItems: Array<OrderItem>;
+  paymentStatus: PaymentStatus;
   shippingAddress?: Maybe<Scalars['String']>;
   startDate: Scalars['DateTimeISO'];
   totalAmount: Scalars['Float'];
   user: User;
 };
 
+export type OrderInput = {
+  endDate?: InputMaybe<Scalars['DateTimeISO']>;
+  orderItems: Array<OrderItemInput>;
+  shippingAddress?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['DateTimeISO']>;
+  user: ObjectId;
+};
+
 export type OrderItem = {
   __typename?: 'OrderItem';
   id: Scalars['Int'];
-  order: Order;
-  productItem: ProductItem;
-  productRef: ProductRef;
+  productItems: Array<ProductItem>;
+  quantity: Scalars['Int'];
+  unitPrice: Scalars['Float'];
+};
+
+export type OrderItemInput = {
+  productRef: ObjectId;
   quantity: Scalars['Int'];
   unitPrice: Scalars['Float'];
 };
@@ -365,6 +383,12 @@ export type User = {
   role: Scalars['String'];
 };
 
+/** The status payment of an order */
+export enum PaymentStatus {
+  Paid = 'Paid',
+  Pending = 'Pending'
+}
+
 export type AllProductRefsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -425,14 +449,14 @@ export type GetProductAvailableByDateRangeQuery = { __typename?: 'Query', getPro
 export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllOrdersQuery = { __typename?: 'Query', allOrders: Array<{ __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }>, user: { __typename?: 'User', id: number, email: string } }> };
+export type AllOrdersQuery = { __typename?: 'Query', allOrders: Array<{ __typename?: 'Order', id: number, totalAmount: number, paymentStatus: PaymentStatus, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, orderItems: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productItems: Array<{ __typename?: 'ProductItem', productRef: { __typename?: 'ProductRef', name: string } }> }>, user: { __typename?: 'User', id: number, email: string } }> };
 
 export type OrderByIdQueryVariables = Exact<{
   orderId: Scalars['Int'];
 }>;
 
 
-export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, totalAmount: number, paymentStatus: string, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, user: { __typename?: 'User', id: number, email: string }, items: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productRef: { __typename?: 'ProductRef', name: string } }> } };
+export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, totalAmount: number, paymentStatus: PaymentStatus, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, user: { __typename?: 'User', id: number, email: string }, orderItems: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productItems: Array<{ __typename?: 'ProductItem', productRef: { __typename?: 'ProductRef', name: string } }> }> } };
 
 export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -523,6 +547,13 @@ export type AddCategoryMutationVariables = Exact<{
 
 
 export type AddCategoryMutation = { __typename?: 'Mutation', addCategory: { __typename?: 'Category', id: number, name: string, description?: string | null, image: string } };
+
+export type CreateOrderMutationVariables = Exact<{
+  data: OrderInput;
+}>;
+
+
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Message', message: string, success: boolean } };
 
 export type AddProductRefMutationVariables = Exact<{
   data: InputProductRef;
@@ -986,11 +1017,13 @@ export const AllOrdersDocument = gql`
     endDate
     numberOfDays
     shippingAddress
-    items {
+    orderItems {
       quantity
       unitPrice
-      productRef {
-        name
+      productItems {
+        productRef {
+          name
+        }
       }
     }
     user {
@@ -1035,12 +1068,14 @@ export const OrderByIdDocument = gql`
       id
       email
     }
-    items {
-      productRef {
-        name
-      }
+    orderItems {
       quantity
       unitPrice
+      productItems {
+        productRef {
+          name
+        }
+      }
     }
     totalAmount
     paymentStatus
@@ -1545,6 +1580,40 @@ export function useAddCategoryMutation(baseOptions?: Apollo.MutationHookOptions<
 export type AddCategoryMutationHookResult = ReturnType<typeof useAddCategoryMutation>;
 export type AddCategoryMutationResult = Apollo.MutationResult<AddCategoryMutation>;
 export type AddCategoryMutationOptions = Apollo.BaseMutationOptions<AddCategoryMutation, AddCategoryMutationVariables>;
+export const CreateOrderDocument = gql`
+    mutation CreateOrder($data: OrderInput!) {
+  createOrder(data: $data) {
+    message
+    success
+  }
+}
+    `;
+export type CreateOrderMutationFn = Apollo.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>;
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrderMutation, CreateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+      }
+export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
+export type CreateOrderMutationResult = Apollo.MutationResult<CreateOrderMutation>;
+export type CreateOrderMutationOptions = Apollo.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;
 export const AddProductRefDocument = gql`
     mutation AddProductRef($data: InputProductRef!) {
   addProductRef(data: $data) {

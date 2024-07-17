@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FormInput from '@/components/FormInput';
 import { useAddSubCategoryMutation, useAllCategoriesQuery } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const fields = [
   {
@@ -47,7 +48,7 @@ function AddSubCategoryModal({
     refetch: refetchCategories,
   } = useAllCategoriesQuery();
   const [categories, setCategories] = useState<Category[]>([]);
-
+  const { showAlert } = useAlert();
   useEffect(() => {
     if (categoryData && categoryData.allCategories) {
       setCategories(categoryData.allCategories);
@@ -62,7 +63,7 @@ function AddSubCategoryModal({
     const categoryId = categories.find((c) => c.name === selectedCategoryName)?.id;
 
     if (!categoryId) {
-      alert('Catégorie invalide.');
+      showAlert('error', 'Catégorie invalide.', 3000);
       return;
     }
 
@@ -77,16 +78,16 @@ function AddSubCategoryModal({
       });
 
       if (response.data && response.data.addSubCategory) {
-        alert('Sous-catégorie ajoutée avec succès');
+        showAlert('success', 'Sous-catégorie ajoutée avec succès', 3000);
         onSubCategoryAdded(response.data.addSubCategory);
         onClose();
         // Refetch categories after adding a subcategory
         await refetchCategories();
       } else {
-        alert('Erreur lors de l’ajout de la sous-catégorie');
+        showAlert('error', 'Erreur lors de l’ajout de la sous-catégorie', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout de la sous-catégorie');
+      showAlert('error', 'Erreur réseau ou de requête lors de l’ajout de la sous-catégorie', 3000);
       console.error('Erreur lors de l’ajout de la sous-catégorie', error);
     } finally {
       client.resetStore();

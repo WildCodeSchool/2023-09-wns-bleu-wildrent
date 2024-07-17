@@ -64,7 +64,7 @@ export default function Navbar() {
           </div>
         </div>
         <Link href={'/'} className="flex items-center justify-center">
-          <Image src={logo} width={150} height={150} alt="logo Wildrent" />
+          <Image src={logo} priority={true} width={150} height={150} alt="logo Wildrent" />
         </Link>
         <div className="hidden md:flex items-center justify-evenly w-full md:w-auto">
           {afterLogo.map((item, index) => (

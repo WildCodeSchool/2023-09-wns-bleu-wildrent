@@ -5,6 +5,8 @@ import {
 } from '@/graphql/generated/schema';
 import React, { useEffect, useState } from 'react';
 import { MdCheck } from 'react-icons/md';
+import { useDate } from './providers/DatesContext';
+import { useAlert } from './providers/AlertContext';
 
 function SelectDate() {
   const nbDaysLocalStorage = JSON.parse(localStorage.getItem('nbDays') || '0');
@@ -39,6 +41,7 @@ function SelectDate() {
       refetch();
     }
   };
+
   return (
     <div className="mb-5 p-2 flex flex-col gap-4 items-center border rounded-xl bg-secondary/50">
       <div className="text-xl text-primary text-center font-semibold">

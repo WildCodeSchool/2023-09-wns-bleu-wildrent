@@ -5,21 +5,24 @@ type OrderCardProps = {
     startDate: string;
     endDate: string;
     numberOfDays: number;
-    items: {
+    orderItems: {
       quantity: number;
       unitPrice: number;
-      productRef: {
-        name: string;
-      };
+      productItems: {
+        productRef: {
+          name: string;
+        };
+      }[];
     }[];
   };
   link?: string;
 };
+
 export const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString();
 };
 const OrderCard = ({
-  order: { orderDate, totalAmount, startDate, endDate, numberOfDays, items },
+  order: { orderDate, totalAmount, startDate, endDate, numberOfDays, orderItems },
   link,
 }: OrderCardProps) => {
   return (
@@ -48,11 +51,13 @@ const OrderCard = ({
               </tr>
             </thead>
             <tbody>
-              {items.map((item, index) => (
+              {orderItems.map((item, index) => (
                 <tr key={index}>
-                  <td className="border px-4 py-2 text-center">{item.productRef.name}</td>
-                  <td className="border px-4 py-2  text-center">{item.quantity}</td>
-                  <td className="border px-4 py-2  text-center">€{item.unitPrice}</td>
+                  <td className="border px-4 py-2 text-center">
+                    {item.productItems.length > 0 && item.productItems[0].productRef.name}
+                  </td>
+                  <td className="border px-4 py-2 text-center">{item.quantity}</td>
+                  <td className="border px-4 py-2 text-center">€{item.unitPrice}</td>
                 </tr>
               ))}
             </tbody>

@@ -10,11 +10,21 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import User from './user.entity';
-import { Field, Int, ObjectType, Float } from 'type-graphql';
-import { OrderItem } from './orderItem.entity';
+import { Field, Int, ObjectType, Float, InputType, registerEnumType } from 'type-graphql';
+import { OrderItem, OrderItemInput } from './orderItem.entity';
+import { ObjectId } from '../utils';
 
-@ObjectType()
+export enum PaymentStatus {
+  Pending = 'pending',
+  Paid = 'paid',
+}
+// Enregistrer l'enum avec type-graphql
+registerEnumType(PaymentStatus, {
+  name: 'paymentStatus', // Nom du type dans le schéma GraphQL
+  description: 'The status payment of an order',
+});
 @Entity()
+@ObjectType()
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
@@ -26,29 +36,33 @@ export class Order extends BaseEntity {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
   @Field(() => [OrderItem])
-  items: OrderItem[];
+  orderItems: OrderItem[];
 
   @Column({ type: 'float', nullable: true })
   @Field(() => Float)
   totalAmount: number;
 
-  @Column()
-  @Field()
-  paymentStatus: string;
+  @Column({
+    type: 'enum',
+    enum: PaymentStatus,
+    default: PaymentStatus.Pending,
+  })
+  @Field(() => PaymentStatus)
+  paymentStatus: PaymentStatus;
 
   @CreateDateColumn()
   @Field()
   orderDate: Date;
 
-  @Column({ nullable: true })
+  @Column()
   @Field()
   startDate: Date;
 
-  @Column({ nullable: true })
+  @Column()
   @Field()
   endDate: Date;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', nullable: false })
   @Field(() => Int)
   numberOfDays: number;
 
@@ -58,6 +72,18 @@ export class Order extends BaseEntity {
 
   @BeforeInsert()
   @BeforeUpdate()
+  validateDates() {
+    const today = new Date();
+    if (this.startDate && this.endDate) {
+      if (this.startDate > this.endDate && this.startDate != today) {
+        throw new Error('Start date must be before end date');
+      }
+      if (this.startDate.getTime() === this.endDate.getTime()) {
+        throw new Error('Start date and end date cannot be the same');
+      }
+    }
+    this.calculateTotalAmount();
+  }
   calculateTotalAmount() {
     if (this.startDate && this.endDate) {
       const timeDiff = this.endDate.getTime() - this.startDate.getTime();
@@ -66,12 +92,29 @@ export class Order extends BaseEntity {
       this.numberOfDays = 0;
     }
 
-    if (this.items && this.items.length > 0) {
-      this.totalAmount = this.items.reduce((total, item) => {
+    if (this.orderItems && this.orderItems.length > 0) {
+      this.totalAmount = this.orderItems.reduce((total, item) => {
         return total + item.quantity * item.unitPrice * this.numberOfDays;
       }, 0);
     } else {
       this.totalAmount = 0;
     }
   }
+}
+@InputType()
+export class OrderInput {
+  @Field(() => ObjectId)
+  user: ObjectId;
+
+  @Field(() => [OrderItemInput])
+  orderItems: OrderItemInput[];
+
+  @Field({ nullable: true })
+  startDate?: Date;
+
+  @Field({ nullable: true })
+  endDate?: Date;
+
+  @Field({ nullable: true })
+  shippingAddress?: string;
 }

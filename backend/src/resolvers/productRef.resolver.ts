@@ -5,7 +5,6 @@ import { Message } from '../entities/user.entity';
 import ProductRefService from '../services/productRef.service';
 import { AvailableProducts } from '../entities/productItem.entity';
 import { In } from 'typeorm';
-import db from '../db';
 import { Order } from '../entities/order.entity';
 
 @Resolver(ProductRef)
@@ -103,50 +102,48 @@ class ProductRefsResolver {
         };
       } else if (startDate && endDate) {
         // Recuperer les items de toutes les order sur une plage de date
-        const allOrderByDateRange = await db
-          .getRepository(Order)
-          .createQueryBuilder('order')
-          .leftJoinAndSelect('order.items', 'orderItem')
-          .leftJoinAndSelect('orderItem.productRef', 'productRef')
+        const allOrderByDateRange = await Order.createQueryBuilder('order')
+          .leftJoinAndSelect('order.orderItems', 'orderItem')
+          .leftJoinAndSelect('orderItem.productItems', 'productItem')
+          .leftJoinAndSelect('productItem.productRef', 'productRef')
           .where(
             '(order.startDate BETWEEN :startDate AND :endDate OR order.endDate BETWEEN :startDate AND :endDate)',
             { startDate: new Date(startDate), endDate: new Date(endDate) },
           )
           .orWhere('(order.startDate <= :startDate AND order.endDate >= :endDate)', {
-            startDate,
-            endDate,
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
           })
           .getMany();
 
-        // Associer les quantités commandés au productRef.id
+        // Récupérer les items commandés et les quantités associées
         const allProductsOrdered = allOrderByDateRange
-          .flatMap((order) => order.items)
-          .map(({ id, quantity, productRef }) => ({ productId: id, quantity, productRef }));
+          .flatMap((order) => order.orderItems)
+          .flatMap((orderItem) =>
+            orderItem.productItems.map((productItem) => ({
+              productRefId: productItem.productRef.id,
+              quantity: orderItem.quantity,
+            })),
+          );
 
-        // Map des quantités avec le productRef.id en tant que key
+        // Map des quantités avec le productRef.id en tant que clé
         const quantitiesMap: { [id: number]: number } = {};
 
         for (const product of allProductsOrdered) {
-          const { quantity, productRef } = product;
-          const { id } = productRef;
+          const { quantity, productRefId } = product;
 
-          // Vérifier si l'id existe déjà dans quantitiesMap
-          if (quantitiesMap[id]) {
-            // Ajouter la quantité à l'id existant
-            quantitiesMap[id] += quantity;
+          if (quantitiesMap[productRefId]) {
+            quantitiesMap[productRefId] += quantity;
           } else {
-            // Initialiser la quantité pour cet id
-            quantitiesMap[id] = quantity;
+            quantitiesMap[productRefId] = quantity;
           }
         }
 
-        // Convertir la map en un array
         const aggregatedQuantities = Object.keys(quantitiesMap).map((id) => ({
           id: Number(id),
           quantity: quantitiesMap[Number(id)],
         }));
 
-        // Recuperer les productRef avec des quantité dispo et available
         const productRefs = await ProductRef.find({
           where: {
             id: In(aggregatedQuantities.map(({ id }) => id)),
@@ -155,7 +152,6 @@ class ProductRefsResolver {
 
         const items: ProductRef[] = [];
 
-        // Mise à jour des quantités en retirant les produits commandés
         for (let i = 0; i < aggregatedQuantities.length; i++) {
           const { id, quantity } = aggregatedQuantities[i];
           const productRef = productRefs.find((pr) => pr.id === id);
@@ -165,7 +161,6 @@ class ProductRefsResolver {
           items.push(productRef as ProductRef);
         }
 
-        // Retourne tout les produits sans les produits non disponible
         const result = allProductRefs.filter(
           ({ id }) =>
             !items
@@ -173,6 +168,7 @@ class ProductRefsResolver {
               .map((item) => item.id)
               .includes(id),
         );
+
         return {
           items: result,
         };

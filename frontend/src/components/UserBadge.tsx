@@ -1,9 +1,18 @@
 import { useGetProfileQuery } from '@/graphql/generated/schema';
 import Link from 'next/link';
 import LogoutBtn from './LogoutBtn';
+import { useUser } from './providers/UserContext';
+import { useEffect } from 'react';
 
 export default function UserBadge({ isAdmin }: { isAdmin: boolean }) {
   const { data } = useGetProfileQuery();
+  const { user, setUser } = useUser();
+
+  useEffect(() => {
+    if (data?.getProfile) {
+      setUser(data?.getProfile);
+    }
+  }, [data, setUser]);
   const avatar = data?.getProfile.picture;
   const name = data?.getProfile.firstname;
   return (

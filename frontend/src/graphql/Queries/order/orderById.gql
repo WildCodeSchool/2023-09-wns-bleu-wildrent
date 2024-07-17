@@ -5,12 +5,14 @@ query OrderById($orderId: Int!) {
       id
       email
     }
-    items {
-      productRef {
-        name
-      }
+    orderItems {
       quantity
       unitPrice
+      productItems {
+        productRef {
+          name
+        }
+      }
     }
     totalAmount
     paymentStatus

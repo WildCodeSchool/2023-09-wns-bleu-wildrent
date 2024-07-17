@@ -1,10 +1,11 @@
-import { Resolver, Arg, Query, Int, Ctx } from 'type-graphql';
+import { Resolver, Mutation, Arg, Query, Ctx, Int } from 'type-graphql';
+import { Order, OrderInput } from '../entities/order.entity';
+import { Message } from '../entities/user.entity';
 import { GraphQLError } from 'graphql';
-import { Order } from '../entities/order.entity';
-import OrderService from '../services/order.service';
 import { ContextType } from '../types';
+import OrderService from '../services/order.service';
 
-@Resolver(Order)
+@Resolver()
 class OrderResolver {
   private orderService = new OrderService();
 
@@ -40,6 +41,21 @@ class OrderResolver {
       throw new GraphQLError('Unauthorized');
     }
     return order;
+  }
+
+  @Mutation(() => Message)
+  async createOrder(@Arg('data') data: OrderInput) {
+    try {
+      const success = await new OrderService().addOrder(data);
+      if (success) {
+        return { success: true, message: 'order Created !' };
+      } else {
+        return { success: false, message: 'Failed to create order' };
+      }
+    } catch (error) {
+      console.error((error as Error).message);
+      return { success: false, message: (error as Error).message };
+    }
   }
 }
 
