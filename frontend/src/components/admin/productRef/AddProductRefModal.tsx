@@ -8,6 +8,7 @@ import {
 } from '@/graphql/generated/schema';
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const fields = [
   {
@@ -56,6 +57,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
     loading: loadingSubCategories,
     error: errorSubCategories,
   } = useAllSubCategoriesQuery();
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -69,15 +71,15 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
           data: formJSON as InputProductRef,
         },
       });
-      console.log(response.data);
       if (response.data && response.data.addProductRef.success) {
-        alert('Produit ajouté avec succès');
+        showAlert('success', 'Produit ajouté avec succès', 3000);
+
         onClose();
       } else {
-        alert(`Erreur lors de l'ajout du produit`);
+        showAlert('error', "Erreur lors de l'ajout du produit", 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout du produit');
+      showAlert('error', 'Erreur réseau ou de requête lors de l’ajout du produit', 3000);
       console.error('Erreur lors de l’ajout du produit', error);
     } finally {
       client.resetStore();

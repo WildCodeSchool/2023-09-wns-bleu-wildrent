@@ -7,6 +7,7 @@ import UpdateCategoryModal from '@/components/admin/category/UpdateCategoryModal
 import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
 import client from '@/graphql/client';
 import { IoIosAdd } from 'react-icons/io';
+import { useAlert } from '@/components/providers/AlertContext';
 
 // Définition de la mutation GraphQL pour la suppression
 const DELETE_CATEGORY_MUTATION = gql`
@@ -24,7 +25,7 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
+  const { showAlert } = useAlert();
   const [deleteCategory] = useMutation(DELETE_CATEGORY_MUTATION);
 
   const handleEditClick = (category: Category) => {
@@ -62,14 +63,15 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
       });
       if (data.deleteCategory) {
         setCategories(categories.filter((category) => category.id !== categoryId));
-        alert('Catégorie supprimée avec succès');
+        showAlert('success', 'Catégorie supprimée avec succès', 3000);
+
         client.resetStore();
       } else {
-        alert('Échec de la suppression de la catégorie');
+        showAlert('error', 'Échec de la suppression de la catégorie', 3000);
       }
     } catch (error) {
       console.error('Erreur lors de la suppression de la catégorie', error);
-      alert(`Erreur lors de la suppression de la catégorie : ${(error as Error).message}`);
+      showAlert('error', 'Erreur lors de la suppression de la catégorie', 3000);
     }
   };
 

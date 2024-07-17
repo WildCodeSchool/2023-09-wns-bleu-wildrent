@@ -11,6 +11,7 @@ import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
 import { ProductRef, SimpleSubCategory } from '@/types';
 import Loader from '@/components/Loader';
+import { useAlert } from '@/components/providers/AlertContext';
 const fields = [
   {
     label: 'Nom du produit',
@@ -52,16 +53,14 @@ const fields = [
 function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalProps) {
   if (!isOpen || !productRef) return null;
   const [UpdateProductRef, { loading }] = useUpdateProductRefMutation();
-
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
 
     const formJSON: any = Object.fromEntries(formData.entries());
-    console.log('formJSON', formJSON);
     formJSON.priceHT = parseFloat(formJSON.priceHT);
     formJSON.subCategory = { id: parseInt(formJSON.subCategory) };
-    console.log('formJSON.subCategory', formJSON.subCategory);
     formJSON.quantity = parseInt(formJSON.quantity);
     try {
       const response = await UpdateProductRef({
@@ -70,15 +69,15 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
           data: formJSON as UpdateProductRef,
         },
       });
-      console.log(response.data);
       if (response.data && response.data.updateProductRef.success) {
-        alert('Produit modifié avec succès');
+        showAlert('success', 'Produit modifié avec succès', 3000);
+
         onClose();
       } else {
-        alert(`Erreur lors de la modification du produit`);
+        showAlert('error', 'Erreur lors de la modification du produit', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout du produit');
+      showAlert('error', 'Erreur réseau ou de requête lors de l’ajout du produit', 3000);
       console.error('Erreur lors de la modification du produit', error);
     } finally {
       client.resetStore();

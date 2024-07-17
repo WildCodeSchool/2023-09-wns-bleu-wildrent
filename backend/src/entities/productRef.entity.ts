@@ -39,14 +39,14 @@ export class ProductRef extends BaseEntity {
   @Field()
   priceHT: number;
 
-  @Field(() => SubCategory)
   @ManyToOne(() => SubCategory, (subcategory) => subcategory.productRefs)
+  @Field(() => SubCategory)
   subCategory: SubCategory;
 
   @OneToMany(() => ProductItem, (productItem) => productItem.productRef, {
     eager: true,
     cascade: true,
-  }) // cette relation sera chargée chaque fois que productRef sera chargé
+  })
   productItems: ProductItem[];
 
   @Column({ default: 0 })

@@ -73,9 +73,12 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({ orders }) => {
                               </tr>
                             </thead>
                             <tbody>
-                              {order.items.map((item, index) => (
+                              {order.orderItems.map((item, index) => (
                                 <tr key={index} className="border-t">
-                                  <td className="px-4 py-2 text-center">{item.productRef.name}</td>
+                                  <td className="px-4 py-2 text-center">
+                                    {item.productItems.length > 0 &&
+                                      item.productItems[0].productRef.name}
+                                  </td>
                                   <td className="px-4 py-2 text-center">{item.quantity}</td>
                                   <td className="px-4 py-2 text-center">{item.unitPrice}€</td>
                                 </tr>

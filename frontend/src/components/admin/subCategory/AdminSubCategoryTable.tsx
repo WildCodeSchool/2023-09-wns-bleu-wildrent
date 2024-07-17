@@ -7,6 +7,7 @@ import UpdateSubCategoryModal from '@/components/admin/subCategory/UpdateSubCate
 import AddSubCategoryModal from '@/components/admin/subCategory/AddSubCategoryModal';
 import client from '@/graphql/client';
 import { IoIosAdd } from 'react-icons/io';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const DELETE_SUBCATEGORY_MUTATION = gql`
   mutation DeleteSubCategory($id: Int!) {
@@ -25,7 +26,7 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const [deleteSubCategory] = useMutation(DELETE_SUBCATEGORY_MUTATION);
-
+  const { showAlert } = useAlert();
   const handleEditClick = (subCategory: SubCategory) => {
     setSelectedSubCategory(subCategory);
     setIsModalOpen(true);
@@ -61,14 +62,15 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
       });
       if (data.deleteSubCategory) {
         setSubCategories(subCategories.filter((subCategory) => subCategory.id !== subCategoryId));
-        alert('Sous-catégorie supprimée avec succès');
+        showAlert('success', 'Sous-catégorie supprimée avec succès', 3000);
+
         client.resetStore();
       } else {
-        alert('Échec de la suppression de la sous-catégorie');
+        showAlert('error', 'Échec de la suppression de la sous-catégorie', 3000);
       }
     } catch (error) {
+      showAlert('error', 'Erreur lors de la suppression de la sous-catégorie', 3000);
       console.error('Erreur lors de la suppression de la sous-catégorie', error);
-      alert(`Erreur lors de la suppression de la sous-catégorie : ${(error as Error).message}`);
     }
   };
 
