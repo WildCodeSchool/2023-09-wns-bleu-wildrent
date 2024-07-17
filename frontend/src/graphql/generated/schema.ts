@@ -458,7 +458,7 @@ export type GetProductAvailableByDateRangeQueryVariables = Exact<{
 }>;
 
 
-export type GetProductAvailableByDateRangeQuery = { __typename?: 'Query', getProductAvailableByDateRange: { __typename?: 'AvailableProducts', items: Array<{ __typename?: 'ProductRef', id: number, name: string, image: string, priceHT: number }> } };
+export type GetProductAvailableByDateRangeQuery = { __typename?: 'Query', getProductAvailableByDateRange: { __typename?: 'AvailableProducts', items: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantityAvailable: number }> } };
 
 export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1067,8 +1067,10 @@ export const GetProductAvailableByDateRangeDocument = gql`
     items {
       id
       name
+      description
       image
       priceHT
+      quantityAvailable
     }
   }
 }

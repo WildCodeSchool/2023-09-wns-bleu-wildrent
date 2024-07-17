@@ -3,8 +3,10 @@ query GetProductAvailableByDateRange($endDate: String, $startDate: String) {
     items {
       id
       name
+      description
       image
       priceHT
+      quantityAvailable
     }
   }
 }

@@ -53,7 +53,7 @@ function SelectDate() {
         </div>
         <span className="mx-4 text-primary">to</span>
         <div className="relative">
-          <input name="endDate" type="date" className="input input-bordered w-full max-w-xs" />
+          <input name="end" type="date" className="input input-bordered w-full max-w-xs" />
         </div>
         <button
           disabled={loading}
