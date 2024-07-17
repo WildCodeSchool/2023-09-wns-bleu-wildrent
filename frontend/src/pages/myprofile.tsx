@@ -1,7 +1,6 @@
 import Layout from '@/components/Layout';
 import React from 'react';
 import {
-  GetProfileDocument,
   useDeleteUserMutation,
   useGetProfileQuery,
   useLogoutMutation,
@@ -10,6 +9,8 @@ import {
 import router from 'next/router';
 import Link from 'next/link';
 import client from '@/graphql/client';
+import Orders from '@/components/Orders';
+import { useAlert } from '@/components/providers/AlertContext';
 
 function MyProfile() {
   const { data } = useGetProfileQuery();
@@ -17,7 +18,7 @@ function MyProfile() {
   const [deleteUser] = useDeleteUserMutation();
   const [logout] = useLogoutMutation();
   const user = data?.getProfile;
-
+  const { showAlert } = useAlert();
   const deleteAccount = async () => {
     try {
       if (user && user.id) {
@@ -32,29 +33,31 @@ function MyProfile() {
         }
         return alert(res.data?.deleteUser.message);
       } else {
-        return alert('User not exist');
+        return showAlert('error', 'User not exist', 3000);
       }
     } catch (e) {
       console.error(`Something wrong with account delete: ${(e as Error).message}`);
-    } finally {
-      router.push('/auth/register');
     }
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
+    formJSON.id = user?.id;
     try {
       const res = await updateUser({
         variables: {
           updatedUser: formJSON as any,
         },
       });
-      const message = res.data?.updateUser.message;
-      alert(message);
+      if (res.data?.updateUser) {
+        showAlert('success', 'User updated successfully', 3000);
+      } else {
+        showAlert('error', 'Error updated user', 3000);
+      }
     } catch (e) {
       console.error((e as Error).message);
-      alert((e as Error).message || 'Une erreur est survenue lors de la mise à jour du profil.');
+      showAlert('error', 'An error occurred while updating the profile.', 3000);
     } finally {
       await client.resetStore();
     }
@@ -62,16 +65,9 @@ function MyProfile() {
   return (
     <Layout>
       <section className="">
-        <div className="card card-compact w-full bg-base-100 shadow-xl p-5 m-5">
-          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-            Historique des commandes
-          </h2>
-          <p> Aucune commande à ce jour</p>
-        </div>
+        <Orders />
         <div className="card card-compact w-full bg-base-100 shadow-xl p-5  m-5">
-          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-            Modifier votre profil
-          </h2>
+          <h2 className="mb-4 text-xl font-bold dark:text-white">Edit your profile</h2>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
               <div className="w-full">
@@ -79,7 +75,7 @@ function MyProfile() {
                   htmlFor="lastname "
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  NOM
+                  Lastname
                 </label>
                 <input
                   type="text"
@@ -94,7 +90,7 @@ function MyProfile() {
                   htmlFor="firstname"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Prénom
+                  Firstname
                 </label>
                 <input
                   type="text"
@@ -124,14 +120,14 @@ function MyProfile() {
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Mot de passe
+                  Password
                 </label>
                 <Link
                   href="#"
                   // className="w-full p-2.5 hover:bg-white hover:rounded-lg text-blue-600 visited:text-purple-600"
                   className="hover:bg-gray-50 border border-gray-300text-blue-600 visited:text-purple-600 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 >
-                  réinitialiser votre mot de passe
+                  Reset your password
                 </Link>
               </div>
               <div className="w-full">
@@ -139,7 +135,7 @@ function MyProfile() {
                   htmlFor="address"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Adresse
+                  Address
                 </label>
                 <input
                   type="text"
@@ -147,7 +143,7 @@ function MyProfile() {
                   id="address"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   defaultValue={user?.address || ''}
-                  placeholder="à compléter"
+                  placeholder="to complete"
                 />
               </div>
               <div className="w-full">
@@ -155,7 +151,7 @@ function MyProfile() {
                   htmlFor="cp"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Code Postal
+                  Postal Code
                 </label>
                 <input
                   type="string"
@@ -163,7 +159,7 @@ function MyProfile() {
                   id="cp"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   defaultValue={user?.cp || ''}
-                  placeholder="à compléter"
+                  placeholder="to complete"
                 />
               </div>
               <div className="w-full">
@@ -171,7 +167,7 @@ function MyProfile() {
                   htmlFor="city"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Ville
+                  City
                 </label>
                 <input
                   type="string"
@@ -179,7 +175,7 @@ function MyProfile() {
                   id="city"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   defaultValue={user?.city || ''}
-                  placeholder="à compléter"
+                  placeholder="to complete"
                 />
               </div>
               <div className="w-full">
@@ -195,19 +191,23 @@ function MyProfile() {
                   id="picture"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   defaultValue={user?.picture || ''}
-                  placeholder="à compléter"
+                  placeholder="to complete"
                 />
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <button type="submit" className="btn btn-active btn-secondary">
-                Modifier
+                Save
               </button>
             </div>
           </form>
         </div>
-        <button className="bg-red-600 px-4 py-2" onClick={deleteAccount} type="button">
-          Supprimer son compte
+        <button
+          className="btn btn-error text-primary mt-4 ml-4 px-6 py-2 "
+          onClick={deleteAccount}
+          type="button"
+        >
+          Delete your account
         </button>
       </section>
     </Layout>

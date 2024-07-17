@@ -1,9 +1,18 @@
 import { useGetProfileQuery } from '@/graphql/generated/schema';
 import Link from 'next/link';
 import LogoutBtn from './LogoutBtn';
+import { useUser } from './providers/UserContext';
+import { useEffect } from 'react';
 
 export default function UserBadge({ isAdmin }: { isAdmin: boolean }) {
   const { data } = useGetProfileQuery();
+  const { user, setUser } = useUser();
+
+  useEffect(() => {
+    if (data?.getProfile) {
+      setUser(data?.getProfile);
+    }
+  }, [data, setUser]);
   const avatar = data?.getProfile.picture;
   const name = data?.getProfile.firstname;
   return (
@@ -23,7 +32,7 @@ export default function UserBadge({ isAdmin }: { isAdmin: boolean }) {
         tabIndex={0}
         className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
       >
-        <li className="font-semibold text-center my-2">{name || 'no name'}</li>
+        <li className="font-semibold text-center my-2">{`Hello ${name}` || 'no name'}</li>
         {isAdmin && (
           <li>
             <Link href={'/admin'}>
@@ -33,14 +42,13 @@ export default function UserBadge({ isAdmin }: { isAdmin: boolean }) {
             </Link>
           </li>
         )}
-        <li>
-          <Link href={'/myprofile'}>
-            <div className="justify-between">Mon compte</div>
-          </Link>
-        </li>
-        <li>
-          <a>Settings</a>
-        </li>
+        {!isAdmin && (
+          <li>
+            <Link href={'/myprofile'}>
+              <div className="justify-between">My account</div>
+            </Link>
+          </li>
+        )}
         <li data-test-id="logout-btn">
           <LogoutBtn />
         </li>

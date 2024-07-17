@@ -7,5 +7,13 @@ query ProductRefById($productRefId: Int!) {
     priceHT
     quantity
     quantityAvailable
+    subCategory {
+      id
+      name
+      category {
+        id
+        name
+      }
+    }
   }
 }

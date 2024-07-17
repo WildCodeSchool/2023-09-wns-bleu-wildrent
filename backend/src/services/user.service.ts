@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import db from '../db';
-import User, { InputRegister, InputUpdate } from '../entities/user.entity';
+import User, { InputRegister, InputUpdate, InputUpdateAdmin } from '../entities/user.entity';
+import { ObjType, getValidProperties } from '../utils/helpers';
 
 export default class UserService {
   db: Repository<User>;
@@ -19,6 +20,30 @@ export default class UserService {
   async findUserById(id: number) {
     try {
       return await this.db.findOneBy({ id });
+    } catch (e) {
+      console.error((e as Error).message);
+      return null;
+    }
+  }
+
+  async getAllUsers() {
+    return this.db.find({
+      order: { id: 'asc' },
+      select: ['id', 'firstname', 'lastname', 'email', 'role', 'address', 'cp', 'city', 'picture'],
+    });
+  }
+
+  async updateUserAdmin(id: number, updatedUser: InputUpdateAdmin) {
+    try {
+      if (!id || Object.keys(updatedUser).length < 1) {
+        return null;
+      }
+      const user = await this.db.findOneBy({ id });
+      if (user) {
+        const validUserUpdated = getValidProperties(updatedUser as unknown as ObjType);
+        this.db.merge(user, validUserUpdated as unknown as User);
+        return this.db.save(user);
+      }
     } catch (e) {
       console.error((e as Error).message);
       return null;
@@ -80,6 +105,15 @@ export default class UserService {
   async createUser({ firstname, lastname, email, password }: InputRegister) {
     try {
       const newUser = this.db.create({ firstname, lastname, email, password, role: 'USER' });
+      return await this.db.save(newUser);
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+  }
+
+  async createUserAdmin(newUser: User) {
+    try {
+      this.db.create(newUser);
       return await this.db.save(newUser);
     } catch (e) {
       console.error((e as Error).message);

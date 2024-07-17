@@ -6,6 +6,8 @@ import Image from 'next/image';
 import UpdateCategoryModal from '@/components/admin/category/UpdateCategoryModal';
 import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
 import client from '@/graphql/client';
+import { IoIosAdd } from 'react-icons/io';
+import { useAlert } from '@/components/providers/AlertContext';
 
 // Définition de la mutation GraphQL pour la suppression
 const DELETE_CATEGORY_MUTATION = gql`
@@ -23,7 +25,7 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
+  const { showAlert } = useAlert();
   const [deleteCategory] = useMutation(DELETE_CATEGORY_MUTATION);
 
   const handleEditClick = (category: Category) => {
@@ -60,27 +62,25 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
         variables: { id: categoryId },
       });
       if (data.deleteCategory) {
-        // Mise à jour immédiate de l'affichage des catégories dans le composant
         setCategories(categories.filter((category) => category.id !== categoryId));
-        alert('Catégorie supprimée avec succès');
+        showAlert('success', 'Category successfully deleted', 3000);
+
         client.resetStore();
       } else {
-        alert('Échec de la suppression de la catégorie');
+        showAlert('error', 'Failed to delete category', 3000);
       }
     } catch (error) {
-      console.error('Erreur lors de la suppression de la catégorie', error);
-      alert(`Erreur lors de la suppression de la catégorie : ${(error as Error).message}`);
+      console.error('Error deleting category', error);
+      showAlert('error', 'Error deleting category', 3000);
     }
   };
 
   return (
     <>
-      <button
-        onClick={handleAddCategoryClick}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Ajouter Catégorie
+      <button className="btn btn-circle btn-accent" onClick={handleAddCategoryClick}>
+        <IoIosAdd size={50} />
       </button>
+
       {isAddModalOpen && (
         <AddCategoryModal
           isOpen={isAddModalOpen}
@@ -120,13 +120,13 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
                   className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleEditClick(category)}
                 >
-                  Modifier
+                  Edit
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleDeleteCategoryClick(category.id)}
                 >
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>

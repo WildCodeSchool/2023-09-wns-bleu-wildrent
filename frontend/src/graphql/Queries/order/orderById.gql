@@ -1,0 +1,25 @@
+query OrderById($orderId: Int!) {
+  orderById(orderId: $orderId) {
+    id
+    user {
+      id
+      email
+    }
+    orderItems {
+      quantity
+      unitPrice
+      productItems {
+        productRef {
+          name
+        }
+      }
+    }
+    totalAmount
+    paymentStatus
+    orderDate
+    startDate
+    endDate
+    numberOfDays
+    shippingAddress
+  }
+}

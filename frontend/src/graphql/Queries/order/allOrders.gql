@@ -1,0 +1,25 @@
+query AllOrders {
+  allOrders {
+    id
+    totalAmount
+    paymentStatus
+    orderDate
+    startDate
+    endDate
+    numberOfDays
+    shippingAddress
+    orderItems {
+      quantity
+      unitPrice
+      productItems {
+        productRef {
+          name
+        }
+      }
+    }
+    user {
+      id
+      email
+    }
+  }
+}

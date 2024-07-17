@@ -4,10 +4,12 @@ import AdminCategoryTable from '../../../components/admin/category/AdminCategory
 import { useAllCategoriesAdminQuery } from '../../../graphql/generated/schema';
 import { IoIosAdd } from 'react-icons/io';
 import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
+import Loader from '@/components/Loader';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const CategoriesAdmin = () => {
   const { data, loading, error } = useAllCategoriesAdminQuery();
-
+  const { showAlert } = useAlert();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
     setIsModalOpen(true);
@@ -17,22 +19,12 @@ const CategoriesAdmin = () => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>Erreur: {error.message}</p>;
+  if (loading) return <Loader />;
+  if (error) return showAlert('error', error?.message, 3000);
 
   return (
     <LayoutDashboard>
-      <button className="btn btn-circle btn-accent" onClick={() => handleModal()}>
-        <IoIosAdd size={50} />
-      </button>
       {data?.allCategories && <AdminCategoryTable initialCategories={data.allCategories as any} />}
-      {
-        <AddCategoryModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onCategoryAdded={(category: any) => {}}
-        />
-      }
     </LayoutDashboard>
   );
 };

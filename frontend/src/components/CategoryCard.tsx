@@ -2,17 +2,19 @@ import { CategoryCardProps } from '../types/index';
 import Link from 'next/link';
 import React from 'react';
 
-function CategoryCard({ category: { name, image }, link }: CategoryCardProps) {
+const CategoryCard: React.FC<CategoryCardProps> = ({ category: { name, image }, link }) => {
   return (
     <Link href={link}>
-      <div className="group relative">
-        <div className="relative h-80 w-full overflow-hidden rounded-lg sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
-          <img src={image} alt={name} className="h-full w-full object-cover object-center" />
+      <div className="card card-compact w-full bg-base-100 shadow-xl mb-6">
+        <figure>
+          <img src={image} alt={name} className="h-48 w-full object-cover" />
+        </figure>
+        <div className="card-body">
+          <h2 className="card-title text-center">{name}</h2>
         </div>
-        <h3 className="mt-6 text-xl text-gray-500">{name}</h3>
       </div>
     </Link>
   );
-}
+};
 
 export default CategoryCard;

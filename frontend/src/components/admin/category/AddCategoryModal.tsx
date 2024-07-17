@@ -2,6 +2,7 @@ import React from 'react';
 import FormInput from '@/components/FormInput';
 import { useAddCategoryMutation } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const fields = [
   {
@@ -35,7 +36,7 @@ function AddCategoryModal({
 }) {
   if (!isOpen) return null;
   const [createCategory, { loading }] = useAddCategoryMutation();
-
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -50,15 +51,16 @@ function AddCategoryModal({
         },
       });
       if (response.data?.addCategory) {
-        alert('Catégorie ajoutée avec succès');
+        console.log('🚀 ~ handleSubmit ~ response.data?.addCategory:', response.data?.addCategory);
+        showAlert('success', 'Category added successfully', 3000);
         onCategoryAdded(response.data.addCategory);
         onClose();
       } else {
-        alert('Erreur lors de l’ajout de la catégorie');
+        showAlert('error', 'Error adding category', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout de la catégorie');
-      console.error('Erreur lors de l’ajout de la catégorie', error);
+      showAlert('error', 'Network or query error while adding category', 3000);
+      console.error('Error adding category', error);
     } finally {
       client.resetStore();
     }
@@ -87,12 +89,12 @@ function AddCategoryModal({
               />
             ))}
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              Ajouter
+              Add
             </button>
           </form>
         </div>
         <label className="modal-backdrop" htmlFor="category_modal" onClick={onClose}>
-          Fermer
+          Close
         </label>
       </div>
     </div>

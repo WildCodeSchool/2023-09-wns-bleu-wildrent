@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import 'reflect-metadata';
+import 'reflect-metadata'; // permet de stocker les types TS dans les metadata de JS
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
@@ -49,14 +49,14 @@ async function main() {
           }
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
       return ctx;
     };
     const middleware = expressMiddleware(server, { context });
     app.use(express.json(), middleware);
     await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
-    console.log(`🚀 Server ready at http://localhost:${port}/`);
+    console.info(`🚀 Server ready at http://localhost:${port}/`);
   } catch (e) {
     console.error((e as Error).message);
   }
