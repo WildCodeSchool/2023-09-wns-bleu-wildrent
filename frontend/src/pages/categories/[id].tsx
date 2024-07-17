@@ -1,41 +1,26 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useQuery, gql } from '@apollo/client';
 import Layout from '../../components/Layout';
 import SubCategoryCard from '../../components/SubCategory/SubCategoryCard';
 import Loader from '../../components/Loader';
 import BreadcrumbComponent from '../../components/BreadcrumbComponent';
-
-const GET_SUBCATEGORIES_BY_CATEGORY_ID = gql`
-  query GetSubCategoriesByCategoryId($categoryId: Int!) {
-    subCategoriesByCategoryId(categoryId: $categoryId) {
-      id
-      name
-      description
-      image
-    }
-  }
-`;
-
-const GET_CATEGORY_NAME = gql`
-  query GetCategoryName($categoryId: Int!) {
-    categoryById(id: $categoryId) {
-      name
-    }
-  }
-`;
+import {
+  useGetCategoryNameQuery,
+  useGetSubCategoriesByCategoryIdQuery,
+} from '@/graphql/generated/schema';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const CategoryDetails = () => {
   const router = useRouter();
   const { id: categoryId } = router.query;
-
+  const { showAlert } = useAlert();
   if (!categoryId) return null;
 
   const {
     data: subCategoriesData,
     loading: subCategoriesLoading,
     error: subCategoriesError,
-  } = useQuery(GET_SUBCATEGORIES_BY_CATEGORY_ID, {
+  } = useGetSubCategoriesByCategoryIdQuery({
     variables: { categoryId: parseInt(categoryId as string, 10) },
   });
 
@@ -43,18 +28,16 @@ const CategoryDetails = () => {
     data: categoryData,
     loading: categoryLoading,
     error: categoryError,
-  } = useQuery(GET_CATEGORY_NAME, {
+  } = useGetCategoryNameQuery({
     variables: { categoryId: parseInt(categoryId as string, 10) },
   });
 
   if (subCategoriesLoading || categoryLoading) return <Loader />;
-  if (subCategoriesError || categoryError)
-    return (
-      <p>Une erreur s'est produite : {subCategoriesError?.message || categoryError?.message}</p>
-    );
+  if (subCategoriesError) return showAlert('error', subCategoriesError?.message, 3000);
+  if (categoryError) return showAlert('error', categoryError?.message, 3000);
 
   const subCategories = subCategoriesData?.subCategoriesByCategoryId || [];
-  const categoryName = categoryData?.categoryById?.name || 'Catégorie';
+  const category = categoryData?.categoryById || { name: 'Category', description: '' };
 
   return (
     <Layout>
@@ -62,10 +45,15 @@ const CategoryDetails = () => {
         <BreadcrumbComponent
           items={[
             { label: 'Catégories', href: '/' },
-            { label: categoryName, href: `/categories/${categoryId}`, current: true },
+            {
+              label: category?.name || '',
+              href: `/categories/${categoryId}`,
+              current: true,
+            },
           ]}
         />
-        <h1 className="text-3xl font-bold text-center my-6">Sous-catégories</h1>
+
+        <p className="container m-4 p-4 text-justify">{categoryData?.categoryById?.description} </p>
         {subCategories.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {subCategories.map((subCategory: any) => (

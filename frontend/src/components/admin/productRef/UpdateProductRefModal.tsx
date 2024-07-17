@@ -50,7 +50,11 @@ const fields = [
     placeholder: '5',
   },
 ];
-function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalProps) {
+function UpdateProductRefModal({
+  isOpen,
+  onClose,
+  productRef,
+}: ProductRefModalProps): React.ReactNode {
   if (!isOpen || !productRef) return null;
   const [UpdateProductRef, { loading }] = useUpdateProductRefMutation();
   const { showAlert } = useAlert();
@@ -70,15 +74,15 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
         },
       });
       if (response.data && response.data.updateProductRef.success) {
-        showAlert('success', 'Produit modifié avec succès', 3000);
+        showAlert('success', 'Product modified successfully', 3000);
 
         onClose();
       } else {
-        showAlert('error', 'Erreur lors de la modification du produit', 3000);
+        showAlert('error', 'Error editing product', 3000);
       }
     } catch (error) {
-      showAlert('error', 'Erreur réseau ou de requête lors de l’ajout du produit', 3000);
-      console.error('Erreur lors de la modification du produit', error);
+      showAlert('error', 'Network or query error while editing product', 3000);
+      console.error('Error while editing product', error);
     } finally {
       client.resetStore();
     }
@@ -90,7 +94,9 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
   } = useAllSubCategoriesQuery();
 
   if (loadingSubCategories) return <Loader />;
-  if (errorSubCategories) return <Loader />;
+  if (errorSubCategories) {
+    showAlert('error', errorSubCategories?.message, 3000);
+  }
 
   return (
     <div>

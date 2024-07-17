@@ -46,10 +46,15 @@ class ProductRefsResolver {
       return { success: false, message: 'Already Registered' };
     } else {
       try {
-        await new ProductRefService().createProductRef(data);
-        return { success: true, message: 'ProductRef Created !' };
-      } catch (e) {
-        console.error((e as Error).message);
+        const success = await new ProductRefService().createProductRef(data);
+        if (success) {
+          return { success: true, message: 'ProductRef Created !' };
+        } else {
+          return { success: false, message: 'Failed to create productRef' };
+        }
+      } catch (error) {
+        console.error((error as Error).message);
+        return { success: false, message: (error as Error).message };
       }
     }
   }

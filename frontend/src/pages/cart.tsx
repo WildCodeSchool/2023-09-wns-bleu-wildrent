@@ -8,11 +8,16 @@ import { useAlert } from '@/components/providers/AlertContext';
 import { useCreateOrderMutation, OrderInput } from '@/graphql/generated/schema';
 import { useUser } from '@/components/providers/UserContext';
 import { useDate } from '@/components/providers/DatesContext';
+import { useAuthModal } from '@/components/hooks/useAuthModal';
+import LoginForm from '@/components/LoginForm';
+import RegisterForm from '@/components/RegisterForm';
 
 const Cart = () => {
   const { showAlert } = useAlert();
   const { user } = useUser();
   const { startDate, endDate, nbDays } = useDate();
+  const { showLoginForm, showRegisterForm, handleLoginClick, handleRegisterClick, closeModal } =
+    useAuthModal();
 
   const [cartItems, setCartItems] = useState<CartItemProps['item'][]>(() => {
     if (typeof window !== 'undefined') {
@@ -31,7 +36,6 @@ const Cart = () => {
     variables: { productRefId: typeof id === 'string' ? parseInt(id, 10) : 0 },
     skip: typeof id === 'undefined',
   });
-  const productRef = data?.productRefById;
   const [createOrder] = useCreateOrderMutation();
   const updateQuantity = (id: number, quantity: number) => {
     setCartItems(
@@ -54,8 +58,11 @@ const Cart = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!user || !startDate || !endDate) {
+    if (!user) {
+      handleLoginClick();
+      return;
+    }
+    if (!startDate || !endDate) {
       showAlert('info', 'Please fill in all the required fields', 3000);
       return;
     }
@@ -121,6 +128,10 @@ const Cart = () => {
                 </button>
               </div>
             </form>
+            {showLoginForm && (
+              <LoginForm closeModal={closeModal} switchToRegister={handleRegisterClick} />
+            )}
+            {showRegisterForm && <RegisterForm closeModal={closeModal} />}
           </>
         )}
       </div>

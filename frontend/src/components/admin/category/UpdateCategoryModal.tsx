@@ -58,19 +58,15 @@ function UpdateCategoryModal({
       });
 
       if (response.data?.updateCategory?.id) {
-        showAlert('success', 'Catégorie mise à jour avec succès', 3000);
+        showAlert('success', 'Category updated successfully', 3000);
         onCategoryUpdated(response.data.updateCategory);
         onClose();
       } else {
-        showAlert('error', 'Erreur lors de la mise à jour de la catégorie', 3000);
+        showAlert('error', 'Error updating category', 3000);
       }
     } catch (error) {
-      showAlert(
-        'error',
-        'Erreur réseau ou de requête lors de la mise à jour de la catégorie',
-        3000,
-      );
-      console.error('Erreur lors de la mise à jour de la catégorie', error);
+      showAlert('error', 'Network or query error while updating category', 3000);
+      console.error('Error updating category', error);
     } finally {
       client.resetStore();
     }

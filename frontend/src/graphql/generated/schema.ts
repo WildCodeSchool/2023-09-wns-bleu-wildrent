@@ -411,7 +411,7 @@ export type ProductRefByIdQueryVariables = Exact<{
 }>;
 
 
-export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantity: number, quantityAvailable: number } };
+export type ProductRefByIdQuery = { __typename?: 'Query', productRefById: { __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantity: number, quantityAvailable: number, subCategory: { __typename?: 'SubCategory', id: number, name: string, category?: { __typename?: 'Category', id: number, name: string } | null } } };
 
 export type CheckIfLoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -428,6 +428,13 @@ export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'Profile', id: number, firstname?: string | null, lastname?: string | null, picture?: string | null, address?: string | null, cp?: string | null, city?: string | null, role: string, email: string }> };
 
+export type GetSubCategoryNameQueryVariables = Exact<{
+  subCategoryId: Scalars['Int'];
+}>;
+
+
+export type GetSubCategoryNameQuery = { __typename?: 'Query', subCategoryById?: { __typename?: 'SubCategory', name: string, description?: string | null, category?: { __typename?: 'Category', id: number, name: string } | null } | null };
+
 export type AllCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -438,13 +445,20 @@ export type AllCategoriesAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AllCategoriesAdminQuery = { __typename?: 'Query', allCategories: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, image: string }> };
 
+export type GetCategoryNameQueryVariables = Exact<{
+  categoryId: Scalars['Int'];
+}>;
+
+
+export type GetCategoryNameQuery = { __typename?: 'Query', categoryById?: { __typename?: 'Category', name: string, description?: string | null } | null };
+
 export type GetProductAvailableByDateRangeQueryVariables = Exact<{
   endDate?: InputMaybe<Scalars['String']>;
   startDate?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetProductAvailableByDateRangeQuery = { __typename?: 'Query', getProductAvailableByDateRange: { __typename?: 'AvailableProducts', items: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantityAvailable: number }> } };
+export type GetProductAvailableByDateRangeQuery = { __typename?: 'Query', getProductAvailableByDateRange: { __typename?: 'AvailableProducts', items: Array<{ __typename?: 'ProductRef', id: number, name: string, image: string, priceHT: number }> } };
 
 export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -458,6 +472,13 @@ export type OrderByIdQueryVariables = Exact<{
 
 export type OrderByIdQuery = { __typename?: 'Query', orderById: { __typename?: 'Order', id: number, totalAmount: number, paymentStatus: PaymentStatus, orderDate: any, startDate: any, endDate: any, numberOfDays: number, shippingAddress?: string | null, user: { __typename?: 'User', id: number, email: string }, orderItems: Array<{ __typename?: 'OrderItem', quantity: number, unitPrice: number, productItems: Array<{ __typename?: 'ProductItem', productRef: { __typename?: 'ProductRef', name: string } }> }> } };
 
+export type GetSubCategoriesByCategoryIdQueryVariables = Exact<{
+  categoryId: Scalars['Int'];
+}>;
+
+
+export type GetSubCategoriesByCategoryIdQuery = { __typename?: 'Query', subCategoriesByCategoryId: Array<{ __typename?: 'SubCategory', id: number, name: string, description?: string | null, image: string }> };
+
 export type AllSubCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -467,13 +488,6 @@ export type AllSubCategoriesAdminQueryVariables = Exact<{ [key: string]: never; 
 
 
 export type AllSubCategoriesAdminQuery = { __typename?: 'Query', allSubCategories: Array<{ __typename?: 'SubCategory', id: number, name: string, description?: string | null, image: string, category?: { __typename?: 'Category', id: number, name: string } | null }> };
-
-export type GetSubCategoriesByCategoryIdQueryVariables = Exact<{
-  categoryId: Scalars['Int'];
-}>;
-
-
-export type GetSubCategoriesByCategoryIdQuery = { __typename?: 'Query', subCategoriesByCategoryId: Array<{ __typename?: 'SubCategory', id: number, name: string, description?: string | null, image: string }> };
 
 export type UpdateUserAdminMutationVariables = Exact<{
   updatedUser: InputUpdateAdmin;
@@ -690,7 +704,7 @@ export type AllProductRefsAdminQueryHookResult = ReturnType<typeof useAllProduct
 export type AllProductRefsAdminLazyQueryHookResult = ReturnType<typeof useAllProductRefsAdminLazyQuery>;
 export type AllProductRefsAdminQueryResult = Apollo.QueryResult<AllProductRefsAdminQuery, AllProductRefsAdminQueryVariables>;
 export const GetProductsBySubCategoryIdDocument = gql`
-    query getProductsBySubCategoryId($subCategoryId: Int!) {
+    query GetProductsBySubCategoryId($subCategoryId: Int!) {
   getProductsBySubCategoryId(subCategoryId: $subCategoryId) {
     id
     name
@@ -738,6 +752,14 @@ export const ProductRefByIdDocument = gql`
     priceHT
     quantity
     quantityAvailable
+    subCategory {
+      id
+      name
+      category {
+        id
+        name
+      }
+    }
   }
 }
     `;
@@ -889,6 +911,46 @@ export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export const GetSubCategoryNameDocument = gql`
+    query GetSubCategoryName($subCategoryId: Int!) {
+  subCategoryById(id: $subCategoryId) {
+    name
+    description
+    category {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSubCategoryNameQuery__
+ *
+ * To run a query within a React component, call `useGetSubCategoryNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSubCategoryNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSubCategoryNameQuery({
+ *   variables: {
+ *      subCategoryId: // value for 'subCategoryId'
+ *   },
+ * });
+ */
+export function useGetSubCategoryNameQuery(baseOptions: Apollo.QueryHookOptions<GetSubCategoryNameQuery, GetSubCategoryNameQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSubCategoryNameQuery, GetSubCategoryNameQueryVariables>(GetSubCategoryNameDocument, options);
+      }
+export function useGetSubCategoryNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSubCategoryNameQuery, GetSubCategoryNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSubCategoryNameQuery, GetSubCategoryNameQueryVariables>(GetSubCategoryNameDocument, options);
+        }
+export type GetSubCategoryNameQueryHookResult = ReturnType<typeof useGetSubCategoryNameQuery>;
+export type GetSubCategoryNameLazyQueryHookResult = ReturnType<typeof useGetSubCategoryNameLazyQuery>;
+export type GetSubCategoryNameQueryResult = Apollo.QueryResult<GetSubCategoryNameQuery, GetSubCategoryNameQueryVariables>;
 export const AllCategoriesDocument = gql`
     query AllCategories {
   allCategories {
@@ -963,16 +1025,50 @@ export function useAllCategoriesAdminLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AllCategoriesAdminQueryHookResult = ReturnType<typeof useAllCategoriesAdminQuery>;
 export type AllCategoriesAdminLazyQueryHookResult = ReturnType<typeof useAllCategoriesAdminLazyQuery>;
 export type AllCategoriesAdminQueryResult = Apollo.QueryResult<AllCategoriesAdminQuery, AllCategoriesAdminQueryVariables>;
+export const GetCategoryNameDocument = gql`
+    query GetCategoryName($categoryId: Int!) {
+  categoryById(id: $categoryId) {
+    name
+    description
+  }
+}
+    `;
+
+/**
+ * __useGetCategoryNameQuery__
+ *
+ * To run a query within a React component, call `useGetCategoryNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoryNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoryNameQuery({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useGetCategoryNameQuery(baseOptions: Apollo.QueryHookOptions<GetCategoryNameQuery, GetCategoryNameQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoryNameQuery, GetCategoryNameQueryVariables>(GetCategoryNameDocument, options);
+      }
+export function useGetCategoryNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoryNameQuery, GetCategoryNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoryNameQuery, GetCategoryNameQueryVariables>(GetCategoryNameDocument, options);
+        }
+export type GetCategoryNameQueryHookResult = ReturnType<typeof useGetCategoryNameQuery>;
+export type GetCategoryNameLazyQueryHookResult = ReturnType<typeof useGetCategoryNameLazyQuery>;
+export type GetCategoryNameQueryResult = Apollo.QueryResult<GetCategoryNameQuery, GetCategoryNameQueryVariables>;
 export const GetProductAvailableByDateRangeDocument = gql`
     query GetProductAvailableByDateRange($endDate: String, $startDate: String) {
   getProductAvailableByDateRange(endDate: $endDate, startDate: $startDate) {
     items {
       id
       name
-      description
       image
       priceHT
-      quantityAvailable
     }
   }
 }
@@ -1115,6 +1211,44 @@ export function useOrderByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type OrderByIdQueryHookResult = ReturnType<typeof useOrderByIdQuery>;
 export type OrderByIdLazyQueryHookResult = ReturnType<typeof useOrderByIdLazyQuery>;
 export type OrderByIdQueryResult = Apollo.QueryResult<OrderByIdQuery, OrderByIdQueryVariables>;
+export const GetSubCategoriesByCategoryIdDocument = gql`
+    query GetSubCategoriesByCategoryId($categoryId: Int!) {
+  subCategoriesByCategoryId(categoryId: $categoryId) {
+    id
+    name
+    description
+    image
+  }
+}
+    `;
+
+/**
+ * __useGetSubCategoriesByCategoryIdQuery__
+ *
+ * To run a query within a React component, call `useGetSubCategoriesByCategoryIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSubCategoriesByCategoryIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSubCategoriesByCategoryIdQuery({
+ *   variables: {
+ *      categoryId: // value for 'categoryId'
+ *   },
+ * });
+ */
+export function useGetSubCategoriesByCategoryIdQuery(baseOptions: Apollo.QueryHookOptions<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>(GetSubCategoriesByCategoryIdDocument, options);
+      }
+export function useGetSubCategoriesByCategoryIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>(GetSubCategoriesByCategoryIdDocument, options);
+        }
+export type GetSubCategoriesByCategoryIdQueryHookResult = ReturnType<typeof useGetSubCategoriesByCategoryIdQuery>;
+export type GetSubCategoriesByCategoryIdLazyQueryHookResult = ReturnType<typeof useGetSubCategoriesByCategoryIdLazyQuery>;
+export type GetSubCategoriesByCategoryIdQueryResult = Apollo.QueryResult<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>;
 export const AllSubCategoriesDocument = gql`
     query AllSubCategories {
   allSubCategories {
@@ -1197,44 +1331,6 @@ export function useAllSubCategoriesAdminLazyQuery(baseOptions?: Apollo.LazyQuery
 export type AllSubCategoriesAdminQueryHookResult = ReturnType<typeof useAllSubCategoriesAdminQuery>;
 export type AllSubCategoriesAdminLazyQueryHookResult = ReturnType<typeof useAllSubCategoriesAdminLazyQuery>;
 export type AllSubCategoriesAdminQueryResult = Apollo.QueryResult<AllSubCategoriesAdminQuery, AllSubCategoriesAdminQueryVariables>;
-export const GetSubCategoriesByCategoryIdDocument = gql`
-    query GetSubCategoriesByCategoryId($categoryId: Int!) {
-  subCategoriesByCategoryId(categoryId: $categoryId) {
-    id
-    name
-    description
-    image
-  }
-}
-    `;
-
-/**
- * __useGetSubCategoriesByCategoryIdQuery__
- *
- * To run a query within a React component, call `useGetSubCategoriesByCategoryIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSubCategoriesByCategoryIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetSubCategoriesByCategoryIdQuery({
- *   variables: {
- *      categoryId: // value for 'categoryId'
- *   },
- * });
- */
-export function useGetSubCategoriesByCategoryIdQuery(baseOptions: Apollo.QueryHookOptions<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>(GetSubCategoriesByCategoryIdDocument, options);
-      }
-export function useGetSubCategoriesByCategoryIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>(GetSubCategoriesByCategoryIdDocument, options);
-        }
-export type GetSubCategoriesByCategoryIdQueryHookResult = ReturnType<typeof useGetSubCategoriesByCategoryIdQuery>;
-export type GetSubCategoriesByCategoryIdLazyQueryHookResult = ReturnType<typeof useGetSubCategoriesByCategoryIdLazyQuery>;
-export type GetSubCategoriesByCategoryIdQueryResult = Apollo.QueryResult<GetSubCategoriesByCategoryIdQuery, GetSubCategoriesByCategoryIdQueryVariables>;
 export const UpdateUserAdminDocument = gql`
     mutation UpdateUserAdmin($updatedUser: InputUpdateAdmin!) {
   updateUserAdmin(updatedUser: $updatedUser) {

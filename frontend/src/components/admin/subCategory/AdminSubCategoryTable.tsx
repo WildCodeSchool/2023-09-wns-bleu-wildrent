@@ -62,15 +62,15 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
       });
       if (data.deleteSubCategory) {
         setSubCategories(subCategories.filter((subCategory) => subCategory.id !== subCategoryId));
-        showAlert('success', 'Sous-catégorie supprimée avec succès', 3000);
+        showAlert('success', 'Subcategory removed successfully', 3000);
 
         client.resetStore();
       } else {
-        showAlert('error', 'Échec de la suppression de la sous-catégorie', 3000);
+        showAlert('error', 'Failed to delete subcategory', 3000);
       }
     } catch (error) {
-      showAlert('error', 'Erreur lors de la suppression de la sous-catégorie', 3000);
-      console.error('Erreur lors de la suppression de la sous-catégorie', error);
+      showAlert('error', 'Error deleted subcategory', 3000);
+      console.error('Error deleting subcategory', error);
     }
   };
 

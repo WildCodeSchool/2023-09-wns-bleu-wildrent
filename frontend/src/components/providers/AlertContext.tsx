@@ -17,6 +17,7 @@ const AlertContext = createContext<AlertContextType | undefined>(undefined);
 const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertType, setAlertType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+  console.log('🚀 ~ alertType:', alertType);
   const [alertMessage, setAlertMessage] = useState('');
 
   const closeAlert = useCallback(() => {
@@ -26,7 +27,7 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const showAlert = useCallback(
     (type: 'success' | 'error' | 'warning' | 'info', message: string, duration: number) => {
       setAlertType(type);
-
+      console.log('🚀 ~ type:', type);
       setAlertMessage(message);
       setAlertOpen(true);
 
@@ -38,7 +39,6 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     },
     [closeAlert],
   );
-  console.log('🚀 ~ alertType:', alertType);
   return (
     <AlertContext.Provider value={{ showAlert, closeAlert, alertOpen, alertType, alertMessage }}>
       {children}

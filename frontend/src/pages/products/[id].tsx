@@ -3,41 +3,21 @@ import BreadcrumbComponent from '@/components/BreadcrumbComponent';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useProductRefByIdQuery } from '@/graphql/generated/schema';
-import { gql, useQuery } from '@apollo/client';
 import { BiSolidCartAdd } from 'react-icons/bi';
 import { CartItemProps } from '@/components/CartItem';
-
-const GET_PRODUCT_REF_BY_ID = gql`
-  query ProductRefById($productRefId: Int!) {
-    productRefById(productRefId: $productRefId) {
-      id
-      name
-      description
-      priceHT
-      image
-      quantity
-      subCategory {
-        id
-        name
-        category {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
+import Loader from '@/components/Loader';
+import { useAlert } from '@/components/providers/AlertContext';
 
 function ProductRefDetails() {
   const cartLocalStorage = JSON.parse(localStorage.getItem('cartList') || '[]');
   const [quantity, setQuantity] = useState(1);
+  const { showAlert } = useAlert();
   const router = useRouter();
   const { id } = router.query;
-  const { data, loading, error } = useQuery(GET_PRODUCT_REF_BY_ID, {
+  const { data, loading, error } = useProductRefByIdQuery({
     variables: { productRefId: typeof id === 'string' ? parseInt(id, 10) : 0 },
     skip: typeof id === 'undefined',
   });
-
   const [cartList, setCartList] = useState(cartLocalStorage);
   const [showDialog, setShowDialog] = useState(false);
   const continueShopping = () => {
@@ -53,7 +33,7 @@ function ProductRefDetails() {
 
   if (!productRef) {
     console.error('productRef is undefined');
-    return <p>Product not found</p>;
+    return showAlert('error', 'prodcut not found', 3000);
   }
 
   const { id: productRefId, name, image, priceHT } = productRef;
@@ -74,12 +54,10 @@ function ProductRefDetails() {
   };
 
   if (loading) {
-    return <p className="text-center">Chargement...</p>;
+    return <Loader />;
   }
 
-  if (error) {
-    return <p className="text-center">Une erreur s'est produite : {error.message}</p>;
-  }
+  if (error) return showAlert('error', error?.message, 3000);
 
   if (!productRef) {
     return <p className="text-center">Produit non trouvé</p>;
@@ -88,8 +66,8 @@ function ProductRefDetails() {
   const breadcrumbItems = [
     { label: 'Catégories', href: '/' },
     {
-      label: productRef.subCategory.category.name,
-      href: `/categories/${productRef.subCategory.category.id}`,
+      label: productRef.name,
+      href: `/categories/${productRef?.subCategory?.category?.id}`,
     },
     { label: productRef.subCategory.name, href: `/subcategories/${productRef.subCategory.id}` },
     { label: productRef.name, href: `/products/${productRef.id}`, current: true },

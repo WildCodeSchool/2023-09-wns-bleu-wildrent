@@ -9,6 +9,7 @@ import {
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
 import { useAlert } from '@/components/providers/AlertContext';
+import Loader from '@/components/Loader';
 
 const fields = [
   {
@@ -72,22 +73,24 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
         },
       });
       if (response.data && response.data.addProductRef.success) {
-        showAlert('success', 'Produit ajouté avec succès', 3000);
+        showAlert('success', 'Product added successfully', 3000);
 
         onClose();
       } else {
-        showAlert('error', "Erreur lors de l'ajout du produit", 3000);
+        showAlert('error', 'Error adding product', 3000);
       }
     } catch (error) {
-      showAlert('error', 'Erreur réseau ou de requête lors de l’ajout du produit', 3000);
-      console.error('Erreur lors de l’ajout du produit', error);
+      showAlert('error', 'Network or query error while adding product', 3000);
+      console.error('Error adding product', error);
     } finally {
       client.resetStore();
     }
   };
 
-  if (loadingSubCategories) return <p>Chargement des sous-catégories...</p>;
-  if (errorSubCategories) return <p>Erreur lors du chargement des sous-catégories.</p>;
+  if (loadingSubCategories) return <Loader />;
+  if (errorSubCategories) {
+    showAlert('error', errorSubCategories?.message, 3000);
+  }
 
   return (
     <div>

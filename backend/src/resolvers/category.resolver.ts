@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Arg, Int } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg, Int, Authorized } from 'type-graphql';
 import { Category } from '../entities/category.entity';
 import CategoryService from '../services/category.service';
 
@@ -15,7 +15,7 @@ export class CategoryResolver {
   async categoryById(@Arg('id', () => Int) id: number) {
     return await this.categoryService.findCategoryById(id);
   }
-
+  @Authorized(['ADMIN'])
   @Mutation(() => Category)
   async addCategory(
     @Arg('name') name: string,
@@ -24,7 +24,7 @@ export class CategoryResolver {
   ) {
     return await this.categoryService.createCategory({ name, description, image });
   }
-
+  @Authorized(['ADMIN'])
   @Mutation(() => Category)
   async updateCategory(
     @Arg('id', () => Int) id: number,
@@ -34,7 +34,7 @@ export class CategoryResolver {
   ) {
     return await this.categoryService.updateCategory(id, { name, description, image });
   }
-
+  @Authorized(['ADMIN'])
   @Mutation(() => Boolean)
   async deleteCategory(@Arg('id', () => Int) id: number) {
     return await this.categoryService.deleteCategory(id);
