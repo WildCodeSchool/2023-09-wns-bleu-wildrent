@@ -10,7 +10,7 @@ export const navData = [
   {
     text: 'About us',
     alt: 'alt',
-    link: '/',
+    link: '/about',
   },
   {
     text: 'Catalog',
