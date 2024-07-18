@@ -2,29 +2,29 @@ import Link from 'next/link';
 import { JSX, SVGProps } from 'react';
 import { navData } from '../const';
 
-export default function Component() {
+export default function Footer() {
   return (
-    <footer className="w-full py-12">
+    <footer className="w-full py-12 bg-gray-100 dark:bg-gray-900">
       <div className="container flex flex-col items-center gap-6 px-4 text-center md:flex-row md:justify-between md:gap-8 md:px-6 lg:gap-10">
         <div className="flex flex-col gap-2 text-sm items-center md:items-start md:gap-1 lg:flex-row lg:gap-2">
           <span className="mx-auto text-xs tracking-wide text-gray-500 lg:mx-0 lg:mr-2 dark:text-gray-400">
-            Follow us nous
+            Follow us
           </span>
           <div className="flex gap-2 lg:gap-1">
             <Link
-              className="rounded-full w-6 h-6 overflow-hidden border border-gray-200 shadow-sm hover:shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950dark:border-gray-800 dark:hover:shadow-steel dark:hover:scale-105 dark:focus-visible:ring-gray-300"
+              className="rounded-full w-6 h-6 overflow-hidden border border-gray-200 shadow-sm hover:shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:shadow-steel dark:hover:scale-105 dark:focus-visible:ring-gray-300"
               href="#"
             >
               <FacebookIcon className="w-4 h-4 translate-x-0.5" />
             </Link>
             <Link
-              className="rounded-full w-6 h-6 overflow-hidden border border-gray-200 shadow-sm hover:shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:hover:shadow-steel dark:hover:scale-105 dark:focus-visible:ring-gray-300"
+              className="rounded-full w-6 h-6 overflow-hidden border border-gray-200 shadow-sm hover:shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:shadow-steel dark:hover:scale-105 dark:focus-visible:ring-gray-300"
               href="#"
             >
               <TwitterIcon className="w-4 h-4 translate-x-0.5" />
             </Link>
             <Link
-              className="rounded-full w-6 h-6 overflow-hidden border border-gray-200shadow-sm hover:shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:shadow-steel dark:hover:scale-105 dark:focus-visible:ring-gray-300"
+              className="rounded-full w-6 h-6 overflow-hidden border border-gray-200 shadow-sm hover:shadow transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 dark:border-gray-800 dark:hover:shadow-steel dark:hover:scale-105 dark:focus-visible:ring-gray-300"
               href="#"
             >
               <InstagramIcon className="w-4 h-4 translate-x-0.5" />

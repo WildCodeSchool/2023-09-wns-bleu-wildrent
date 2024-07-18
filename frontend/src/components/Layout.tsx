@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Navbar from '../components/Navbar';
-
-import Footer from './Footer';
-import SelectDate from './SelectDate';
+import Footer from '../components/Footer';
+import SelectDate from '../components/SelectDate';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,10 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="mx-auto max-w-5xl mb-10">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <SelectDate />
-      <div className="container mx-auto px-4 min-h-full">{children}</div>
+      <div className="container mx-auto px-4 flex-grow">{children}</div>
       <Footer />
     </div>
   );
