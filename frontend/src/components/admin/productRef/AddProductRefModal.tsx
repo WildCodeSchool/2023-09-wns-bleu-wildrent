@@ -8,6 +8,8 @@ import {
 } from '@/graphql/generated/schema';
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
+import { useAlert } from '@/components/providers/AlertContext';
+import Loader from '@/components/Loader';
 
 const fields = [
   {
@@ -56,6 +58,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
     loading: loadingSubCategories,
     error: errorSubCategories,
   } = useAllSubCategoriesQuery();
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -69,23 +72,25 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
           data: formJSON as InputProductRef,
         },
       });
-      console.log(response.data);
       if (response.data && response.data.addProductRef.success) {
-        alert('Produit ajouté avec succès');
+        showAlert('success', 'Product added successfully', 3000);
+
         onClose();
       } else {
-        alert(`Erreur lors de l'ajout du produit`);
+        showAlert('error', 'Error adding product', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout du produit');
-      console.error('Erreur lors de l’ajout du produit', error);
+      showAlert('error', 'Network or query error while adding product', 3000);
+      console.error('Error adding product', error);
     } finally {
       client.resetStore();
     }
   };
 
-  if (loadingSubCategories) return <p>Chargement des sous-catégories...</p>;
-  if (errorSubCategories) return <p>Erreur lors du chargement des sous-catégories.</p>;
+  if (loadingSubCategories) return <Loader />;
+  if (errorSubCategories) {
+    showAlert('error', errorSubCategories?.message, 3000);
+  }
 
   return (
     <div>

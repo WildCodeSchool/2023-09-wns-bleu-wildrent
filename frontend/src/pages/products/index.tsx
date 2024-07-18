@@ -2,10 +2,11 @@ import React from 'react';
 import ProductCard from '@/components/ProductCard';
 import { useAllProductRefsQuery } from '../../graphql/generated/schema';
 import Layout from '@/components/Layout';
+import Loader from '@/components/Loader';
 
 function ProductList() {
   const { data, loading } = useAllProductRefsQuery();
-  if (loading) return 'Chargement...';
+  if (loading) return <Loader />;
   const productRefs = data?.allProductRefs || [];
   return (
     <Layout>

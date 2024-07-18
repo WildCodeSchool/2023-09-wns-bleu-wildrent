@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import FormInput from '@/components/FormInput';
 import { useAddSubCategoryMutation, useAllCategoriesQuery } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
+import { useAlert } from '@/components/providers/AlertContext';
+import Loader from '@/components/Loader';
 
 const fields = [
   {
@@ -47,7 +49,7 @@ function AddSubCategoryModal({
     refetch: refetchCategories,
   } = useAllCategoriesQuery();
   const [categories, setCategories] = useState<Category[]>([]);
-
+  const { showAlert } = useAlert();
   useEffect(() => {
     if (categoryData && categoryData.allCategories) {
       setCategories(categoryData.allCategories);
@@ -62,11 +64,9 @@ function AddSubCategoryModal({
     const categoryId = categories.find((c) => c.name === selectedCategoryName)?.id;
 
     if (!categoryId) {
-      alert('Catégorie invalide.');
+      showAlert('error', 'Catégorie invalide.', 3000);
       return;
     }
-
-    console.log('Submitting with categoryId:', categoryId);
 
     try {
       const response = await addSubCategory({
@@ -77,20 +77,19 @@ function AddSubCategoryModal({
           categoryId,
         },
       });
-      console.log('Mutation response:', response);
 
       if (response.data && response.data.addSubCategory) {
-        alert('Sous-catégorie ajoutée avec succès');
+        showAlert('success', 'Subcategory added successfully', 3000);
         onSubCategoryAdded(response.data.addSubCategory);
         onClose();
         // Refetch categories after adding a subcategory
         await refetchCategories();
       } else {
-        alert('Erreur lors de l’ajout de la sous-catégorie');
+        showAlert('error', 'Error adding subcategory', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout de la sous-catégorie');
-      console.error('Erreur lors de l’ajout de la sous-catégorie', error);
+      showAlert('error', 'Network or query error while adding subcategory', 3000);
+      console.error('Error adding subcategory', error);
     } finally {
       client.resetStore();
     }
@@ -111,7 +110,7 @@ function AddSubCategoryModal({
         <div className="modal-box">
           <h3 className="text-lg font-bold">Ajout d'une nouvelle sous-catégorie</h3>
           {categoryLoading ? (
-            <div>Chargement des catégories...</div>
+            <Loader />
           ) : (
             <form className="flex flex-col gap-4 p-4 border rounded" onSubmit={handleSubmit}>
               {fields.map((field) => (
@@ -138,11 +137,12 @@ function AddSubCategoryModal({
                 className="btn btn-primary"
                 disabled={addLoading || categoryLoading}
               >
-                {addLoading || categoryLoading ? 'Chargement...' : 'Ajouter'}
+                {addLoading || categoryLoading ? <Loader /> : 'Add'}
               </button>
             </form>
           )}
         </div>
+        S
         <label className="modal-backdrop" htmlFor="subcategory_modal" onClick={onClose}>
           Fermer
         </label>

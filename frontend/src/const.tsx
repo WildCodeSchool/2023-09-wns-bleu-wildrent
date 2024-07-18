@@ -27,7 +27,7 @@ export const navData = [
 export const adminSideBarItems: LinkProps[] = [
   {
     href: '/admin',
-    text: 'Accueil',
+    text: 'Home',
     testId: 'dashboard-id',
   },
   {
@@ -35,7 +35,7 @@ export const adminSideBarItems: LinkProps[] = [
     text: 'Categories',
   },
   {
-    href: '/admin/sous-categorie',
+    href: '/admin/subCategory',
     text: 'SubCategories',
   },
   {
@@ -47,20 +47,8 @@ export const adminSideBarItems: LinkProps[] = [
     text: 'Products',
   },
   {
-    href: '/admin/productref',
-    text: 'ProductRef',
-  },
-  {
     href: '/admin/orders',
     text: 'Orders',
-  },
-  {
-    href: '/admin/reservation',
-    text: 'Réservation',
-  },
-  {
-    href: '/myprofile',
-    text: 'Profil',
   },
   {
     href: '/',

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Arg, Int } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg, Int, Authorized } from 'type-graphql';
 import { SubCategory } from '../entities/subcategory.entity';
 import SubCategoryService from '../services/subCategory.service';
 
@@ -15,7 +15,12 @@ export default class SubCategoryResolver {
   async subCategoryById(@Arg('id', () => Int) id: number) {
     return await this.subCategoryService.findSubCategoryById(id);
   }
+  @Query(() => [SubCategory])
+  async subCategoriesByCategoryId(@Arg('categoryId', () => Int) categoryId: number) {
+    return await this.subCategoryService.getSubCategoriesByCategoryId(categoryId);
+  }
 
+  @Authorized(['ADMIN'])
   @Mutation(() => SubCategory)
   async addSubCategory(
     @Arg('name') name: string,
@@ -30,7 +35,7 @@ export default class SubCategoryResolver {
       categoryId,
     });
   }
-
+  @Authorized(['ADMIN'])
   @Mutation(() => SubCategory)
   async updateSubCategory(
     @Arg('id', () => Int) id: number,
@@ -47,7 +52,7 @@ export default class SubCategoryResolver {
       categoryId,
     });
   }
-
+  @Authorized(['ADMIN'])
   @Mutation(() => Boolean)
   async deleteSubCategory(@Arg('id', () => Int) id: number) {
     return await this.subCategoryService.deleteSubCategory(id);

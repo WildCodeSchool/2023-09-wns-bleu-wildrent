@@ -7,6 +7,7 @@ import {
 } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
 import { Category, SubCategory } from '@/types';
+import { useAlert } from '@/components/providers/AlertContext';
 
 interface UpdateSubCategoryModalProps {
   isOpen: boolean;
@@ -50,7 +51,7 @@ function UpdateSubCategoryModal({
     subCategory && subCategory.category ? subCategory.category.id : undefined,
   );
   const [updateSubCategory, { loading }] = useUpdateSubCategoryMutation();
-
+  const { showAlert } = useAlert();
   useEffect(() => {
     // Mise à jour des catégories lorsque les données sont chargées
     if (categoriesData && categoriesData.allCategories) {
@@ -67,7 +68,8 @@ function UpdateSubCategoryModal({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!subCategory) {
-      alert('La sous-catégorie est introuvable.');
+      showAlert('error', 'La sous-catégorie est introuvable.', 3000);
+
       return;
     }
 
@@ -78,7 +80,7 @@ function UpdateSubCategoryModal({
       selectedCategoryId || categories.find((c) => c.name === formJSON.categoryId)?.id;
 
     if (!categoryId) {
-      alert('Veuillez sélectionner une catégorie valide.');
+      showAlert('error', 'Veuillez sélectionner une catégorie valide.', 3000);
       return;
     }
 
@@ -95,13 +97,13 @@ function UpdateSubCategoryModal({
       // Tentative de mise à jour de la sous-catégorie via GraphQL
       const response = await updateSubCategory({ variables });
       if (response.data?.updateSubCategory) {
-        alert('Sous-catégorie mise à jour avec succès');
+        showAlert('error', 'Subcategory updated successfully', 3000);
         onSubCategoryUpdated(response.data.updateSubCategory);
         onClose();
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de la mise à jour de la sous-catégorie');
-      console.error('Erreur lors de la mise à jour de la sous-catégorie', error);
+      showAlert('error', 'error updating subcategory', 3000);
+      console.error('Error updating subcategory', error);
     }
   };
 

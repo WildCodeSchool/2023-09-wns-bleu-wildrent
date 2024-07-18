@@ -6,10 +6,11 @@ import { useAllProductRefsAdminQuery } from '@/graphql/generated/schema';
 import { IoIosAdd } from 'react-icons/io';
 import AddProductRefModal from '@/components/admin/productRef/AddProductRefModal';
 import Loader from '@/components/Loader';
+import { useAlert } from '@/components/providers/AlertContext';
 
 const ProductsAdmin = () => {
   const { data, loading, error } = useAllProductRefsAdminQuery();
-
+  const { showAlert } = useAlert();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
     setIsModalOpen(true);
@@ -19,7 +20,8 @@ const ProductsAdmin = () => {
     setIsModalOpen(false);
   };
   if (loading) return <Loader />;
-  if (error) return <p>Erreur: {error.message}</p>;
+
+  if (error) return showAlert('error', error?.message, 3000);
   return (
     <LayoutDashboard>
       <button className="btn btn-circle btn-accent" onClick={() => handleModal()}>

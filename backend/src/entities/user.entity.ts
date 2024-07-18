@@ -121,6 +121,9 @@ export class NewUserInput {
 
   @Field({ nullable: true })
   picture?: string;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }
 
 // Input modification des infos du user

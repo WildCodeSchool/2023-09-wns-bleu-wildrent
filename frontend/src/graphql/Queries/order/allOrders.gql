@@ -8,11 +8,13 @@ query AllOrders {
     endDate
     numberOfDays
     shippingAddress
-    items {
+    orderItems {
       quantity
       unitPrice
-      productRef {
-        name
+      productItems {
+        productRef {
+          name
+        }
       }
     }
     user {

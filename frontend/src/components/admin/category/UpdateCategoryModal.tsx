@@ -2,6 +2,7 @@ import React from 'react';
 import FormInput from '@/components/FormInput';
 import { useUpdateCategoryMutation, AllCategoriesAdminQuery } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
+import { useAlert } from '@/components/providers/AlertContext';
 
 type Category = AllCategoriesAdminQuery['allCategories'][0];
 
@@ -39,7 +40,7 @@ function UpdateCategoryModal({
 }) {
   if (!isOpen || !category) return null;
   const [updateCategory, { loading, error }] = useUpdateCategoryMutation();
-
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -57,15 +58,15 @@ function UpdateCategoryModal({
       });
 
       if (response.data?.updateCategory?.id) {
-        alert('Catégorie mise à jour avec succès');
+        showAlert('success', 'Category updated successfully', 3000);
         onCategoryUpdated(response.data.updateCategory);
         onClose();
       } else {
-        alert('Erreur lors de la mise à jour de la catégorie');
+        showAlert('error', 'Error updating category', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de la mise à jour de la catégorie');
-      console.error('Erreur lors de la mise à jour de la catégorie', error);
+      showAlert('error', 'Network or query error while updating category', 3000);
+      console.error('Error updating category', error);
     } finally {
       client.resetStore();
     }

@@ -11,6 +11,7 @@ import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
 import { ProductRef, SimpleSubCategory } from '@/types';
 import Loader from '@/components/Loader';
+import { useAlert } from '@/components/providers/AlertContext';
 const fields = [
   {
     label: 'Nom du produit',
@@ -49,19 +50,21 @@ const fields = [
     placeholder: '5',
   },
 ];
-function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalProps) {
+function UpdateProductRefModal({
+  isOpen,
+  onClose,
+  productRef,
+}: ProductRefModalProps): React.ReactNode {
   if (!isOpen || !productRef) return null;
   const [UpdateProductRef, { loading }] = useUpdateProductRefMutation();
-
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
 
     const formJSON: any = Object.fromEntries(formData.entries());
-    console.log('formJSON', formJSON);
     formJSON.priceHT = parseFloat(formJSON.priceHT);
     formJSON.subCategory = { id: parseInt(formJSON.subCategory) };
-    console.log('formJSON.subCategory', formJSON.subCategory);
     formJSON.quantity = parseInt(formJSON.quantity);
     try {
       const response = await UpdateProductRef({
@@ -70,16 +73,16 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
           data: formJSON as UpdateProductRef,
         },
       });
-      console.log(response.data);
       if (response.data && response.data.updateProductRef.success) {
-        alert('Produit modifié avec succès');
+        showAlert('success', 'Product modified successfully', 3000);
+
         onClose();
       } else {
-        alert(`Erreur lors de la modification du produit`);
+        showAlert('error', 'Error editing product', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout du produit');
-      console.error('Erreur lors de la modification du produit', error);
+      showAlert('error', 'Network or query error while editing product', 3000);
+      console.error('Error while editing product', error);
     } finally {
       client.resetStore();
     }
@@ -91,7 +94,9 @@ function UpdateProductRefModal({ isOpen, onClose, productRef }: ProductRefModalP
   } = useAllSubCategoriesQuery();
 
   if (loadingSubCategories) return <Loader />;
-  if (errorSubCategories) return <Loader />;
+  if (errorSubCategories) {
+    showAlert('error', errorSubCategories?.message, 3000);
+  }
 
   return (
     <div>

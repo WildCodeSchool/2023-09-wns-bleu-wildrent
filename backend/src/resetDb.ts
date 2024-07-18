@@ -140,17 +140,20 @@ async function main() {
 
   const order1 = Order.create({
     user: customer1,
-    paymentStatus: 'Paid',
     orderDate: new Date(),
     startDate: new Date('2024-06-14'),
     endDate: new Date('2024-06-16'),
     shippingAddress: '742 Evergreen Terrace, Springfield',
   });
+
+  const productItem1 = ProductItem.create({ productRef: productRef1 });
+  await productItem1.save();
+
+  const productItem2 = ProductItem.create({ productRef: productRef2 });
+  await productItem2.save();
   await order1.save();
   const order2 = Order.create({
     user: customer1,
-    paymentStatus: 'Paid',
-
     orderDate: new Date(),
     startDate: new Date('2024-06-25'),
     endDate: new Date('2024-06-30'),
@@ -160,15 +163,14 @@ async function main() {
 
   const order1Item1 = OrderItem.create({
     order: order1,
-    productRef: productRef1,
-
+    productItems: [productRef1],
     quantity: 1,
     unitPrice: 10,
   });
   await order1Item1.save();
   const order1Item2 = OrderItem.create({
     order: order1,
-    productRef: productRef2,
+    productItems: [productItem1],
 
     quantity: 1,
     unitPrice: 10,
@@ -177,15 +179,15 @@ async function main() {
 
   const order2Item1 = OrderItem.create({
     order: order2,
-    productRef: productRef2,
+    productItems: [productItem2],
 
-    quantity: 5,
+    quantity: 16,
     unitPrice: 10,
   });
   await order2Item1.save();
 
-  order1.items = [order1Item1, order1Item2];
-  order2.items = [order2Item1];
+  order1.orderItems = [order1Item1, order1Item2];
+  order2.orderItems = [order2Item1];
 
   order1.calculateTotalAmount();
   order2.calculateTotalAmount();

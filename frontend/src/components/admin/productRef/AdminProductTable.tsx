@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAlert } from '@/components/providers/AlertContext';
 import {
   AddProductRefDocument,
   ProductRef as GeneratedProductRef,
@@ -25,7 +26,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
   // Trier les articles par ordre croissant d'id avant de les rendre
   const sortedProductRefs = [...productRefs].sort((a, b) => a.id - b.id);
   const [selectedProductRef, setSelectedProductRef] = useState<ProductRef | null>(null);
-
+  const { showAlert } = useAlert();
   const [deleteProductRef] = useDeleteProductRefMutation();
   const handleDelete = async (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -33,12 +34,13 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
       try {
         const { data } = await deleteProductRef({ variables: { productRefId: id } });
         if (data?.deleteProductRef.success) {
-          alert('Produit supprimé avec succès !');
+          showAlert('success', 'Category updated successfully', 3000);
         } else {
-          alert(data?.deleteProductRef.message);
+          const message = data?.deleteProductRef?.message ?? 'An error occurred';
+          showAlert('error', message, 3000);
         }
       } catch (e) {
-        alert('Erreur lors de la suppression du produit');
+        showAlert('error', 'Error deleting product', 3000);
         console.error(e);
       } finally {
         client.resetStore();
@@ -63,7 +65,6 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           productRef={selectedProductRef}
-          // onCategoryUpdated={handleCategoryUpdated}
         />
       )}
       <table className="min-w-full table-auto">

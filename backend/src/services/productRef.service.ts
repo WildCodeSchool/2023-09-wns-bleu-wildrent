@@ -12,10 +12,30 @@ export default class ProductRefService {
     this.db = db.getRepository(ProductRef);
     this.productItemService = new ProductItemService();
   }
+  async findProductRefById(id: number) {
+    try {
+      return await this.db.findOneBy({ id });
+    } catch (e) {
+      console.error((e as Error).message);
+      throw new Error('Failed to find ProductRef');
+    }
+  }
 
   async findProductRefByName(name: string) {
     try {
       return await this.db.findOneBy({ name });
+    } catch (e) {
+      console.error((e as Error).message);
+    }
+  }
+
+  async getProductsBySubCategoryId(subCategoryId: number) {
+    try {
+      return await this.db
+        .createQueryBuilder('productRef')
+        .leftJoinAndSelect('productRef.subCategory', 'subCategory')
+        .where('subCategory.id = :subCategoryId', { subCategoryId })
+        .getMany();
     } catch (e) {
       console.error((e as Error).message);
     }
@@ -27,6 +47,7 @@ export default class ProductRefService {
       relations: ['subCategory', 'productItems'],
     });
   }
+
   async deleteProductRef(id: number): Promise<boolean> {
     try {
       const productRef = await this.db.findOneBy({ id });
@@ -55,11 +76,8 @@ export default class ProductRefService {
         console.error('ProductRef not found!');
         return false;
       }
-      console.log(data);
 
       if (typeof data?.quantity === 'number' && data.quantity > productRefToUpdate.quantity) {
-        console.log('test', productRefToUpdate.productItems);
-
         const productItems = Array.from(
           { length: data.quantity - productRefToUpdate.quantity },
           () => new ProductItem(),

@@ -8,6 +8,7 @@ import User, {
   Message,
   Profile,
   InputUpdate,
+  InputUpdateAdmin,
 } from '../entities/user.entity';
 import { ContextType } from '../types';
 import db from '../db';
@@ -116,6 +117,21 @@ export default class UserResolver {
         return { success: false, message: 'no currentUser' };
       }
       const updated = await this.userService.updateUser(currentUser.id, updatedUser);
+      if (!updated) {
+        return { success: false, message: 'cannot update user' };
+      }
+      return { success: true, message: 'user updated successfully' };
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Error updating user: ${(e as Error).message}` };
+    }
+  }
+
+  @Authorized(['ADMIN'])
+  @Mutation(() => Message)
+  async updateUserAdmin(@Arg('updatedUser') updatedUser: InputUpdateAdmin): Promise<Message> {
+    try {
+      const updated = await this.userService.updateUserAdmin(updatedUser.id, updatedUser);
       if (!updated) {
         return { success: false, message: 'cannot update user' };
       }
