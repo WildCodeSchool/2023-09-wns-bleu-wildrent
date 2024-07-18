@@ -4,7 +4,6 @@ import LayoutDashboard from '@/components/admin/LayoutDashboard';
 import AdminTableModal from '@/components/admin/table/AdminTableModal';
 import client from '@/graphql/client';
 import {
-  InputUpdate,
   NewUserInput,
   useCreateNewUserMutation,
   useGetAllUsersQuery,
@@ -17,17 +16,22 @@ import { newUserFields } from '@/const';
 import { useAlert } from '@/components/providers/AlertContext';
 
 export default function Page() {
+  const [open, setOpen] = useState<boolean>(false);
+  const [editionMode, setEditionMode] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number>(0);
+
   const [createUser] = useCreateNewUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserAdminMutation();
 
   const { data: users, loading, error } = useGetAllUsersQuery({});
-  const [open, setOpen] = useState<boolean>(false);
-  const [editionMode, setEditionMode] = useState<boolean>(false);
-  const [userId, setUserId] = useState<number>(0);
   const { showAlert } = useAlert();
   if (loading) return <Loader />;
+
   if (error) return <p>{error.message}</p>;
+
+  const cols = createColumnsFromData(users?.allUsers);
+  const dataset = createDataset(users?.allUsers || [], cols);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -104,9 +108,6 @@ export default function Page() {
       }
     }
   };
-
-  const cols = createColumnsFromData(users?.allUsers);
-  const dataset = createDataset(users?.allUsers || [], cols);
 
   return (
     <LayoutDashboard>

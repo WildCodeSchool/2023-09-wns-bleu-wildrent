@@ -181,7 +181,7 @@ async function main() {
     order: order2,
     productItems: [productItem2],
 
-    quantity: 5,
+    quantity: 16,
     unitPrice: 10,
   });
   await order2Item1.save();
