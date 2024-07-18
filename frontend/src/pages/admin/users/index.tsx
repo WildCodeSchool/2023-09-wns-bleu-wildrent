@@ -14,6 +14,7 @@ import { useDeleteUserMutation } from '@/graphql/generated/schema';
 import { createColumnsFromData, createDataset } from '@/utils/table';
 import { useState } from 'react';
 import { newUserFields } from '@/const';
+import { useAlert } from '@/components/providers/AlertContext';
 
 export default function Page() {
   const [createUser] = useCreateNewUserMutation();
@@ -24,7 +25,7 @@ export default function Page() {
   const [open, setOpen] = useState<boolean>(false);
   const [editionMode, setEditionMode] = useState<boolean>(false);
   const [userId, setUserId] = useState<number>(0);
-
+  const { showAlert } = useAlert();
   if (loading) return <Loader />;
   if (error) return <p>{error.message}</p>;
 
@@ -83,17 +84,24 @@ export default function Page() {
   };
 
   const removeUser = async (id: number) => {
-    try {
-      const res = await deleteUser({
-        variables: {
-          userId: id,
-        },
-      });
-      alert(res.data?.deleteUser.message);
-    } catch (e) {
-      console.error((e as Error).message);
-    } finally {
-      client.resetStore();
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      try {
+        const { data } = await deleteUser({
+          variables: {
+            userId: id,
+          },
+        });
+        if (data?.deleteUser.success) {
+          showAlert('success', 'User deleted successfully', 3000);
+        } else {
+          const message = data?.deleteUser?.message ?? 'An error occurred';
+          showAlert('error', message, 3000);
+        }
+      } catch (e) {
+        console.error((e as Error).message);
+      } finally {
+        client.resetStore();
+      }
     }
   };
 

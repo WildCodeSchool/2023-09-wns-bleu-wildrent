@@ -1,5 +1,5 @@
 import { SimpleSubCategory } from '@/types';
-import React from 'react';
+import React, { useState } from 'react';
 import { ProductRefModalProps } from './ProductRefModalDetails';
 import {
   InputProductRef,
@@ -13,46 +13,50 @@ import Loader from '@/components/Loader';
 
 const fields = [
   {
-    label: 'Nom du produit',
     id: 'name',
+    label: 'Product Name',
     type: 'text',
-    placeholder: 'Chaise Adèle',
+    placeholder: 'Enter product name',
+    required: true,
   },
   {
-    label: 'Description détaillée',
     id: 'description',
+    label: 'Product Description',
     type: 'textarea',
-    placeholder: 'les détails du produit',
+    placeholder: 'Enter product description',
+    required: false,
   },
   {
     label: 'Prix HT par unité et par jour de location',
     id: 'priceHT',
     type: 'number',
     placeholder: '20€',
+    required: true,
   },
   {
     label: 'Photo du produit',
     id: 'image',
     type: 'text',
     placeholder: 'Ajouter le lien vers la photo du produit',
+    required: false,
   },
   {
     label: 'Type',
     id: 'subCategory',
     type: 'select',
-    placeholder: 'Ajouter le lien vers la photo du produit',
   },
   {
     label: 'Quantité disponible',
     id: 'quantity',
     type: 'number',
     placeholder: '5',
+    required: true,
   },
 ];
 
 function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
   if (!isOpen) return null;
-  const [createProduct, { data, loading, error }] = useAddProductRefMutation();
+  const [createProduct, { data, loading }] = useAddProductRefMutation();
   const {
     data: subCategoriesData,
     loading: loadingSubCategories,
@@ -61,6 +65,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
   const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     formJSON.priceHT = parseFloat(formJSON.priceHT);
@@ -74,7 +79,6 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
       });
       if (response.data && response.data.addProductRef.success) {
         showAlert('success', 'Product added successfully', 3000);
-
         onClose();
       } else {
         showAlert('error', 'Error adding product', 3000);
@@ -103,7 +107,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Ajout d'un nouveau produit</h3>
+          <h3 className="text-lg font-bold">Adding a new product</h3>
           <form className="flex flex-col gap-4 border rounded p-4" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <FormInput
@@ -120,6 +124,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
                       }))
                     : undefined
                 }
+                required={field.required}
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">

@@ -10,18 +10,21 @@ const fields = [
     id: 'name',
     type: 'text',
     placeholder: 'Entrez le nom de la catégorie',
+    required: true,
   },
   {
     label: 'Description de la catégorie',
     id: 'description',
     type: 'textarea',
     placeholder: 'Entrez la description',
+    required: true,
   },
   {
     label: 'Image de la catégorie',
     id: 'image',
     type: 'text',
     placeholder: "URL de l'image",
+    required: true,
   },
 ];
 
@@ -39,6 +42,7 @@ function AddCategoryModal({
   const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget);
     const formJSON = Object.fromEntries(formData.entries());
 
@@ -86,6 +90,7 @@ function AddCategoryModal({
                 label={field.label}
                 placeholder={field.placeholder}
                 inputType={field.type}
+                required={field.required}
               />
             ))}
             <button type="submit" className="btn btn-primary" disabled={loading}>

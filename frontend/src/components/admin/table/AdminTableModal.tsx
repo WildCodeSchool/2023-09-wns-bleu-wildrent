@@ -29,7 +29,7 @@ export default function AdminTableModal({
             />
           ))}
           <button className="px-3 py-2 bg-neutral-900 text-white rounded-lg ml-[70%]" type="submit">
-            Enregistrer
+            Save
           </button>
         </form>
       </dialog>

@@ -2,7 +2,7 @@ import { useLoginMutation, InputLogin } from '../graphql/generated/schema';
 import FormInput from './FormInput';
 import { useRouter } from 'next/navigation';
 import client from '@/graphql/client';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 const fields = [
   {
@@ -10,12 +10,14 @@ const fields = [
     id: 'email',
     type: 'email',
     placeholder: 'john.doe@email.com',
+    required: true,
   },
   {
     label: 'Password',
     id: 'password',
     type: 'password',
     placeholder: '**********',
+    required: true,
   },
 ];
 
@@ -31,6 +33,7 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     try {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
       const user = Object.fromEntries(formData.entries()) as InputLogin;
@@ -73,6 +76,7 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
                 label={field.label}
                 placeholder={field.placeholder}
                 inputType={field.type}
+                required={field.required}
               />
             ))}
             <button

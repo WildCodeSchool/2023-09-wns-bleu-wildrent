@@ -23,18 +23,21 @@ const fields = [
     id: 'name',
     type: 'text',
     placeholder: 'Entrez le nom de la sous-catégorie',
+    required: true,
   },
   {
     label: 'Description de la sous-catégorie',
     id: 'description',
     type: 'textarea',
     placeholder: 'Entrez la description',
+    required: true,
   },
   {
     label: 'Image de la sous-catégorie',
     id: 'image',
     type: 'text',
     placeholder: "URL de l'image",
+    required: true,
   },
 ];
 
@@ -67,6 +70,7 @@ function UpdateSubCategoryModal({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     if (!subCategory) {
       showAlert('error', 'La sous-catégorie est introuvable.', 3000);
 
@@ -131,6 +135,7 @@ function UpdateSubCategoryModal({
                 placeholder={field.placeholder}
                 inputType={field.type}
                 defaultValue={subCategory[field.id as keyof SubCategory] as string}
+                required={field.required}
               />
             ))}
             <div className="form-group">

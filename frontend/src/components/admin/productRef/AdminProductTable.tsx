@@ -23,18 +23,17 @@ type AdminProductTableProps = {
 };
 
 const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) => {
-  // Trier les articles par ordre croissant d'id avant de les rendre
   const sortedProductRefs = [...productRefs].sort((a, b) => a.id - b.id);
   const [selectedProductRef, setSelectedProductRef] = useState<ProductRef | null>(null);
   const { showAlert } = useAlert();
   const [deleteProductRef] = useDeleteProductRefMutation();
   const handleDelete = async (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+    if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         const { data } = await deleteProductRef({ variables: { productRefId: id } });
         if (data?.deleteProductRef.success) {
-          showAlert('success', 'Category updated successfully', 3000);
+          showAlert('success', 'Category deleted successfully', 3000);
         } else {
           const message = data?.deleteProductRef?.message ?? 'An error occurred';
           showAlert('error', message, 3000);

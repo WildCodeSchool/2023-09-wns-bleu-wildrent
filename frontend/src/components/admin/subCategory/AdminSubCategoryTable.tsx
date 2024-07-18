@@ -55,22 +55,28 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
     handleCloseModal();
   };
 
-  const handleDeleteSubCategoryClick = async (subCategoryId: number) => {
-    try {
-      const { data } = await deleteSubCategory({
-        variables: { id: subCategoryId },
-      });
-      if (data.deleteSubCategory) {
-        setSubCategories(subCategories.filter((subCategory) => subCategory.id !== subCategoryId));
-        showAlert('success', 'Subcategory removed successfully', 3000);
+  const handleDeleteSubCategoryClick = async (
+    subCategoryId: number,
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault();
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        const { data } = await deleteSubCategory({
+          variables: { id: subCategoryId },
+        });
+        if (data.deleteSubCategory) {
+          setSubCategories(subCategories.filter((subCategory) => subCategory.id !== subCategoryId));
+          showAlert('success', 'Subcategory removed successfully', 3000);
 
-        client.resetStore();
-      } else {
-        showAlert('error', 'Failed to delete subcategory', 3000);
+          client.resetStore();
+        } else {
+          showAlert('error', 'Failed to delete subcategory', 3000);
+        }
+      } catch (error) {
+        showAlert('error', 'Error deleted subcategory', 3000);
+        console.error('Error deleting subcategory', error);
       }
-    } catch (error) {
-      showAlert('error', 'Error deleted subcategory', 3000);
-      console.error('Error deleting subcategory', error);
     }
   };
 
@@ -133,7 +139,7 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                  onClick={() => handleDeleteSubCategoryClick(subCategory.id)}
+                  onClick={(e) => handleDeleteSubCategoryClick(subCategory.id, e)}
                 >
                   Delete
                 </button>
