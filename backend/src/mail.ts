@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import env from './env';
 
-export default nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: env.SMTP_HOST,
   port: env.SMTP_PORT,
   secure: true,
@@ -10,3 +10,14 @@ export default nodemailer.createTransport({
     pass: env.SMTP_PASS,
   },
 });
+
+export const sendEmail = async (to: string, subject: string, text: string) => {
+  const info = await transporter.sendMail({
+    from: env.EMAIL_FROM,
+    to,
+    subject,
+    text,
+  });
+  console.log('Message sent: %s', info.messageId);
+  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+};

@@ -12,7 +12,7 @@ import User, {
 import { ContextType } from '../types';
 import db from '../db';
 import env from '../env';
-import mail from '../mail';
+import { sendEmail } from '../mail';
 import { GraphQLError } from 'graphql';
 import crypto from 'crypto';
 
@@ -20,14 +20,13 @@ import crypto from 'crypto';
 export default class UserResolver {
   private userService = new UserService();
   @Mutation(() => Message)
-  async register(@Arg('newUser') newUser: InputRegister) {
+  async register(@Arg('newUser') newUser: InputRegister): Promise<Message> {
     const alreadyRegistered = Boolean(await this.userService.findUserByEmail(newUser.email));
     if (alreadyRegistered) {
       return { success: false, message: 'Already Registered' };
     } else {
       try {
         const token = crypto.randomBytes(20).toString('hex');
-        console.log(token);
         await this.userService.createUser(newUser);
         const user = await this.userService.findUserByEmail(newUser.email);
 
@@ -39,22 +38,17 @@ export default class UserResolver {
         } else {
           console.error('User ID is undefined');
         }
-        console.log(user, 'usererror');
-        const isOk = await mail.verify();
-        if (isOk) {
-          await mail.sendMail({
-            subject: 'Bienvenue sur Wildrent',
-            to: newUser.email,
-            from: env.EMAIL_FROM,
-            text: `Bienvenue parmi nous ${newUser.firstname}. Merci de bien vouloir cliquer sur ce lien pour confirmer votre email : ${env.FRONTEND_URL}/auth/emailConfirmation?token=${token}`,
-          });
-        } else {
-          console.error('erreur mail');
-        }
 
-        return { success: true, message: 'Account Created !' };
+        await sendEmail(
+          newUser.email,
+          'Bienvenue sur Wildrent',
+          `Bienvenue parmi nous ${newUser.firstname}. Merci de bien vouloir cliquer sur ce lien pour confirmer votre email : ${env.FRONTEND_URL}/auth/emailConfirmation?token=${token}`,
+        );
+
+        return { success: true, message: 'Account Created!' };
       } catch (e) {
         console.error((e as Error).message);
+        return { success: false, message: 'Error creating account' };
       }
     }
   }

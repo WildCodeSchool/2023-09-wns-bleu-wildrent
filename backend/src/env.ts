@@ -1,7 +1,5 @@
 import { load } from 'ts-dotenv';
 
-// https://github.com/LeoBakerHytch/ts-dotenv
-
 export default load({
   JWT_PRIVATE_KEY: String,
   CORS_ALLOWED_ORIGINS: String,

@@ -14,7 +14,7 @@ export default function EmailConfirmation() {
     if (token)
       confirmEmail({ variables: { token } }).then(() => {
         setTimeout(() => {
-          router.push('/auth/login');
+          router.push('http://localhost:3000/');
         }, 5000);
       });
   }, [token]);
