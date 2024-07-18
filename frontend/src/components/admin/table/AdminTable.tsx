@@ -1,6 +1,7 @@
 import { TableRow } from '@/types';
 import { AdminTableProps } from '@/types/props';
 import AdminTableRow from './AdminTableRow';
+import { BiPlusCircle } from 'react-icons/bi';
 
 export default function AdminTable({ columns, dataset, remove, edit, create }: AdminTableProps) {
   return (
@@ -25,11 +26,12 @@ export default function AdminTable({ columns, dataset, remove, edit, create }: A
       </table>
       {create && (
         <button
-          className="w-full py-2 bg-green-400 text-white rounded-b"
+          data-test-id="add_btn"
+          className="w-full py-2 bg-green-400 text-white flex justify-center items-center rounded-b"
           onClick={create}
           type="button"
         >
-          Add Item
+          <BiPlusCircle size={40} />
         </button>
       )}
     </>

@@ -1,0 +1,12 @@
+query GetProductAvailableByDateRange($endDate: String, $startDate: String) {
+  getProductAvailableByDateRange(endDate: $endDate, startDate: $startDate) {
+    items {
+      id
+      name
+      description
+      image
+      priceHT
+      quantityAvailable
+    }
+  }
+}

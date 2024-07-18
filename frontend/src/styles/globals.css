@@ -146,4 +146,5 @@ p {
   height: 100dvh;
   width: 100dvw;
   background-color: rgba(0, 0, 0, 0.4);
+  inset: 0;
 }
