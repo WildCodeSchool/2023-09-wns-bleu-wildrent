@@ -1,38 +1,45 @@
-import React from 'react';
+import client from '@/graphql/client';
+import {
+  AllProductRefsDocument,
+  useGetProductAvailableByDateRangeQuery,
+} from '@/graphql/generated/schema';
+import React, { useEffect, useState } from 'react';
 import { MdCheck } from 'react-icons/md';
 import { useDate } from './providers/DatesContext';
 import { useAlert } from './providers/AlertContext';
 
 function SelectDate() {
-  const { startDate, endDate, setStartDate, setEndDate, calculateNbDays } = useDate();
-  const { showAlert } = useAlert();
-  const today = new Date();
-  const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newStartDate = new Date(event.target.value);
-    if (newStartDate.getTime() > today.getTime()) {
-      setStartDate(newStartDate.toISOString().split('T')[0]);
-    } else {
-      showAlert(
-        'error',
-        `The date must be after ${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`,
-        3000,
-      );
+  const nbDaysLocalStorage = JSON.parse(localStorage.getItem('nbDays') || '0');
+  const [nbDays, setNbDays] = useState(nbDaysLocalStorage);
+  const [filter, setFilter] = useState<any>({ startDate: '', endDate: '' });
+
+  const { data, loading, error, refetch } = useGetProductAvailableByDateRangeQuery({
+    variables: filter,
+    onCompleted: (data) => {
+      client.writeQuery({
+        query: AllProductRefsDocument,
+        data: {
+          allProductRefs: data.getProductAvailableByDateRange.items,
+        },
+      });
+    },
+  });
+  useEffect(() => {
+    localStorage.setItem('nbDays', JSON.stringify(nbDays));
+  }, [nbDays]);
+
+  const handleFilter = (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const filter = Object.fromEntries(formData.entries());
+
+      setFilter(filter);
+    } catch (e) {
+      console.error((e as Error).message);
+    } finally {
+      refetch();
     }
-  };
-
-  const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newEndDate = new Date(event.target.value);
-    const start = new Date(startDate);
-
-    if (start.getTime() != newEndDate.getTime()) {
-      setEndDate(newEndDate.toISOString().split('T')[0]);
-    } else {
-      showAlert('error', `The date must be after start date`, 3000);
-    }
-  };
-
-  const handleFilter = () => {
-    calculateNbDays();
   };
 
   return (
@@ -40,34 +47,22 @@ function SelectDate() {
       <div className="text-xl text-primary text-center font-semibold">
         Select dates to explore our catalog of products available during that period:
       </div>
-      <div className="flex items-center">
+      <form onSubmit={handleFilter} className="flex items-center">
         <div className="relative">
-          <input
-            name="start"
-            type="date"
-            className="input input-bordered w-full max-w-xs"
-            value={startDate}
-            onChange={handleStartDateChange}
-          />
+          <input name="startDate" type="date" className="input input-bordered w-full max-w-xs" />
         </div>
         <span className="mx-4 text-primary">to</span>
         <div className="relative">
-          <input
-            name="end"
-            type="date"
-            className="input input-bordered w-full max-w-xs"
-            value={endDate}
-            onChange={handleEndDateChange}
-          />
+          <input name="end" type="date" className="input input-bordered w-full max-w-xs" />
         </div>
         <button
-          onClick={handleFilter}
-          type="button"
+          disabled={loading}
+          type="submit"
           className="mx-4 text-primary btn btn-circle btn-secondary"
         >
           <MdCheck type="button" size={25} />
         </button>
-      </div>
+      </form>
     </div>
   );
 }
