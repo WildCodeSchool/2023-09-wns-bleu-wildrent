@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
-
-import Footer from './Footer';
-import SelectDate from './SelectDate';
+import Footer from '../components/Footer';
+import SelectDate from '../components/SelectDate';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,11 +17,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
+
   return (
-    <div className="mx-auto max-w-5xl mb-10">
-      <Navbar />
-      <SelectDate />
-      <div className="container mx-auto px-4 min-h-full">{children}</div>
+    <div className="flex flex-col min-h-screen">
+      <div className="mx-auto max-w-5xl w-full flex-grow">
+        <Navbar />
+        {router.pathname !== '/about' && <SelectDate />}
+        <div className="container mx-auto px-4 min-h-full">{children}</div>
+      </div>
       <Footer />
     </div>
   );
