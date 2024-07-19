@@ -34,7 +34,10 @@ export class Order extends BaseEntity {
   @Field(() => User)
   user: User;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+    eager: true,
+    cascade: true,
+  })
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
 

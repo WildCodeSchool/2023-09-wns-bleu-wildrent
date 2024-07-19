@@ -3,7 +3,7 @@ import Layout from '../components/Layout';
 import { useAllCategoriesQuery } from '../graphql/generated/schema';
 import CategoryCard from '@/components/CategoryCard';
 import Loader from '@/components/Loader';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 export default function Home() {
   const { data, loading, error } = useAllCategoriesQuery();

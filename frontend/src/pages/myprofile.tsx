@@ -10,7 +10,7 @@ import router from 'next/router';
 import Link from 'next/link';
 import client from '@/graphql/client';
 import Orders from '@/components/Orders';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 function MyProfile() {
   const { data } = useGetProfileQuery();

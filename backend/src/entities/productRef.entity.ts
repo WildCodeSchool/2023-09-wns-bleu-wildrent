@@ -13,7 +13,7 @@ import {
 import { ObjectType, Field, Int, InputType } from 'type-graphql';
 import { SubCategory } from './subcategory.entity';
 import { Availability, ProductItem } from './productItem.entity';
-import { IsInt, Length, Min } from 'class-validator';
+import { IsInt, Length, Matches, Min } from 'class-validator';
 import { ObjectId } from '../utils';
 
 @Entity()
@@ -88,16 +88,22 @@ export class ProductRef extends BaseEntity {
 @InputType()
 export class InputProductRef {
   @Field()
+  @Length(5, 50, { message: 'Le titre doit contenir entre 5 et 50 caractères' })
   name: string;
   @Field()
+  @Length(5, 250, { message: 'Le titre doit contenir entre 5 et 250 caractères' })
   description: string;
   @Field()
+  @Matches(/(https?:\/\/.*\.(?:png|jpg|jpeg))/i, { message: "Le format de l'image est invalide" })
   image: string;
   @Field()
+  @Min(0, { message: 'le prix doit etre positif' })
   priceHT: number;
   @Field(() => ObjectId)
   subCategory: ObjectId;
   @Field(() => Int)
+  @IsInt({ message: 'la quantité doit être un entier' })
+  @Min(0, { message: 'la quantité doit être supérieure ou égale à 0' })
   quantity: number;
 }
 

@@ -3,7 +3,6 @@ import { ProductRef } from './entities/productRef.entity';
 import { Category } from './entities/category.entity';
 import { SubCategory } from './entities/subcategory.entity';
 import User from './entities/user.entity';
-// import { ProductItem } from './entities/productItem.entity';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductItem } from './entities/productItem.entity';
