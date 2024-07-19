@@ -2,7 +2,7 @@ import React from 'react';
 import FormInput from '@/components/FormInput';
 import { useAddCategoryMutation } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 const fields = [
   {
@@ -55,7 +55,6 @@ function AddCategoryModal({
         },
       });
       if (response.data?.addCategory) {
-        console.log('🚀 ~ handleSubmit ~ response.data?.addCategory:', response.data?.addCategory);
         showAlert('success', 'Category added successfully', 3000);
         onCategoryAdded(response.data.addCategory);
         onClose();

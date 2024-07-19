@@ -7,7 +7,7 @@ import UpdateSubCategoryModal from '@/components/admin/subCategory/UpdateSubCate
 import AddSubCategoryModal from '@/components/admin/subCategory/AddSubCategoryModal';
 import client from '@/graphql/client';
 import { IoIosAdd } from 'react-icons/io';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 const DELETE_SUBCATEGORY_MUTATION = gql`
   mutation DeleteSubCategory($id: Int!) {

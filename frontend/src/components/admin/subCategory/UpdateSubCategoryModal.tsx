@@ -7,7 +7,7 @@ import {
 } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
 import { Category, SubCategory } from '@/types';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 interface UpdateSubCategoryModalProps {
   isOpen: boolean;

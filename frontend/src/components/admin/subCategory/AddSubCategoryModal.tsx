@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FormInput from '@/components/FormInput';
 import { useAddSubCategoryMutation, useAllCategoriesQuery } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 import Loader from '@/components/Loader';
 
 const fields = [

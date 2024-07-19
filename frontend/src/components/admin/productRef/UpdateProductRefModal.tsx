@@ -11,7 +11,7 @@ import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
 import { ProductRef, SimpleSubCategory } from '@/types';
 import Loader from '@/components/Loader';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 const fields = [
   {
     label: 'Nom du produit',

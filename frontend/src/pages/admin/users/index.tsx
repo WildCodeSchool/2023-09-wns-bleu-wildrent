@@ -13,7 +13,7 @@ import { useDeleteUserMutation } from '@/graphql/generated/schema';
 import { createColumnsFromData, createDataset } from '@/utils/table';
 import { useState } from 'react';
 import { newUserFields } from '@/const';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 export default function Page() {
   const [open, setOpen] = useState<boolean>(false);

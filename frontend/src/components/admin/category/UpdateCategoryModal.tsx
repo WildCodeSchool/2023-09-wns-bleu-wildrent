@@ -2,7 +2,7 @@ import React from 'react';
 import FormInput from '@/components/FormInput';
 import { useUpdateCategoryMutation, AllCategoriesAdminQuery } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 type Category = AllCategoriesAdminQuery['allCategories'][0];
 

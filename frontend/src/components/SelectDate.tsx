@@ -5,8 +5,8 @@ import {
 } from '@/graphql/generated/schema';
 import React, { useEffect, useState } from 'react';
 import { MdCheck } from 'react-icons/md';
-import { useDate } from './providers/DatesContext';
-import { useAlert } from './providers/AlertContext';
+import { useDate } from './hooks/DatesContext';
+import { useAlert } from './hooks/AlertContext';
 
 function SelectDate() {
   const nbDaysLocalStorage = JSON.parse(localStorage.getItem('nbDays') || '0');
@@ -24,6 +24,7 @@ function SelectDate() {
       });
     },
   });
+
   useEffect(() => {
     localStorage.setItem('nbDays', JSON.stringify(nbDays));
   }, [nbDays]);

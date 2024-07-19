@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 import {
   AddProductRefDocument,
   ProductRef as GeneratedProductRef,
@@ -33,7 +33,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
       try {
         const { data } = await deleteProductRef({ variables: { productRefId: id } });
         if (data?.deleteProductRef.success) {
-          showAlert('success', 'Category deleted successfully', 3000);
+          showAlert('success', 'Product deleted successfully', 3000);
         } else {
           const message = data?.deleteProductRef?.message ?? 'An error occurred';
           showAlert('error', message, 3000);

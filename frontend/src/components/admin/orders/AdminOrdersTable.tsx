@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Order } from '../../../graphql/generated/schema';
+import { Order, useDeleteOrderMutation } from '../../../graphql/generated/schema';
 import { formatDate } from '@/components/OrderCard';
+import client from '@/graphql/client';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 type AdminOrdersTableProps = {
   orders: Order[];
@@ -9,10 +11,32 @@ type AdminOrdersTableProps = {
 const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({ orders }) => {
   const sortedOrders = [...orders].sort((a, b) => a.orderDate - b.orderDate);
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
-
+  const { showAlert } = useAlert();
+  const [deleteOrder] = useDeleteOrderMutation();
   const toggleExpand = (orderId: number) => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
+
+  const handleDelete = async (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (window.confirm('Are you sure you want to delete this order?')) {
+      try {
+        const { data } = await deleteOrder({ variables: { orderId: id } });
+        if (data?.deleteOrder.success) {
+          showAlert('success', 'Order deleted successfully', 3000);
+        } else {
+          const message = data?.deleteOrder?.message ?? 'An error occurred';
+          showAlert('error', message, 3000);
+        }
+      } catch (e) {
+        showAlert('error', 'Error deleting order', 3000);
+        console.error(e);
+      } finally {
+        client.resetStore();
+      }
+    }
+  };
+
   return (
     <>
       <table className="min-w-full table-auto mx-auto">
@@ -48,7 +72,10 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({ orders }) => {
                   >
                     {expandedOrderId === order.id ? 'Hide Details' : 'Show Details'}
                   </button>
-                  <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                  <button
+                    onClick={(e) => handleDelete(order.id, e)}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                  >
                     Delete
                   </button>
                 </td>

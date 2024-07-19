@@ -1,3 +1,4 @@
+import { log } from 'console';
 import React, { ReactNode, createContext, useCallback, useState, useContext } from 'react';
 
 type AlertContextType = {
@@ -17,7 +18,6 @@ const AlertContext = createContext<AlertContextType | undefined>(undefined);
 const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertType, setAlertType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
-  console.log('🚀 ~ alertType:', alertType);
   const [alertMessage, setAlertMessage] = useState('');
 
   const closeAlert = useCallback(() => {
@@ -27,7 +27,6 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const showAlert = useCallback(
     (type: 'success' | 'error' | 'warning' | 'info', message: string, duration: number) => {
       setAlertType(type);
-      console.log('🚀 ~ type:', type);
       setAlertMessage(message);
       setAlertOpen(true);
 
@@ -44,7 +43,7 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       {children}
       {alertOpen && (
         <div className="toast toast-top toast-center">
-          <div className={`alert alert-${alertType}`}>
+          <div className={`alert alert-${alertType} text-center`}>
             <span>{alertMessage}</span>
           </div>
         </div>

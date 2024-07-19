@@ -3,6 +3,7 @@ import FormInput from './FormInput';
 import { useRouter } from 'next/navigation';
 import client from '@/graphql/client';
 import { useRef, useState } from 'react';
+import { useAlert } from './hooks/AlertContext';
 
 const fields = [
   {
@@ -30,7 +31,7 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
   const router = useRouter();
   const [login, { loading, error }] = useLoginMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
-
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!e.currentTarget.checkValidity()) return;
@@ -44,11 +45,13 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
         },
       });
       if (response.data?.login.success) {
-        router.push('/');
+        showAlert('success', response.data?.login?.message, 30000);
         closeModal();
+      } else {
+        showAlert('error', response.data?.login?.message ?? 'Wrong credentials', 3000);
       }
     } catch (err) {
-      console.error(`Could not create account: ${err}`);
+      console.error(`Could not login: ${err}`);
     } finally {
       await client.resetStore();
     }

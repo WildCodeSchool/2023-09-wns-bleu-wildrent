@@ -6,7 +6,7 @@ import { useProductRefByIdQuery } from '@/graphql/generated/schema';
 import { BiSolidCartAdd } from 'react-icons/bi';
 import { CartItemProps } from '@/components/CartItem';
 import Loader from '@/components/Loader';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 function ProductRefDetails() {
   const cartLocalStorage = JSON.parse(localStorage.getItem('cartList') || '[]');
