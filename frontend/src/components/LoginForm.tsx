@@ -45,7 +45,7 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
         },
       });
       if (response.data?.login.success) {
-        showAlert('success', response.data?.login?.message, 30000);
+        showAlert('success', response.data?.login?.message, 300000);
         closeModal();
       } else {
         showAlert('error', response.data?.login?.message ?? 'Wrong credentials', 3000);

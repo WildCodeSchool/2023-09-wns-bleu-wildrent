@@ -26,10 +26,10 @@ export default function AdminTableModal({
             className="gap-6 w-full flex flex-col justify-center items-center"
             onSubmit={handleSubmit}
           >
-            {editionMode && id && (
-              <h5 className="font-semibold text-xl py-4">Edition Item n°{id}</h5>
-            )}
-            {fields.map(({ id, label, placeholder, inputType, options }) => (
+            <h5 className="font-semibold text-xl py-4">
+              {editionMode && id ? `Edit user id n° ${id}` : 'Create new user'}
+            </h5>
+            {fields.map(({ id, label, placeholder, inputType, options, required }) => (
               <FormInput
                 key={id}
                 id={id}
@@ -37,6 +37,7 @@ export default function AdminTableModal({
                 label={label}
                 inputType={inputType}
                 options={options}
+                required={required}
               />
             ))}
           </form>
