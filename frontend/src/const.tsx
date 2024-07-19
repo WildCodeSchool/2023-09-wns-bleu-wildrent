@@ -5,7 +5,7 @@ export const navData = [
   {
     text: 'Contact',
     alt: 'alt',
-    link: '/',
+    link: '/contact',
   },
   {
     text: 'About us',
