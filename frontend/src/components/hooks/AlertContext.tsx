@@ -43,7 +43,9 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       {children}
       {alertOpen && (
         <div className="toast toast-top toast-center">
-          <div className={`alert alert-${alertType} text-center`}>
+          <div
+            className={`alert alert-${alertType} text-center text-gray-700 font-bold p-4 rounded shadow-lg`}
+          >
             <span>{alertMessage}</span>
           </div>
         </div>
