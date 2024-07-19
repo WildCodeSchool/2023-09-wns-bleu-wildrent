@@ -4,31 +4,38 @@ import React from 'react';
 const teamMembers = [
   {
     name: 'Yohan',
-    role: 'Développeur Full Stack',
+    role: 'Full Stack Developer',
     image: 'https://randomuser.me/api/portraits/men/32.jpg',
     description:
-      "Yohan a apporté une expertise technique précieuse, travaillant sur les fonctionnalités complexes du backend tout en contribuant à la création d'interfaces utilisateur intuitives et réactives.",
+      'Yohan brought invaluable technical expertise, working on complex backend functionalities while contributing to the creation of intuitive and responsive user interfaces.',
   },
   {
     name: 'Marion',
-    role: 'Développeuse Full Stack',
+    role: 'Full Stack Developer',
     image: 'https://randomuser.me/api/portraits/women/44.jpg',
     description:
-      "Marion a orchestré l'ensemble du projet avec brio, tout en participant activement au développement frontend et backend. Son leadership et son sens du détail ont été essentiels à la réussite de notre projet.",
+      'Marion orchestrated the entire project with brilliance, actively participating in both frontend and backend development. Her leadership and attention to detail were essential to the success of our project.',
   },
   {
     name: 'Aymeric',
-    role: 'Développeur Full Stack',
+    role: 'Full Stack Developer',
     image: 'https://randomuser.me/api/portraits/men/45.jpg',
     description:
-      'Aymeric a joué un rôle clé dans le développement, en intégrant des solutions backend robustes et en créant des interfaces utilisateur efficaces et réactives.',
+      'Aymeric played a key role in development, integrating robust backend solutions and creating efficient and responsive user interfaces.',
   },
   {
     name: 'Brian',
-    role: 'Développeur Full Stack',
+    role: 'Full Stack Developer',
     image: 'https://randomuser.me/api/portraits/men/46.jpg',
     description:
-      'Brian a travaillé à la fois sur le backend et le frontend, en optimisant les performances et la sécurité, tout en assurant une expérience utilisateur optimale grâce à des interfaces bien conçues.',
+      'Brian worked on both the backend and frontend, optimizing performance and security while ensuring an optimal user experience through well-designed interfaces.',
+  },
+  {
+    name: 'Lucas',
+    role: 'Full Stack Developer',
+    image: 'https://randomuser.me/api/portraits/men/47.jpg',
+    description:
+      'Lucas also contributed to frontend and backend development, bringing his expertise to enhance functionalities and user experience.',
   },
 ];
 
@@ -36,11 +43,11 @@ const About = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center mb-4">À propos de nous</h1>
+        <h1 className="text-4xl font-bold text-center mb-4">About Us</h1>
         <p className="text-center text-gray-700 mb-8">
-          Nous sommes une équipe de quatre passionnés par la technologie et le design, dédiés à
-          créer des solutions innovantes et intuitives. Ensemble, nous avons travaillé sur ce projet
-          pour offrir la meilleure expérience possible.
+          We are a team of four technology and design enthusiasts dedicated to creating innovative
+          and intuitive solutions. Together, we have worked on this project to provide the best
+          possible experience.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {teamMembers.map((member, index) => (
