@@ -44,7 +44,7 @@ test('Login admin et user', async ({ page }) => {
   // Vérifier la redirection vers la page de connexion
   await page.goto('http://localhost:3000/');
   await page.click('[data-test-id="nav-login-button"]');
-  await page.click('[data-test-id="register1-button"]');
+  // await page.click('[data-test-id="register1-button"]');
 
   // Créer un utilisateur de test
   const emailUser = 'moi@gmail.com';
@@ -58,8 +58,6 @@ test('Login admin et user', async ({ page }) => {
   user.role = roleUser;
   await user.save();
 
-  await page.click('[data-test-id="register-button"]');
-  await page.click('[data-test-id="nav-login-button"]');
   // Remplir le formulaire de connexion utilisateur
   await page.fill('input#email', 'moi@gmail.com');
   await page.fill('input#password', 'mdp');
