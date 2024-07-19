@@ -3,9 +3,6 @@ import { GraphQLError } from 'graphql';
 import { InputProductRef, ProductRef, UpdateProductRef } from '../entities/productRef.entity';
 import { Message } from '../entities/user.entity';
 import ProductRefService from '../services/productRef.service';
-import { AvailableProducts } from '../entities/productItem.entity';
-import { In } from 'typeorm';
-import { Order } from '../entities/order.entity';
 
 @Resolver(ProductRef)
 class ProductRefsResolver {
@@ -94,96 +91,44 @@ class ProductRefsResolver {
     }
   }
 
-  @Query(() => AvailableProducts)
-  async getProductAvailableByDateRange(
-    @Arg('startDate', () => String, { nullable: true }) startDate: string | null,
-    @Arg('endDate', () => String, { nullable: true }) endDate: string | null,
-  ): Promise<AvailableProducts> {
-    try {
-      const allProductRefs = await this.productRefService.getAllProductRefs();
-      if (!startDate && !endDate) {
-        return {
-          items: allProductRefs,
-        };
-      } else if (startDate && endDate) {
-        // Recuperer les items de toutes les order sur une plage de date
-        const allOrderByDateRange = await Order.createQueryBuilder('order')
-          .leftJoinAndSelect('order.orderItems', 'orderItem')
-          .leftJoinAndSelect('orderItem.productItems', 'productItem')
-          .leftJoinAndSelect('productItem.productRef', 'productRef')
-          .where(
-            '(order.startDate BETWEEN :startDate AND :endDate OR order.endDate BETWEEN :startDate AND :endDate)',
-            { startDate: new Date(startDate), endDate: new Date(endDate) },
-          )
-          .orWhere('(order.startDate <= :startDate AND order.endDate >= :endDate)', {
-            startDate: new Date(startDate),
-            endDate: new Date(endDate),
-          })
-          .getMany();
+  // @Query(() => [AvailableProduct])
+  // async getAvailableProducts(
+  //   @Arg('startDate') startDate: string,
+  //   @Arg('endDate') endDate: string,
+  // ): Promise<AvailableProduct[]> {
+  //   const totalQuantities = await this.db
+  //     .createQueryBuilder('product_ref')
+  //     .select('product_ref.id', 'product_ref_id')
+  //     .addSelect('product_ref.name', 'name')
+  //     .addSelect('COUNT(product_item.id)', 'total_quantity')
+  //     .innerJoin('product_ref.productItems', 'product_item')
+  //     .groupBy('product_ref.id')
+  //     .addGroupBy('product_ref.name')
+  //     .getRawMany();
 
-        // Récupérer les items commandés et les quantités associées
-        const allProductsOrdered = allOrderByDateRange
-          .flatMap((order) => order.orderItems)
-          .flatMap((orderItem) =>
-            orderItem.productItems.map((productItem) => ({
-              productRefId: productItem.productRef.id,
-              quantity: orderItem.quantity,
-            })),
-          );
+  //   const orderedQuantities = await orderRepo
+  //     .createQueryBuilder('order')
+  //     .select('product_ref.id', 'product_ref_id')
+  //     .addSelect('SUM(order_item.quantity)', 'ordered_quantity')
+  //     .innerJoin('order.orderItems', 'order_item')
+  //     .leftJoin('order_item.productItems', 'product_item')
+  //     .leftJoin('product_item.productRef', 'product_ref')
+  //     .where('order.startDate >= :startDate AND order.endDate <= :endDate', { startDate, endDate })
+  //     .groupBy('product_ref.id')
+  //     .getRawMany();
 
-        // Map des quantités avec le productRef.id en tant que clé
-        const quantitiesMap: { [id: number]: number } = {};
+  //   const orderedQuantitiesMap = new Map(
+  //     orderedQuantities.map((item) => [item.product_ref_id, item.ordered_quantity]),
+  //   );
 
-        for (const product of allProductsOrdered) {
-          const { quantity, productRefId } = product;
-
-          if (quantitiesMap[productRefId]) {
-            quantitiesMap[productRefId] += quantity;
-          } else {
-            quantitiesMap[productRefId] = quantity;
-          }
-        }
-
-        const aggregatedQuantities = Object.keys(quantitiesMap).map((id) => ({
-          id: Number(id),
-          quantity: quantitiesMap[Number(id)],
-        }));
-
-        const productRefs = await ProductRef.find({
-          where: {
-            id: In(aggregatedQuantities.map(({ id }) => id)),
-          },
-        });
-
-        const items: ProductRef[] = [];
-
-        for (let i = 0; i < aggregatedQuantities.length; i++) {
-          const { id, quantity } = aggregatedQuantities[i];
-          const productRef = productRefs.find((pr) => pr.id === id);
-          if (productRef) {
-            productRef.quantityAvailable -= quantity;
-          }
-          items.push(productRef as ProductRef);
-        }
-
-        const result = allProductRefs.filter(
-          ({ id }) =>
-            !items
-              .filter((item) => item.quantityAvailable < 1)
-              .map((item) => item.id)
-              .includes(id),
-        );
-
-        return {
-          items: result,
-        };
-      } else {
-        throw new Error('Both startDate and endDate must be provided together');
-      }
-    } catch (e) {
-      throw new GraphQLError((e as Error).message);
-    }
-  }
+  //   return totalQuantities.map((totalQuantity) => {
+  //     const orderedQuantity = orderedQuantitiesMap.get(totalQuantity.product_ref_id) || 0;
+  //     return {
+  //       name: totalQuantity.name,
+  //       available_quantity: totalQuantity.total_quantity - orderedQuantity,
+  //     };
+  //   });
+  // }
 }
 
 export default ProductRefsResolver;
