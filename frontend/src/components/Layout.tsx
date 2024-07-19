@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SelectDate from '../components/SelectDate';
@@ -16,11 +17,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <SelectDate />
-      <div className="container mx-auto px-4 flex-grow">{children}</div>
+      <div className="mx-auto max-w-5xl w-full flex-grow">
+        <Navbar />
+        {router.pathname !== '/about' && <SelectDate />}
+        <div className="container mx-auto px-4 min-h-full">{children}</div>
+      </div>
       <Footer />
     </div>
   );
