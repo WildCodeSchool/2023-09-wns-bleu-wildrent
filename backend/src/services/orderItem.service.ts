@@ -15,4 +15,17 @@ export default class OrderItemService {
       console.error((e as Error).message);
     }
   }
+
+  async findOrderItemById(id: number) {
+    const orderItem = await this.db.findOneBy({ id });
+    if (!orderItem) {
+      throw new Error('OrderItem not found');
+    }
+    return orderItem;
+  }
+  async deleteOrderItem(id: number) {
+    const orderItemToDelete = (await this.findOrderItemById(id)) as OrderItem;
+    await this.db.remove(orderItemToDelete);
+    return { id };
+  }
 }

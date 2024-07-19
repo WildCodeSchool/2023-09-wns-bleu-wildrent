@@ -6,7 +6,7 @@ import { useAllProductRefsAdminQuery } from '@/graphql/generated/schema';
 import { IoIosAdd } from 'react-icons/io';
 import AddProductRefModal from '@/components/admin/productRef/AddProductRefModal';
 import Loader from '@/components/Loader';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 const ProductsAdmin = () => {
   const { data, loading, error } = useAllProductRefsAdminQuery();

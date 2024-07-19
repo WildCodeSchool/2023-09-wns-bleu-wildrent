@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Arg, Query, Ctx, Int } from 'type-graphql';
+import { Resolver, Mutation, Arg, Query, Ctx, Int, Authorized } from 'type-graphql';
 import { Order, OrderInput } from '../entities/order.entity';
 import { Message } from '../entities/user.entity';
 import { GraphQLError } from 'graphql';
@@ -58,6 +58,22 @@ class OrderResolver {
     } catch (error) {
       console.error((error as Error).message);
       return { success: false, message: (error as Error).message };
+    }
+  }
+
+  @Authorized(['ADMIN'])
+  @Mutation(() => Message)
+  async deleteOrder(@Arg('orderId', () => Int) id: number): Promise<Message> {
+    try {
+      const success = await this.orderService.deleteOrder(id);
+      if (success) {
+        return { success: true, message: 'Order Deleted Successfully!' };
+      } else {
+        return { success: false, message: 'Failed to delete Order' };
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: (e as Error).message };
     }
   }
 }

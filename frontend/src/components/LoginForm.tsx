@@ -2,7 +2,8 @@ import { useLoginMutation, InputLogin } from '../graphql/generated/schema';
 import FormInput from './FormInput';
 import { useRouter } from 'next/navigation';
 import client from '@/graphql/client';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { useAlert } from './hooks/AlertContext';
 
 const fields = [
   {
@@ -10,12 +11,14 @@ const fields = [
     id: 'email',
     type: 'email',
     placeholder: 'john.doe@email.com',
+    required: true,
   },
   {
     label: 'Password',
     id: 'password',
     type: 'password',
     placeholder: '**********',
+    required: true,
   },
 ];
 
@@ -28,9 +31,10 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
   const router = useRouter();
   const [login, { loading, error }] = useLoginMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
-
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     try {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
       const user = Object.fromEntries(formData.entries()) as InputLogin;
@@ -41,11 +45,13 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
         },
       });
       if (response.data?.login.success) {
-        router.push('/');
+        showAlert('success', response.data?.login?.message, 300000);
         closeModal();
+      } else {
+        showAlert('error', response.data?.login?.message ?? 'Wrong credentials', 3000);
       }
     } catch (err) {
-      console.error(`Could not create account: ${err}`);
+      console.error(`Could not login: ${err}`);
     } finally {
       await client.resetStore();
     }
@@ -73,6 +79,7 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
                 label={field.label}
                 placeholder={field.placeholder}
                 inputType={field.type}
+                required={field.required}
               />
             ))}
             <button

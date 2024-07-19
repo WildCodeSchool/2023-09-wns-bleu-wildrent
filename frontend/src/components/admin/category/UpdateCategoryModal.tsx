@@ -2,7 +2,7 @@ import React from 'react';
 import FormInput from '@/components/FormInput';
 import { useUpdateCategoryMutation, AllCategoriesAdminQuery } from '@/graphql/generated/schema';
 import client from '@/graphql/client';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 type Category = AllCategoriesAdminQuery['allCategories'][0];
 
@@ -12,18 +12,21 @@ const fields = [
     id: 'name',
     type: 'text',
     placeholder: 'Entrez le nom de la catégorie',
+    required: true,
   },
   {
     label: 'Description de la catégorie',
     id: 'description',
     type: 'textarea',
     placeholder: 'Entrez la description',
+    required: true,
   },
   {
     label: 'Image de la catégorie',
     id: 'image',
     type: 'text',
     placeholder: "URL de l'image",
+    required: true,
   },
 ];
 
@@ -43,7 +46,7 @@ function UpdateCategoryModal({
   const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget);
     const formJSON = Object.fromEntries(formData.entries());
 
@@ -93,15 +96,16 @@ function UpdateCategoryModal({
                 placeholder={field.placeholder}
                 inputType={field.type}
                 defaultValue={category[field.id as keyof Category] as string}
+                required={field.required}
               />
             ))}
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              Mettre à jour
+              Update
             </button>
           </form>
         </div>
         <label className="modal-backdrop" htmlFor="category_modal" onClick={onClose}>
-          Fermer
+          Close
         </label>
       </div>
     </div>
