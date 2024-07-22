@@ -12,30 +12,35 @@ const fields = [
     id: 'lastname',
     type: 'text',
     placeholder: 'Doe',
+    required: false,
   },
   {
     label: 'Prénom',
     id: 'firstname',
     type: 'text',
     placeholder: 'John',
+    required: false,
   },
   {
     label: 'Email',
     id: 'email',
     type: 'email',
     placeholder: 'john.doe@email.com',
+    required: true,
   },
   {
     label: 'Mot de passe',
     id: 'password',
     type: 'password',
     placeholder: '**********',
+    required: true,
   },
   {
     label: 'Confirmation du mot de passe',
     id: 'confirm_password',
     type: 'password',
     placeholder: '**********',
+    required: true,
   },
 ];
 interface RegisterFormProps {
@@ -48,6 +53,7 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget as HTMLFormElement);
 
     if (formData.get('password') === formData.get('confirm_password')) {
@@ -100,6 +106,7 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
                 label={field.label}
                 placeholder={field.placeholder}
                 inputType={field.type}
+                required={field.required}
               />
             ))}
             <button

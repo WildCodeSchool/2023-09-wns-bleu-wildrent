@@ -111,4 +111,24 @@ export default class OrderService {
     await this.db.save(order);
     return order;
   }
+
+  async deleteOrder(id: number): Promise<boolean> {
+    try {
+      const order = await this.db.findOneBy({ id });
+      if (!order) {
+        console.error('ProductRef not found!');
+        return false;
+      }
+      if (order.orderItems) {
+        for (const item of order.orderItems) {
+          await this.orderItemService.deleteOrderItem(item.id);
+        }
+      }
+      await this.db.remove(order);
+      return true;
+    } catch (e) {
+      console.error('Error deleting order:', e);
+      return false;
+    }
+  }
 }

@@ -8,20 +8,27 @@ export default function FormInput({
   inputType,
   placeholder,
   id,
-  error,
   options,
   defaultValue,
+  required,
 }: FormInputProps) {
   const [type, setType] = useState(inputType);
-
+  const [isInvalid, setIsInvalid] = useState(false);
   const handleShow = () => {
     setType(type === 'password' ? 'text' : 'password');
+  };
+
+  const handleValidation = (
+    event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
+    const { validity } = event.target;
+    setIsInvalid(!validity.valid);
   };
 
   return (
     <div className="max-w-sm flex flex-col gap-2">
       <label className="font-semibold text-center" htmlFor={id}>
-        {label}
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative w-full space-x-4">
         {type === 'textarea' ? (
@@ -31,9 +38,22 @@ export default function FormInput({
             name={id}
             placeholder={placeholder}
             defaultValue={defaultValue}
+            aria-required={required}
+            aria-invalid={isInvalid ? 'true' : 'false'}
+            onBlur={handleValidation}
+            required={required}
           />
         ) : type === 'select' ? (
-          <select className="px-4 py-2 rounded-md" id={id} name={id} defaultValue={defaultValue}>
+          <select
+            className="px-4 py-2 rounded-md"
+            id={id}
+            name={id}
+            defaultValue={defaultValue}
+            aria-required={required}
+            aria-invalid={isInvalid ? 'true' : 'false'}
+            onBlur={handleValidation}
+            required={required}
+          >
             <option disabled value="">
               Select an option
             </option>
@@ -52,6 +72,10 @@ export default function FormInput({
             name={id}
             placeholder={placeholder}
             defaultValue={defaultValue}
+            aria-required={required}
+            aria-invalid={isInvalid ? 'true' : 'false'}
+            onBlur={handleValidation}
+            required={required}
           />
         )}
         {id.includes('password') && (
@@ -64,7 +88,6 @@ export default function FormInput({
           </button>
         )}
       </div>
-      {error && <p className="rounded-md p-4">{error}</p>}
     </div>
   );
 }

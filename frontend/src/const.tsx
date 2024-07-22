@@ -5,12 +5,12 @@ export const navData = [
   {
     text: 'Contact',
     alt: 'alt',
-    link: '/',
+    link: '/contact',
   },
   {
     text: 'About us',
     alt: 'alt',
-    link: '/',
+    link: '/about',
   },
   {
     text: 'Catalog',
@@ -63,18 +63,21 @@ export const newUserFields: FormInputProps[] = [
     label: 'Nom',
     placeholder: 'Doe',
     inputType: 'text',
+    required: false,
   },
   {
     id: 'firstname',
     label: 'Prénom',
     placeholder: 'John',
     inputType: 'text',
+    required: false,
   },
   {
     id: 'email',
     label: 'Email',
     placeholder: 'exemple@email.com',
     inputType: 'text',
+    required: true,
   },
   {
     id: 'role',
@@ -85,29 +88,34 @@ export const newUserFields: FormInputProps[] = [
       { label: 'User', value: 'USER' },
       { label: 'Administrateur', value: 'ADMIN' },
     ],
+    required: true,
   },
   {
     id: 'password',
     label: 'Mot de Passe',
     placeholder: '********',
     inputType: 'password',
+    required: true,
   },
   {
     id: 'address',
     label: 'Adresse',
     placeholder: '123 rue Wild',
     inputType: 'text',
+    required: false,
   },
   {
     id: 'city',
     label: 'Ville',
     placeholder: 'Paris',
     inputType: 'text',
+    required: false,
   },
   {
     id: 'cp',
     label: 'Code Postal',
     placeholder: '75001',
     inputType: 'text',
+    required: false,
   },
 ];

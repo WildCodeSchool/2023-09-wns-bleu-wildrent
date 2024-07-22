@@ -11,43 +11,49 @@ import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
 import { ProductRef, SimpleSubCategory } from '@/types';
 import Loader from '@/components/Loader';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 const fields = [
   {
     label: 'Nom du produit',
     id: 'name',
     type: 'text',
     placeholder: 'Chaise Adèle',
+    required: true,
   },
   {
     label: 'Description détaillée',
     id: 'description',
     type: 'textarea',
     placeholder: 'les détails du produit',
+    required: true,
   },
   {
     label: 'Prix HT par unité et par jour de location',
     id: 'priceHT',
     type: 'number',
     placeholder: '20€',
+    required: true,
   },
   {
     label: 'Photo du produit',
     id: 'image',
     type: 'text',
     placeholder: 'Ajouter le lien vers la photo du produit',
+    required: true,
   },
   {
     label: 'Type',
     id: 'subCategory',
     type: 'select',
     placeholder: 'Ajouter le lien vers la photo du produit',
+    required: true,
   },
   {
     label: 'Quantité disponible',
     id: 'quantity',
     type: 'number',
     placeholder: '5',
+    required: true,
   },
 ];
 function UpdateProductRefModal({
@@ -60,6 +66,7 @@ function UpdateProductRefModal({
   const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.target as HTMLFormElement);
 
     const formJSON: any = Object.fromEntries(formData.entries());
@@ -127,6 +134,7 @@ function UpdateProductRefModal({
                       }))
                     : undefined
                 }
+                required={field.required}
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
