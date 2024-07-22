@@ -62,6 +62,9 @@ test('Login admin et user', async ({ page }) => {
     },
   });
 
+  // await page.click('[data-test-id="register1-button"]');
+
+
   const emailUser = `user${Math.random().toString(36).substring(7)}@example.com`;
   const passwordUser = 'password123';
   const roleUser = 'USER';
@@ -74,6 +77,7 @@ test('Login admin et user', async ({ page }) => {
   user.emailConfirmationToken = randomBytes(20).toString('hex'); // Utilisation correcte de randomBytes
   await user.save();
 
+
   const confirmationLink = `http://localhost:3000/auth/emailConfirmation?token=${user.emailConfirmationToken}`;
   const info = await transporter.sendMail({
     from: 'contactwildrent@gmail.com',
@@ -81,6 +85,11 @@ test('Login admin et user', async ({ page }) => {
     subject: 'Bienvenue sur Wildrent',
     text: `Bienvenue parmi nous. Merci de bien vouloir cliquer sur ce lien pour confirmer votre email : ${confirmationLink}`,
   });
+
+  // Remplir le formulaire de connexion utilisateur
+  await page.fill('input#email', 'moi@gmail.com');
+  await page.fill('input#password', 'mdp');
+
 
   const email = getTestMessageUrl(info);
   expect(email).toContain('Bienvenue parmi nous');

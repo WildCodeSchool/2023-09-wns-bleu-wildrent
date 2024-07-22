@@ -9,11 +9,12 @@ export interface LinkProps {
 export type FormInputProps = {
   label: string;
   id: string;
-  placeholder: string;
+  placeholder?: string;
   inputType?: string;
   error?: string;
   options?: Option[];
   defaultValue?: string;
+  required?: boolean;
 };
 
 export type AdminTableProps = {

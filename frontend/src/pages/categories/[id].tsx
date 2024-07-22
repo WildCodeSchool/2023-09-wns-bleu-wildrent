@@ -8,7 +8,7 @@ import {
   useGetCategoryNameQuery,
   useGetSubCategoriesByCategoryIdQuery,
 } from '@/graphql/generated/schema';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 const CategoryDetails = () => {
   const router = useRouter();

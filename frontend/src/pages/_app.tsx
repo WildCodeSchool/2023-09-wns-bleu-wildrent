@@ -3,9 +3,9 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 
 import ClientProvider from '@/graphql/ClientProvider';
-import { AlertProvider } from '@/components/providers/AlertContext';
-import { UserProvider } from '@/components/providers/UserContext';
-import { DateProvider } from '@/components/providers/DatesContext';
+import { AlertProvider } from '@/components/hooks/AlertContext';
+import { UserProvider } from '@/components/hooks/UserContext';
+import { DateProvider } from '@/components/hooks/DatesContext';
 
 function App({ Component, pageProps }: AppProps) {
   return (

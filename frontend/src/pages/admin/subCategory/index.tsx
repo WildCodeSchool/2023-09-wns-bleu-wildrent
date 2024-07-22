@@ -5,7 +5,7 @@ import { useAllSubCategoriesAdminQuery } from '../../../graphql/generated/schema
 import { IoIosAdd } from 'react-icons/io';
 import AddSubCategoryModal from '@/components/admin/subCategory/AddSubCategoryModal';
 import Loader from '@/components/Loader';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 const SubCategoriesAdmin = () => {
   const { data, loading, error } = useAllSubCategoriesAdminQuery();

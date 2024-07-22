@@ -5,7 +5,7 @@ import { useAllCategoriesAdminQuery } from '../../../graphql/generated/schema';
 import { IoIosAdd } from 'react-icons/io';
 import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
 import Loader from '@/components/Loader';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 const CategoriesAdmin = () => {
   const { data, loading, error } = useAllCategoriesAdminQuery();

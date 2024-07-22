@@ -7,7 +7,7 @@ import UpdateCategoryModal from '@/components/admin/category/UpdateCategoryModal
 import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
 import client from '@/graphql/client';
 import { IoIosAdd } from 'react-icons/io';
-import { useAlert } from '@/components/providers/AlertContext';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 // Définition de la mutation GraphQL pour la suppression
 const DELETE_CATEGORY_MUTATION = gql`
