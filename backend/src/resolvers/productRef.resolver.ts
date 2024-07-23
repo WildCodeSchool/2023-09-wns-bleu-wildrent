@@ -3,17 +3,38 @@ import { GraphQLError } from 'graphql';
 import { InputProductRef, ProductRef, UpdateProductRef } from '../entities/productRef.entity';
 import { Message } from '../entities/user.entity';
 import ProductRefService from '../services/productRef.service';
+import { Repository } from 'typeorm';
 
 @Resolver(ProductRef)
 class ProductRefsResolver {
+  db: Repository<ProductRef>;
+
   private productRefService = new ProductRefService();
   @Query(() => [ProductRef])
-  async allProductRefs() {
-    return await this.productRefService.getAllProductRefs();
+  async allProductRefs(
+    @Arg('startDate', () => String, { nullable: true }) startDate?: string,
+    @Arg('endDate', () => String, { nullable: true }) endDate?: string,
+    @Arg('name', { nullable: true }) name?: string,
+  ) {
+    const productRefs = await this.productRefService.getAllProductRefs(name);
+
+    const availableProducts = await this.productRefService.getAvailableProducts(startDate, endDate);
+
+    return productRefs.map((productRef) => {
+      const productAvailability = availableProducts.find((p) => p.id === productRef.id);
+      if (productAvailability) {
+        productRef.quantityAvailable = productAvailability.quantityAvailable;
+      }
+      return productRef;
+    });
   }
 
   @Query(() => ProductRef)
-  async productRefById(@Arg('productRefId', () => Int) id: number) {
+  async productRefById(
+    @Arg('productRefId', () => Int) id: number,
+    @Arg('startDate', () => String, { nullable: true }) startDate?: string,
+    @Arg('endDate', () => String, { nullable: true }) endDate?: string,
+  ) {
     const productRef = await ProductRef.findOne({
       where: {
         id: id,
@@ -25,6 +46,16 @@ class ProductRefsResolver {
     if (!productRef) {
       throw new GraphQLError('Not Found');
     }
+
+    const availableProducts = await this.productRefService.getAvailableProducts(startDate, endDate);
+    const productAvailability = availableProducts.find((p) => p.id === id);
+
+    if (productAvailability) {
+      productRef.quantityAvailable = productAvailability.quantityAvailable;
+    } else {
+      productRef.quantityAvailable = 0;
+    }
+
     return productRef;
   }
 
@@ -90,45 +121,6 @@ class ProductRefsResolver {
       return { success: false, message: (e as Error).message };
     }
   }
-
-  // @Query(() => [AvailableProduct])
-  // async getAvailableProducts(
-  //   @Arg('startDate') startDate: string,
-  //   @Arg('endDate') endDate: string,
-  // ): Promise<AvailableProduct[]> {
-  //   const totalQuantities = await this.db
-  //     .createQueryBuilder('product_ref')
-  //     .select('product_ref.id', 'product_ref_id')
-  //     .addSelect('product_ref.name', 'name')
-  //     .addSelect('COUNT(product_item.id)', 'total_quantity')
-  //     .innerJoin('product_ref.productItems', 'product_item')
-  //     .groupBy('product_ref.id')
-  //     .addGroupBy('product_ref.name')
-  //     .getRawMany();
-
-  //   const orderedQuantities = await orderRepo
-  //     .createQueryBuilder('order')
-  //     .select('product_ref.id', 'product_ref_id')
-  //     .addSelect('SUM(order_item.quantity)', 'ordered_quantity')
-  //     .innerJoin('order.orderItems', 'order_item')
-  //     .leftJoin('order_item.productItems', 'product_item')
-  //     .leftJoin('product_item.productRef', 'product_ref')
-  //     .where('order.startDate >= :startDate AND order.endDate <= :endDate', { startDate, endDate })
-  //     .groupBy('product_ref.id')
-  //     .getRawMany();
-
-  //   const orderedQuantitiesMap = new Map(
-  //     orderedQuantities.map((item) => [item.product_ref_id, item.ordered_quantity]),
-  //   );
-
-  //   return totalQuantities.map((totalQuantity) => {
-  //     const orderedQuantity = orderedQuantitiesMap.get(totalQuantity.product_ref_id) || 0;
-  //     return {
-  //       name: totalQuantity.name,
-  //       available_quantity: totalQuantity.total_quantity - orderedQuantity,
-  //     };
-  //   });
-  // }
 }
 
 export default ProductRefsResolver;

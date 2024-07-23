@@ -1,5 +1,5 @@
-import { log } from 'console';
 import React, { ReactNode, createContext, useCallback, useState, useContext } from 'react';
+import clsx from 'clsx';
 
 type AlertContextType = {
   showAlert: (
@@ -38,14 +38,21 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     },
     [closeAlert],
   );
+
+  const baseClasses = 'alert text-center font-bold p-4 rounded shadow-lg';
+  const alertClasses = clsx(baseClasses, {
+    'bg-green-100 text-green-700': alertType === 'success',
+    'bg-yellow-100 text-yellow-700': alertType === 'warning',
+    'bg-red-100 text-red-700': alertType === 'error',
+    'bg-blue-100 text-blue-700': alertType === 'info',
+  });
+
   return (
     <AlertContext.Provider value={{ showAlert, closeAlert, alertOpen, alertType, alertMessage }}>
       {children}
       {alertOpen && (
-        <div className="toast toast-top toast-center">
-          <div
-            className={`alert alert-${alertType} text-center text-gray-700 font-bold p-4 rounded shadow-lg`}
-          >
+        <div className="flex toast toast-top toast-center">
+          <div className={alertClasses}>
             <span>{alertMessage}</span>
           </div>
         </div>

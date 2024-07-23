@@ -36,38 +36,33 @@ function SelectDate() {
   };
 
   return (
-    <div className="mb-5 p-2 flex flex-col gap-4 items-center border rounded-xl bg-secondary/50">
-      <div className="text-xl text-primary text-center font-semibold">
-        Select dates to explore our catalog of products available during that period:
+    <div className="flex items-center justify-center space-x-4">
+      <div className="relative">
+        <input
+          name="start"
+          type="date"
+          className="input input-bordered w-full max-w-xs text-gray-400"
+          value={startDate}
+          onChange={handleStartDateChange}
+        />
       </div>
-      <div className="flex items-center">
-        <div className="relative">
-          <input
-            name="start"
-            type="date"
-            className="input input-bordered w-full max-w-xs"
-            value={startDate}
-            onChange={handleStartDateChange}
-          />
-        </div>
-        <span className="mx-4 text-primary">to</span>
-        <div className="relative">
-          <input
-            name="end"
-            type="date"
-            className="input input-bordered w-full max-w-xs"
-            value={endDate}
-            onChange={handleEndDateChange}
-          />
-        </div>
-        <button
-          onClick={handleFilter}
-          type="button"
-          className="mx-4 text-primary btn btn-circle btn-secondary"
-        >
-          <MdCheck type="button" size={25} />
-        </button>
+      <span className="text-primary">to</span>
+      <div className="relative">
+        <input
+          name="end"
+          type="date"
+          className="input input-bordered w-full max-w-xs text-gray-400"
+          value={endDate}
+          onChange={handleEndDateChange}
+        />
       </div>
+      <button
+        onClick={handleFilter}
+        type="button"
+        className="text-primary btn btn-circle btn-secondary ml-4"
+      >
+        <MdCheck size={25} />
+      </button>
     </div>
   );
 }

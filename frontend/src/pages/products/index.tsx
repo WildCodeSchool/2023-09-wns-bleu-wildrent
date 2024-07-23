@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductCard from '@/components/ProductCard';
 import { useAllProductRefsQuery } from '../../graphql/generated/schema';
 import Layout from '@/components/Layout';
 import Loader from '@/components/Loader';
+import { useAlert } from '@/components/hooks/AlertContext';
+import { useDate } from '@/components/hooks/DatesContext';
+import { useRouter } from 'next/router';
 
 function ProductList() {
-  const { data, loading, error } = useAllProductRefsQuery();
+  const { showAlert } = useAlert();
+  const { startDate, endDate } = useDate();
+  const router = useRouter();
+  const name = router.query.title as string;
+  const { data, loading, error, refetch } = useAllProductRefsQuery({
+    variables: { name: name || name, startDate, endDate },
+    skip: !router.isReady,
+  });
+  useEffect(() => {
+    if (router.isReady) {
+      refetch();
+    }
+  }, [router.isReady, startDate, endDate, refetch, name]);
   if (loading) return <Loader />;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) return showAlert('error', error.message, 5000);
   const productRefs = data?.allProductRefs || [];
   return (
     <Layout>

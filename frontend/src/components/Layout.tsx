@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SelectDate from '../components/SelectDate';
+import SearchInput from './SearchInput';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,7 +24,10 @@ export default function RootLayout({
     <div className="flex flex-col min-h-screen">
       <div className="mx-auto max-w-5xl w-full flex-grow">
         <Navbar />
-        {router.pathname !== '/about' && <SelectDate />}
+        <div className="p-2 flex flex-col items-center rounded-xl bg-secondary/10 bg-base-100 shadow-xl">
+          {router.pathname !== '/about' && <SelectDate />}
+          {router.pathname !== '/about' && <SearchInput />}
+        </div>
         <div className="container mx-auto px-4 min-h-full">{children}</div>
       </div>
       <Footer />

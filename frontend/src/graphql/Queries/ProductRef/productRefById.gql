@@ -1,5 +1,5 @@
-query ProductRefById($productRefId: Int!) {
-  productRefById(productRefId: $productRefId) {
+query ProductRefById($productRefId: Int!, $endDate: String, $startDate: String) {
+  productRefById(productRefId: $productRefId, endDate: $endDate, startDate: $startDate) {
     id
     name
     description

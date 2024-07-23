@@ -52,6 +52,8 @@ export type ProductRef = {
   description?: string;
   image: string;
   priceHT: number;
+  subCategory?: SubCategory;
+  quantityAvailable?: number;
 };
 
 export interface Option {

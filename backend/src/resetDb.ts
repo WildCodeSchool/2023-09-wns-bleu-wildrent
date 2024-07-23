@@ -251,7 +251,7 @@ async function main() {
     lastname: 'WildRent',
     role: 'ADMIN',
     email: 'contact@wildrent.com',
-    password: 'password',
+    password: 'mdp',
     picture:
       'https://www.lemazetroucas.fr/wp-content/uploads/2024/06/Gray-Circle-Leaf-Wedding-Event-Planner-Logo-1.png',
   });
@@ -260,8 +260,8 @@ async function main() {
   const customer1 = User.create({
     firstname: 'Bart',
     lastname: 'Simpson',
-    email: 'me@gmail.com',
-    password: 'password',
+    email: 'moi@gmail.com',
+    password: 'mdp',
     picture: 'https://anniversaire-celebrite.com/upload/250x333/bart-simpson-250.jpg',
   });
   await customer1.save();
@@ -269,7 +269,7 @@ async function main() {
     firstname: 'Marge',
     lastname: 'Simpson',
     email: 'marge@gmail.com',
-    password: 'password',
+    password: 'mdp',
     picture: 'https://anniversaire-celebrite.com/upload/250x333/marge-simpson-250.jpg',
   });
   await customer2.save();
