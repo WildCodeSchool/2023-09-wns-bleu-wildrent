@@ -42,7 +42,7 @@ services:
     ports:
       - ${GATEWAY_PORT-80}:80
     volumes: 
-      -.log:/var/log/nginx
+      - .log:/var/log/nginx
 
 volumes:
   stagingDB:
