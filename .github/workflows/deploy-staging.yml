@@ -45,4 +45,4 @@ jobs:
       - name: Call VPS webhook to update staging
         uses: wei/curl@master
         with:
-          args: https://ops.0923-bleu-4.wns.wilders.dev/hooks/update-staging
+          args: https://ops.0923-bleu-4.wns.wilders.dev/hooks/wildrent-bleu-update-staging
