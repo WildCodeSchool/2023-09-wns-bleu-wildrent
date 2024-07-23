@@ -14,6 +14,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.be-lounge.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.prod.website-files.com',
+      },
     ],
   },
   eslint: {

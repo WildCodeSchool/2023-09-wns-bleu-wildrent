@@ -1,69 +1,68 @@
-import client from '@/graphql/client';
-import {
-  AllProductRefsDocument,
-  useGetProductAvailableByDateRangeQuery,
-} from '@/graphql/generated/schema';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MdCheck } from 'react-icons/md';
 import { useDate } from './hooks/DatesContext';
 import { useAlert } from './hooks/AlertContext';
 
 function SelectDate() {
-  const nbDaysLocalStorage = JSON.parse(localStorage.getItem('nbDays') || '0');
-  const [nbDays, setNbDays] = useState(nbDaysLocalStorage);
-  const [filter, setFilter] = useState<any>({ startDate: '', endDate: '' });
-
-  const { data, loading, error, refetch } = useGetProductAvailableByDateRangeQuery({
-    variables: filter,
-    onCompleted: (data) => {
-      client.writeQuery({
-        query: AllProductRefsDocument,
-        data: {
-          allProductRefs: data.getProductAvailableByDateRange.items,
-        },
-      });
-    },
-  });
-
-  useEffect(() => {
-    localStorage.setItem('nbDays', JSON.stringify(nbDays));
-  }, [nbDays]);
-
-  const handleFilter = (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData(e.currentTarget as HTMLFormElement);
-      const filter = Object.fromEntries(formData.entries());
-
-      setFilter(filter);
-    } catch (e) {
-      console.error((e as Error).message);
-    } finally {
-      refetch();
+  const { startDate, endDate, setStartDate, setEndDate, calculateNbDays } = useDate();
+  const { showAlert } = useAlert();
+  const today = new Date();
+  const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newStartDate = new Date(event.target.value);
+    if (newStartDate.getTime() > today.getTime()) {
+      setStartDate(newStartDate.toISOString().split('T')[0]);
+    } else {
+      showAlert(
+        'error',
+        `The date must be after ${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`,
+        3000,
+      );
     }
   };
 
+  const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newEndDate = new Date(event.target.value);
+    const start = new Date(startDate);
+
+    if (start.getTime() != newEndDate.getTime()) {
+      setEndDate(newEndDate.toISOString().split('T')[0]);
+    } else {
+      showAlert('error', `The date must be after start date`, 3000);
+    }
+  };
+
+  const handleFilter = () => {
+    calculateNbDays();
+  };
+
   return (
-    <div className="mb-5 p-2 flex flex-col gap-4 items-center border rounded-xl bg-secondary/50">
-      <div className="text-xl text-primary text-center font-semibold">
-        Select dates to explore our catalog of products available during that period:
+    <div className="flex items-center justify-center space-x-4">
+      <div className="relative">
+        <input
+          name="start"
+          type="date"
+          className="input input-bordered w-full max-w-xs text-gray-400"
+          value={startDate}
+          onChange={handleStartDateChange}
+        />
       </div>
-      <form onSubmit={handleFilter} className="flex items-center">
-        <div className="relative">
-          <input name="startDate" type="date" className="input input-bordered w-full max-w-xs" />
-        </div>
-        <span className="mx-4 text-primary">to</span>
-        <div className="relative">
-          <input name="endDate" type="date" className="input input-bordered w-full max-w-xs" />
-        </div>
-        <button
-          disabled={loading}
-          type="submit"
-          className="mx-4 text-primary btn btn-circle btn-secondary"
-        >
-          <MdCheck type="button" size={25} />
-        </button>
-      </form>
+      <span className="text-primary">to</span>
+      <div className="relative">
+        <input
+          name="end"
+          type="date"
+          className="input input-bordered w-full max-w-xs text-gray-400"
+          value={endDate}
+          onChange={handleEndDateChange}
+        />
+      </div>
+      <button
+        onClick={handleFilter}
+        type="button"
+        className="text-primary btn btn-circle btn-secondary ml-4"
+      >
+        <MdCheck size={25} />
+      </button>
     </div>
   );
 }

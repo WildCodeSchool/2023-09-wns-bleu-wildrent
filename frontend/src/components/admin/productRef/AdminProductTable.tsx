@@ -102,7 +102,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
                 {productRef?.description?.substring(0, 90)}...
               </td>
               <td className="px-4 py-2 border-b text-center">{productRef.priceHT}€ HT</td>
-              <td className="px-4 py-2 border-b text-center">{productRef.quantity}</td>
+              <td className="px-4 py-2 border-b text-center">{productRef.quantityAvailable}</td>
               <td className="px-4 py-2 border-b text-center">
                 <button
                   className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mb-3"

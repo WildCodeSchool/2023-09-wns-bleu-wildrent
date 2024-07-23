@@ -22,11 +22,6 @@ export enum Availability {
   Unavailable = 'Unavailable'
 }
 
-export type AvailableProducts = {
-  __typename?: 'AvailableProducts';
-  items: Array<ProductRef>;
-};
-
 export type Category = {
   __typename?: 'Category';
   description?: Maybe<Scalars['String']>;
@@ -310,7 +305,6 @@ export type Query = {
   allUsers: Array<Profile>;
   categoryById?: Maybe<Category>;
   checkIfLoggedIn: Message;
-  getProductAvailableByDateRange: AvailableProducts;
   getProductsBySubCategoryId: Array<ProductRef>;
   getProfile: Profile;
   orderById: Order;
@@ -320,14 +314,15 @@ export type Query = {
 };
 
 
-export type QueryCategoryByIdArgs = {
-  id: Scalars['Int'];
+export type QueryAllProductRefsArgs = {
+  endDate?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['String']>;
 };
 
 
-export type QueryGetProductAvailableByDateRangeArgs = {
-  endDate?: InputMaybe<Scalars['String']>;
-  startDate?: InputMaybe<Scalars['String']>;
+export type QueryCategoryByIdArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -342,7 +337,9 @@ export type QueryOrderByIdArgs = {
 
 
 export type QueryProductRefByIdArgs = {
+  endDate?: InputMaybe<Scalars['String']>;
   productRefId: Scalars['Int'];
+  startDate?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -395,15 +392,19 @@ export enum PaymentStatus {
   Pending = 'Pending'
 }
 
-export type AllProductRefsQueryVariables = Exact<{ [key: string]: never; }>;
+export type AllProductRefsQueryVariables = Exact<{
+  name?: InputMaybe<Scalars['String']>;
+  endDate?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['String']>;
+}>;
 
 
-export type AllProductRefsQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, image: string, priceHT: number }> };
+export type AllProductRefsQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, image: string, priceHT: number, quantityAvailable: number }> };
 
 export type AllProductRefsAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantity: number, quantityAvailable: number, subCategory: { __typename?: 'SubCategory', name: string, category?: { __typename?: 'Category', name: string } | null } }> };
+export type AllProductRefsAdminQuery = { __typename?: 'Query', allProductRefs: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantityAvailable: number, subCategory: { __typename?: 'SubCategory', name: string, category?: { __typename?: 'Category', name: string } | null } }> };
 
 export type GetProductsBySubCategoryIdQueryVariables = Exact<{
   subCategoryId: Scalars['Int'];
@@ -414,6 +415,8 @@ export type GetProductsBySubCategoryIdQuery = { __typename?: 'Query', getProduct
 
 export type ProductRefByIdQueryVariables = Exact<{
   productRefId: Scalars['Int'];
+  endDate?: InputMaybe<Scalars['String']>;
+  startDate?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -457,14 +460,6 @@ export type GetCategoryNameQueryVariables = Exact<{
 
 
 export type GetCategoryNameQuery = { __typename?: 'Query', categoryById?: { __typename?: 'Category', name: string, description?: string | null } | null };
-
-export type GetProductAvailableByDateRangeQueryVariables = Exact<{
-  endDate?: InputMaybe<Scalars['String']>;
-  startDate?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type GetProductAvailableByDateRangeQuery = { __typename?: 'Query', getProductAvailableByDateRange: { __typename?: 'AvailableProducts', items: Array<{ __typename?: 'ProductRef', id: number, name: string, description: string, image: string, priceHT: number, quantityAvailable: number }> } };
 
 export type AllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -634,12 +629,13 @@ export type UpdateSubCategoryMutation = { __typename?: 'Mutation', updateSubCate
 
 
 export const AllProductRefsDocument = gql`
-    query AllProductRefs {
-  allProductRefs {
+    query AllProductRefs($name: String, $endDate: String, $startDate: String) {
+  allProductRefs(name: $name, endDate: $endDate, startDate: $startDate) {
     id
     name
     image
     priceHT
+    quantityAvailable
   }
 }
     `;
@@ -656,6 +652,9 @@ export const AllProductRefsDocument = gql`
  * @example
  * const { data, loading, error } = useAllProductRefsQuery({
  *   variables: {
+ *      name: // value for 'name'
+ *      endDate: // value for 'endDate'
+ *      startDate: // value for 'startDate'
  *   },
  * });
  */
@@ -684,7 +683,6 @@ export const AllProductRefsAdminDocument = gql`
         name
       }
     }
-    quantity
     quantityAvailable
   }
 }
@@ -756,8 +754,12 @@ export type GetProductsBySubCategoryIdQueryHookResult = ReturnType<typeof useGet
 export type GetProductsBySubCategoryIdLazyQueryHookResult = ReturnType<typeof useGetProductsBySubCategoryIdLazyQuery>;
 export type GetProductsBySubCategoryIdQueryResult = Apollo.QueryResult<GetProductsBySubCategoryIdQuery, GetProductsBySubCategoryIdQueryVariables>;
 export const ProductRefByIdDocument = gql`
-    query ProductRefById($productRefId: Int!) {
-  productRefById(productRefId: $productRefId) {
+    query ProductRefById($productRefId: Int!, $endDate: String, $startDate: String) {
+  productRefById(
+    productRefId: $productRefId
+    endDate: $endDate
+    startDate: $startDate
+  ) {
     id
     name
     description
@@ -790,6 +792,8 @@ export const ProductRefByIdDocument = gql`
  * const { data, loading, error } = useProductRefByIdQuery({
  *   variables: {
  *      productRefId: // value for 'productRefId'
+ *      endDate: // value for 'endDate'
+ *      startDate: // value for 'startDate'
  *   },
  * });
  */
@@ -1074,49 +1078,6 @@ export function useGetCategoryNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetCategoryNameQueryHookResult = ReturnType<typeof useGetCategoryNameQuery>;
 export type GetCategoryNameLazyQueryHookResult = ReturnType<typeof useGetCategoryNameLazyQuery>;
 export type GetCategoryNameQueryResult = Apollo.QueryResult<GetCategoryNameQuery, GetCategoryNameQueryVariables>;
-export const GetProductAvailableByDateRangeDocument = gql`
-    query GetProductAvailableByDateRange($endDate: String, $startDate: String) {
-  getProductAvailableByDateRange(endDate: $endDate, startDate: $startDate) {
-    items {
-      id
-      name
-      description
-      image
-      priceHT
-      quantityAvailable
-    }
-  }
-}
-    `;
-
-/**
- * __useGetProductAvailableByDateRangeQuery__
- *
- * To run a query within a React component, call `useGetProductAvailableByDateRangeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProductAvailableByDateRangeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetProductAvailableByDateRangeQuery({
- *   variables: {
- *      endDate: // value for 'endDate'
- *      startDate: // value for 'startDate'
- *   },
- * });
- */
-export function useGetProductAvailableByDateRangeQuery(baseOptions?: Apollo.QueryHookOptions<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>(GetProductAvailableByDateRangeDocument, options);
-      }
-export function useGetProductAvailableByDateRangeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>(GetProductAvailableByDateRangeDocument, options);
-        }
-export type GetProductAvailableByDateRangeQueryHookResult = ReturnType<typeof useGetProductAvailableByDateRangeQuery>;
-export type GetProductAvailableByDateRangeLazyQueryHookResult = ReturnType<typeof useGetProductAvailableByDateRangeLazyQuery>;
-export type GetProductAvailableByDateRangeQueryResult = Apollo.QueryResult<GetProductAvailableByDateRangeQuery, GetProductAvailableByDateRangeQueryVariables>;
 export const AllOrdersDocument = gql`
     query AllOrders {
   allOrders {

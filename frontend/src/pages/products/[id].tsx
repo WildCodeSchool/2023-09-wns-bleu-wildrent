@@ -6,16 +6,19 @@ import { useProductRefByIdQuery } from '@/graphql/generated/schema';
 import { BiSolidCartAdd } from 'react-icons/bi';
 import { CartItemProps } from '@/components/CartItem';
 import Loader from '@/components/Loader';
+import { useDate } from '@/components/hooks/DatesContext';
 import { useAlert } from '@/components/hooks/AlertContext';
 
 function ProductRefDetails() {
   const cartLocalStorage = JSON.parse(localStorage.getItem('cartList') || '[]');
   const [quantity, setQuantity] = useState(1);
   const { showAlert } = useAlert();
+  const { startDate, endDate } = useDate();
   const router = useRouter();
   const { id } = router.query;
   const { data, loading, error } = useProductRefByIdQuery({
-    variables: { productRefId: typeof id === 'string' ? parseInt(id, 10) : 0 },
+    variables: { productRefId: typeof id === 'string' ? parseInt(id, 10) : 0, startDate, endDate },
+
     skip: typeof id === 'undefined',
   });
   const [cartList, setCartList] = useState(cartLocalStorage);
@@ -32,8 +35,7 @@ function ProductRefDetails() {
   const productRef = data?.productRefById;
 
   if (!productRef) {
-    console.error('productRef is undefined');
-    return showAlert('error', 'prodcut not found', 3000);
+    return console.error('productRef is undefined');
   }
 
   const { id: productRefId, name, image, priceHT } = productRef;
@@ -62,7 +64,13 @@ function ProductRefDetails() {
   if (!productRef) {
     return <p className="text-center">Produit non trouvé</p>;
   }
-
+  const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!startDate || !endDate) {
+      showAlert('info', 'Please set the start and end dates before changing the quantity.', 3000);
+    } else {
+      setQuantity(parseInt(e.target.value, 10));
+    }
+  };
   const breadcrumbItems = [
     { label: 'Catégories', href: '/' },
     {
@@ -96,7 +104,9 @@ function ProductRefDetails() {
                   <p className="text-sm">{productRef?.description}</p>
                 </div>
                 <div className="mb-10">
-                  <p className="text-sm">Quantités disponibles : {productRef?.quantity}</p>
+                  {startDate && endDate && (
+                    <p className="text-sm">Available quantity : {productRef?.quantityAvailable}</p>
+                  )}
                 </div>
                 <div>
                   <div className="inline-block align-bottom mr-5 mb-10">
@@ -113,19 +123,21 @@ function ProductRefDetails() {
                     <input
                       type="number"
                       value={quantity}
-                      onChange={() => {
-                        setQuantity(quantity + 1);
+                      onChange={(e) => {
+                        handleChangeQuantity(e);
                       }}
                       min="1"
-                      max={productRef?.quantity}
+                      max={productRef?.quantityAvailable || 0}
                       className="mt-2 p-1 border rounded w-16"
                     />
-                    <BiSolidCartAdd
-                      className="m-4 text-secondary hover:text-secondary/50 cursor-pointer"
+                    <button
+                      className="m-4 text-secondary hover:text-secondary/50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                       onClick={handleAddToCart}
                       type="button"
-                      size={25}
-                    />
+                      disabled={!startDate || !endDate || productRef?.quantityAvailable === 0}
+                    >
+                      <BiSolidCartAdd size={25} />
+                    </button>
                     {showDialog && (
                       <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">
                         <div className="bg-warning p-6 rounded shadow-lg text-center">

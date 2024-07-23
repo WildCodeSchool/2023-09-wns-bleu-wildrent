@@ -4,8 +4,6 @@ import {
   UpdateProductRef,
   useUpdateProductRefMutation,
   useAllSubCategoriesQuery,
-  SubCategory,
-  useProductRefByIdQuery,
 } from '@/graphql/generated/schema';
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
@@ -116,7 +114,7 @@ function UpdateProductRefModal({
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Modification d'un produit</h3>
+          <h3 className="text-lg font-bold">Editing product</h3>
           <form className="flex flex-col gap-4 border rounded p-4" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <FormInput

@@ -114,17 +114,17 @@ const Cart = () => {
               <div className="mt-6 text-right">
                 <h3 className="text-xl font-semibold">Total: {calculateTotal()} €</h3>
                 <button
-                  type="submit"
-                  className="btn btn-secondary text-primary mt-4 ml-4 px-6 py-2 "
-                >
-                  Reserve
-                </button>
-                <button
                   type="button"
                   onClick={clearCart}
                   className="btn btn-error text-primary mt-4 ml-4 px-6 py-2 "
                 >
                   Clear Cart
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-secondary text-primary mt-4 ml-4 px-6 py-2 "
+                >
+                  Reserve
                 </button>
               </div>
             </form>
