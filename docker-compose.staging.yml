@@ -38,7 +38,7 @@ services:
     restart: always
     build:
       context: gateway
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.production
     ports:
       - ${GATEWAY_PORT-80}:80
     volumes: 
