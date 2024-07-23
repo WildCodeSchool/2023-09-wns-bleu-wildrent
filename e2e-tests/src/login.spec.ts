@@ -20,8 +20,9 @@ test('Login admin et user', async ({ page }) => {
   await admin.save();
 
   // Naviguer vers la page de connexion
-  await page.goto('http://localhost:3000/auth/login');
 
+  await page.goto('http://localhost:3000/');
+  await page.click('[data-test-id="nav-login-button"]');
   // Remplir le formulaire de connexion admin
   await page.fill('input#email', 'contact@wildrent.com');
   await page.fill('input#password', 'mdp');
@@ -31,17 +32,20 @@ test('Login admin et user', async ({ page }) => {
 
   // Vérifier la direction vers le / après la connexion et accès au Dashboard
   await expect(page).toHaveURL('http://localhost:3000/');
-  await page.click('[data-test-id="avatar"]');
-  await page.click('[data-test-id="dashboard-id"]');
+  await page.click("[data-test-id='avatar']");
+  await page.click("[data-test-id='dashboard-id']");
   await expect(page).toHaveURL('http://localhost:3000/admin');
-  await page.click('[data-test-id="wildrent-id"]');
 
   // Se déconnecter
-  await page.click('[data-test-id="avatar"]');
-  await page.click('[data-test-id="logout-btn"]');
+  await page.goto('http://localhost:3000/');
+  await page.click("[data-test-id='avatar']");
+  await page.click("[data-test-id='logout-btn']");
 
   // Vérifier la redirection vers la page de connexion
-  await expect(page).toHaveURL('http://localhost:3000/auth/login');
+  await page.goto('http://localhost:3000/');
+  await page.click('[data-test-id="nav-login-button"]');
+  // await page.click('[data-test-id="register1-button"]');
+
   // Créer un utilisateur de test
   const emailUser = 'moi@gmail.com';
   const passwordUser = 'mdp';
@@ -71,8 +75,5 @@ test('Login admin et user', async ({ page }) => {
   await page.click('[data-test-id="logout-btn"]');
 
   // Vérifier la redirection vers la page de connexion
-  await expect(page).toHaveURL('http://localhost:3000/auth/login');
+  await expect(page).toHaveURL('http://localhost:3000/');
 });
-function destroy() {
-  throw new Error('Function not implemented.');
-}

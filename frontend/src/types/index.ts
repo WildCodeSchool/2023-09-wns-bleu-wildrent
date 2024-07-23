@@ -7,21 +7,40 @@ export type CategoryCardProps = {
   link: string;
 };
 
+export interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  address: string;
+  city: string;
+  cp: string;
+  picture: string;
+  role: 'USER' | 'ADMIN';
+}
+
+export type Message = {
+  success: boolean;
+  message: string;
+  isAdmin?: boolean;
+};
+
 export type Category = {
   id: number;
   name: string;
   description?: string | null;
   image: string;
-  // subCategories: SubCategory[];
 };
 
 export type SubCategory = {
   id: number;
   name: string;
-  description?: string;
+  description?: string | null;
   image?: string;
-  productRef?: ProductRef[];
+  category?: Category | null;
 };
+
 export type SimpleSubCategory = {
   id: number;
   name: string;
@@ -33,17 +52,22 @@ export type ProductRef = {
   description?: string;
   image: string;
   priceHT: number;
+  subCategory?: SubCategory;
+  quantityAvailable?: number;
 };
 
 export interface Option {
-  value: number;
+  value: number | string;
   label: string;
 }
-export type FormInputProps = {
-  label: string;
-  id: string;
-  placeholder: string;
-  inputType?: string;
-  error?: string;
-  options?: Option[];
+
+export type Column = {
+  title: string;
+  id: number;
+};
+
+export type TableRow = {
+  cells: string[];
+  id: number;
+  defaultValue?: string;
 };

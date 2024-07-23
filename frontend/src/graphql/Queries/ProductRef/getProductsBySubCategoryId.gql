@@ -1,0 +1,9 @@
+query GetProductsBySubCategoryId($subCategoryId: Int!) {
+  getProductsBySubCategoryId(subCategoryId: $subCategoryId) {
+    id
+    name
+    description
+    priceHT
+    image
+  }
+}

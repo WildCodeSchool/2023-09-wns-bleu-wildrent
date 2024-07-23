@@ -1,84 +1,100 @@
-import { ProductRef, SimpleSubCategory } from '@/types';
-import React from 'react';
+import { SimpleSubCategory } from '@/types';
+import React, { useState } from 'react';
 import { ProductRefModalProps } from './ProductRefModalDetails';
 import {
   InputProductRef,
   useAddProductRefMutation,
   useAllSubCategoriesQuery,
-  SubCategory,
 } from '@/graphql/generated/schema';
 import FormInput from '@/components/FormInput';
 import client from '@/graphql/client';
+import { useAlert } from '@/components/hooks/AlertContext';
+import Loader from '@/components/Loader';
 
 const fields = [
   {
-    label: 'Nom du produit',
     id: 'name',
+    label: 'Product Name',
     type: 'text',
-    placeholder: 'Chaise Adèle',
+    placeholder: 'Enter product name',
+    required: true,
   },
   {
-    label: 'Description détaillée',
     id: 'description',
+    label: 'Product Description',
     type: 'textarea',
-    placeholder: 'les détails du produit',
+    placeholder: 'Enter product description',
+    required: false,
   },
   {
     label: 'Prix HT par unité et par jour de location',
     id: 'priceHT',
     type: 'number',
     placeholder: '20€',
+    required: true,
   },
   {
     label: 'Photo du produit',
     id: 'image',
     type: 'text',
     placeholder: 'Ajouter le lien vers la photo du produit',
+    required: false,
   },
   {
     label: 'Type',
-    id: 'subCategoryId',
+    id: 'subCategory',
     type: 'select',
-    placeholder: 'Ajouter le lien vers la photo du produit',
+  },
+  {
+    label: 'Quantité disponible',
+    id: 'quantity',
+    type: 'number',
+    placeholder: '5',
+    required: true,
   },
 ];
 
 function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
   if (!isOpen) return null;
-  const [createProduct, { data, loading, error }] = useAddProductRefMutation();
+  const [createProduct, { data, loading }] = useAddProductRefMutation();
   const {
     data: subCategoriesData,
     loading: loadingSubCategories,
     error: errorSubCategories,
   } = useAllSubCategoriesQuery();
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.target as HTMLFormElement);
     const formJSON: any = Object.fromEntries(formData.entries());
     formJSON.priceHT = parseFloat(formJSON.priceHT);
-    formJSON.subCategoryId = parseInt(formJSON.subCategoryId);
+    formJSON.subCategory = { id: parseInt(formJSON.subCategory) };
+    formJSON.quantity = parseInt(formJSON.quantity);
     try {
       const response = await createProduct({
         variables: {
-          newProductRef: formJSON as InputProductRef,
+          data: formJSON as InputProductRef,
         },
       });
       if (response.data && response.data.addProductRef.success) {
-        alert('Produit ajouté avec succès');
+        showAlert('success', 'Product added successfully', 3000);
         onClose();
       } else {
-        alert(`Erreur lors de l'ajout du produit`);
+        showAlert('error', 'Error adding product', 3000);
       }
     } catch (error) {
-      alert('Erreur réseau ou de requête lors de l’ajout du produit');
-      console.error('Erreur lors de l’ajout du produit', error);
+      showAlert('error', 'Network or query error while adding product', 3000);
+      console.error('Error adding product', error);
     } finally {
       client.resetStore();
     }
   };
 
-  if (loadingSubCategories) return <p>Chargement des sous-catégories...</p>;
-  if (errorSubCategories) return <p>Erreur lors du chargement des sous-catégories.</p>;
+  if (loadingSubCategories) return <Loader />;
+  if (errorSubCategories) {
+    showAlert('error', errorSubCategories?.message, 3000);
+  }
 
   return (
     <div>
@@ -91,7 +107,7 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Ajout d'un nouveau produit</h3>
+          <h3 className="text-lg font-bold">Adding a new product</h3>
           <form className="flex flex-col gap-4 border rounded p-4" onSubmit={handleSubmit}>
             {fields.map((field) => (
               <FormInput
@@ -108,10 +124,11 @@ function AddProductRefModal({ isOpen, onClose }: ProductRefModalProps) {
                       }))
                     : undefined
                 }
+                required={field.required}
               />
             ))}
             <button disabled={loading} className="btn btn-active btn-secondary" type="submit">
-              Ajouter
+              Add
             </button>
           </form>
         </div>

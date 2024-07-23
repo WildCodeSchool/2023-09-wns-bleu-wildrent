@@ -31,6 +31,7 @@ export class BaseCategoryInput {
   name?: string;
 
   @Field({ nullable: true })
+  @Length(10, 200, { message: 'Le nom doit contenir entre 10 et 200 caractères' })
   description?: string;
 
   @Field({ nullable: true })

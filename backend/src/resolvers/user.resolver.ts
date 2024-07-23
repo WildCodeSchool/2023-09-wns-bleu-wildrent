@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Int, Mutation, Query, Resolver } from 'type-graphql';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/user.service';
 import User, {
@@ -9,20 +9,23 @@ import User, {
   Message,
   Profile,
   InputUpdate,
+  NewUserInput,
+  InputUpdateAdmin,
 } from '../entities/user.entity';
 import { ContextType } from '../types';
 import db from '../db';
 
 @Resolver()
 export default class UserResolver {
+  private userService = new UserService();
   @Mutation(() => Message)
   async register(@Arg('newUser') newUser: InputRegister) {
-    const alreadyRegistered = Boolean(await new UserService().findUserByEmail(newUser.email));
+    const alreadyRegistered = Boolean(await this.userService.findUserByEmail(newUser.email));
     if (alreadyRegistered) {
       return { success: false, message: 'Already Registered' };
     } else {
       try {
-        await new UserService().createUser(newUser);
+        await this.userService.createUser(newUser);
         return { success: true, message: 'Account Created !' };
       } catch (e) {
         console.error((e as Error).message);
@@ -45,7 +48,7 @@ export default class UserResolver {
       if (token) {
         ctx.res.cookie('token', token, {
           secure: process.env.NODE_ENV === 'production',
-          httpOnly: false, // si true pas possible de le récupérer en front
+          httpOnly: true,
         });
         ctx.currentUser = user;
         return { success: true, message: 'Authenticated' };
@@ -67,6 +70,23 @@ export default class UserResolver {
     }
   }
 
+  @Authorized(['ADMIN'])
+  @Mutation(() => Message)
+  async createNewUser(@Arg('newUser') newUser: NewUserInput): Promise<Message> {
+    try {
+      if (newUser) {
+        await this.userService.createUserAdmin(newUser as User);
+        return { success: true, message: 'User created successfully' };
+      } else {
+        return { success: false, message: 'newUser not defined' };
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Cannot create User: ${(e as Error).message}` };
+    }
+  }
+
+  @Authorized()
   @Mutation(() => Message)
   async updateUser(
     @Arg('updatedUser') updatedUser: InputUpdate,
@@ -76,7 +96,25 @@ export default class UserResolver {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
-      const updated = await new UserService().updateUser(currentUser.id, updatedUser);
+      if (currentUser.id !== updatedUser.id) {
+        return { success: false, message: 'Unauthorized' };
+      }
+      const updated = await this.userService.updateUser(currentUser.id, updatedUser);
+      if (!updated) {
+        return { success: false, message: 'cannot update user' };
+      }
+      return { success: true, message: 'user updated successfully' };
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Error updating user: ${(e as Error).message}` };
+    }
+  }
+
+  @Authorized(['ADMIN'])
+  @Mutation(() => Message)
+  async updateUserAdmin(@Arg('updatedUser') updatedUser: InputUpdateAdmin): Promise<Message> {
+    try {
+      const updated = await this.userService.updateUserAdmin(updatedUser.id, updatedUser);
       if (!updated) {
         return { success: false, message: 'cannot update user' };
       }
@@ -88,12 +126,44 @@ export default class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [User])
-  async allUsers() {
-    return await User.find({ order: { id: 'desc' } });
+  @Mutation(() => Message)
+  async deleteUser(
+    @Arg('userId', () => Int) userId: number,
+    @Ctx() { currentUser }: ContextType,
+  ): Promise<Message> {
+    try {
+      if (!currentUser) {
+        return { success: false, message: 'no currentUser' };
+      }
+      if (currentUser.role === 'ADMIN' || currentUser.id === userId) {
+        const res = await this.userService.deleteUser(userId);
+        return res;
+      } else {
+        return { success: false, message: 'Unauthorized' };
+      }
+    } catch (e) {
+      console.error((e as Error).message);
+      return { success: false, message: `Cannot delete user: ${(e as Error).message}` };
+    }
   }
 
-  private userService = new UserService();
+  @Authorized(['ADMIN'])
+  @Query(() => [Profile])
+  async allUsers(): Promise<Profile[] | Message> {
+    try {
+      return (await this.userService.getAllUsers()) as Profile[];
+    } catch (error) {
+      return { success: false, message: 'Only admin can get all users data', isAdmin: false };
+    }
+  }
+
+  @Query(() => Message)
+  async checkIfLoggedIn(@Ctx() { currentUser }: ContextType): Promise<Message> {
+    const isLoggedIn = Boolean(currentUser?.id);
+    const isAdmin = Boolean(currentUser?.role === 'ADMIN');
+    const message = isLoggedIn ? 'User already authenticated' : 'User not authenticated';
+    return { success: isLoggedIn, message, isAdmin };
+  }
 
   @Authorized()
   @Query(() => Profile)
@@ -102,7 +172,7 @@ export default class UserResolver {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
-      return (await new UserService().findUserById(currentUser.id)) as Profile;
+      return (await this.userService.findUserById(currentUser.id)) as Profile;
     } catch (e) {
       console.error((e as Error).message);
       return { success: false, message: `Cannot find current user: ${(e as Error).message}` };

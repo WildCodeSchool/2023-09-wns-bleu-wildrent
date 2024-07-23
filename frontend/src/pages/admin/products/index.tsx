@@ -1,14 +1,16 @@
 // pages/admin/products.tsx
 import React, { useState } from 'react';
-import LayoutDashboard from '../../../components/admin/LayoutDashboard';
-import AdminProductTable from '../../../components/admin/productRef/AdminProductTable';
-import { useAllProductRefsAdminQuery } from '../../../graphql/generated/schema';
+import LayoutDashboard from '@/components/admin/LayoutDashboard';
+import AdminProductTable from '@/components/admin/productRef/AdminProductTable';
+import { useAllProductRefsAdminQuery } from '@/graphql/generated/schema';
 import { IoIosAdd } from 'react-icons/io';
 import AddProductRefModal from '@/components/admin/productRef/AddProductRefModal';
+import Loader from '@/components/Loader';
+import { useAlert } from '@/components/hooks/AlertContext';
 
 const ProductsAdmin = () => {
   const { data, loading, error } = useAllProductRefsAdminQuery();
-
+  const { showAlert } = useAlert();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
     setIsModalOpen(true);
@@ -17,8 +19,9 @@ const ProductsAdmin = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>Erreur: {error.message}</p>;
+  if (loading) return <Loader />;
+
+  if (error) return showAlert('error', error?.message, 3000);
   return (
     <LayoutDashboard>
       <button className="btn btn-circle btn-accent" onClick={() => handleModal()}>

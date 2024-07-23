@@ -2,5 +2,33 @@ query AllSubCategories {
   allSubCategories {
     id
     name
+    description
+    image
+    category {
+      id
+      name
+    }
+  }
+}
+
+query AllSubCategoriesAdmin {
+  allSubCategories {
+    id
+    name
+    description
+    image
+    category {
+      id
+      name
+    }
+  }
+}
+
+query GetSubCategoriesByCategoryId($categoryId: Int!) {
+  subCategoriesByCategoryId(categoryId: $categoryId) {
+    id
+    name
+    description
+    image
   }
 }

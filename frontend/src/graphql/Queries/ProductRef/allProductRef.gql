@@ -1,9 +1,10 @@
-query AllProductRefs {
-  allProductRefs {
+query AllProductRefs($name: String, $endDate: String, $startDate: String) {
+  allProductRefs(name: $name, endDate: $endDate, startDate: $startDate) {
     id
     name
     image
     priceHT
+    quantityAvailable
   }
 }
 
@@ -14,5 +15,12 @@ query AllProductRefsAdmin {
     description
     image
     priceHT
+    subCategory {
+      name
+      category {
+        name
+      }
+    }
+    quantityAvailable
   }
 }

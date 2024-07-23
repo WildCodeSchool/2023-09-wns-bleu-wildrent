@@ -3,10 +3,10 @@ import React from 'react';
 export type ProductRefModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  product?: ProductRef;
+  productRef?: ProductRef;
 };
 
-function ProductRefModalDetails({ isOpen, onClose, product }: ProductRefModalProps) {
+function ProductRefModalDetails({ isOpen, onClose, productRef }: ProductRefModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -20,9 +20,9 @@ function ProductRefModalDetails({ isOpen, onClose, product }: ProductRefModalPro
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">{product?.name}</h3>
-          <p className="py-4">{product?.description}</p>
-          <p className="text-lg">Price: {product?.priceHT}€ HT</p>
+          <h3 className="text-lg font-bold">{productRef?.name}</h3>
+          <p className="py-4">{productRef?.description}</p>
+          <p className="text-lg">Price: {productRef?.priceHT}€ HT</p>
         </div>
         <label className="modal-backdrop" htmlFor="product_modal" onClick={onClose}>
           Close
