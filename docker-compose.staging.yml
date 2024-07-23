@@ -41,7 +41,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - ${GATEWAY_PORT-80}:80
-    volumes: -.log:/var/log/nginx
+    volumes: 
+      -.log:/var/log/nginx
 
 volumes:
   stagingDB:
