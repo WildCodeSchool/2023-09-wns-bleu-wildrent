@@ -30,6 +30,6 @@ jobs:
         with:
           push: true
           context: '{{defaultContext}}:frontend'
-          file: 'dockerfile.production'
+          file: 'Dockerfile.production'
           tags: ${{ inputs.image_name }}
           cache-from: type=gha
