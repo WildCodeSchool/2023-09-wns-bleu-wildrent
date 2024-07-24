@@ -85,7 +85,7 @@ export default function Navbar() {
 
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className="flex flex-col items-start space-y-4 p-4">
+          <div className="flex flex-col items-end space-y-4 p-4">
             {navData.map((item, index) => (
               <Link href={item.link} key={index} style={{ color: 'primary' }}>
                 <div

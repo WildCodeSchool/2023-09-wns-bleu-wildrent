@@ -29,7 +29,10 @@ const SearchInput = () => {
   }, [router.query.title]);
 
   return (
-    <form className="flex items-center space-x-4 m-3" onSubmit={handleSearch}>
+    <form
+      className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 m-3"
+      onSubmit={handleSearch}
+    >
       <label htmlFor="simple-search" className="sr-only">
         Search
       </label>
@@ -43,7 +46,7 @@ const SearchInput = () => {
           onChange={handleInputChange}
         />
       </div>
-      <button type="submit" className="text-primary btn btn-circle btn-secondary">
+      <button type="submit" className="text-primary btn btn-circle btn-secondary sm:mt-0 mt-4">
         <MdSearch size={25} />
       </button>
     </form>

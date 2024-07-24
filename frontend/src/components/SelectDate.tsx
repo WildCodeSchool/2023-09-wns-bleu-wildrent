@@ -36,7 +36,7 @@ function SelectDate() {
   };
 
   return (
-    <div className="flex items-center justify-center space-x-4">
+    <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
       <div className="relative">
         <input
           name="start"
@@ -59,7 +59,7 @@ function SelectDate() {
       <button
         onClick={handleFilter}
         type="button"
-        className="text-primary btn btn-circle btn-secondary ml-4"
+        className="text-primary btn btn-circle btn-secondary mt-4 :mt-0 ml-0 sm:ml-4"
       >
         <MdCheck size={25} />
       </button>
