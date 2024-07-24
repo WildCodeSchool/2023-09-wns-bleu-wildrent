@@ -26,7 +26,7 @@ export default function FormInput({
   };
 
   return (
-    <div className="max-w-sm flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <label className="font-semibold text-center" htmlFor={id}>
         {label} {required && <span className="text-red-500">*</span>}
       </label>

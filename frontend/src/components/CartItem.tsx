@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
-
+import React, { ChangeEvent, useState } from 'react';
+import { RiDeleteBin6Fill } from 'react-icons/ri';
 export type CartItemProps = {
   item: {
     productRefId: number;
@@ -20,34 +20,53 @@ export const CartItem = ({ item, updateQuantity, removeItem }: CartItemProps) =>
   };
 
   return (
-    <div className="flex items-center justify-between m-4 p-4 bg-secondary/50 rounded-lg shadow-md">
-      <Link href={`/products/${item.productRefId}`}>
-        <div className="flex items-center p-4 ">
-          <img
-            src={item.image}
-            alt={item.name}
-            className="w-24 h-24 object-cover mr-4 rounded-lg"
-          />
-          <div className="flex-grow">
-            <h4 className="text-lg font-semibold">{item.name}</h4>
-            <p className="text-primary">{item.priceHT} €</p>
+    <div className="mx-auto w-full flex-none lg:max-w-2xl m-2 xl:max-w-4xl">
+      <div className="space-y-6">
+        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+          <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+            <Link href={`/products/${item.productRefId}`}>
+              <img
+                className="w-24 h-24 object-cover mr-4 rounded-lg"
+                src={item.image}
+                alt={item.name}
+              />
+            </Link>
+
+            <label htmlFor="counter-input" className="sr-only">
+              Choose quantity:
+            </label>
+            <div className="flex items-center justify-between md:order-3 md:justify-end">
+              <input
+                type="number"
+                value={item.quantity}
+                onChange={handleQuantityChange}
+                min="1"
+                className="m-2 p-1 border rounded w-16"
+              />
+
+              <div className="text-end md:order-4 md:w-32">
+                <p className="text-base font-bold text-gray-900 dark:text-white">
+                  {item.priceHT} €
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
+              <Link href={`/products/${item.productRefId}`}>
+                <div className="text-base font-medium text-gray-900 hover:underline dark:text-white">
+                  {item.name}
+                </div>
+              </Link>
+              <div className="flex items-center gap-4">
+                <RiDeleteBin6Fill
+                  size={25}
+                  onClick={() => removeItem(item.productRefId)}
+                  className="cursor-pointer text-error"
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </Link>
-      <div>
-        <input
-          type="number"
-          value={item.quantity}
-          onChange={handleQuantityChange}
-          min="1"
-          className="m-2 p-1 border rounded w-16"
-        />
-        <button
-          onClick={() => removeItem(item.productRefId)}
-          className="btn btn-error text-primary m-4 px-6 py-2 "
-        >
-          Remove
-        </button>
       </div>
     </div>
   );

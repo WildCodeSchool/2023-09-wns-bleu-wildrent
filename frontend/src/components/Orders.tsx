@@ -9,7 +9,7 @@ function Orders() {
 
   return (
     <>
-      <div className="card card-compact w-full bg-base-100 shadow-xl p-5 m-5">
+      <div className="card card-compact w-full bg-base-100 shadow-xl p-5">
         <h2 className="mb-4 text-xl font-bold dark:text-white">Orders </h2>
         {orders.length > 0 ? (
           <section className="flex flex-col">

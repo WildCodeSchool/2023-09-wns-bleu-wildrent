@@ -33,18 +33,23 @@ const fields = [
   },
 ];
 
-const About = () => {
+const Contact = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!e.currentTarget.checkValidity()) return;
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const user = Object.fromEntries(formData.entries());
-    console.log(user);
   };
   return (
     <Layout>
-      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="flex flex-col gap-4 rounded p-4" onSubmit={handleSubmit}>
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold text-center my-6 text-secondary">Contact Us</h1>
+        <p className="m-4 text-justify">
+          Discover our range of products, carefully selected to meet all your needs. From the latest
+          tech gadgets to essential accessories, we have everything you need to stay ahead of the
+          curve.
+        </p>
+        <form
+          className="flex flex-col gap-4 rounded p-4 bg-secondary/10 bg-base-100 shadow-xl w-2/4 mx-auto"
+          onSubmit={handleSubmit}
+        >
           {fields.map((field) => (
             <FormInput
               key={field.id}
@@ -55,7 +60,7 @@ const About = () => {
               required={field.required}
             />
           ))}
-          <button className="btn btn-active btn-secondary" type="submit" disabled>
+          <button className="btn btn-active btn-secondary w-full" type="submit" disabled>
             Send
           </button>
         </form>
@@ -64,4 +69,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default Contact;

@@ -130,7 +130,6 @@ export default class ProductRefService {
   }
 
   async getAvailableProducts(startDate?: string, endDate?: string): Promise<ProductRef[]> {
-    console.log('🚀 ~ ProductRefService ~ getAvailableProducts ~ startDate:', startDate);
     // Fetch total quantities
     const totalQuantities = await this.db
       .createQueryBuilder('product_ref')
