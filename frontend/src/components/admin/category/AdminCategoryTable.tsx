@@ -8,6 +8,7 @@ import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
 import client from '@/graphql/client';
 import { IoIosAdd } from 'react-icons/io';
 import { useAlert } from '@/components/hooks/AlertContext';
+import { BiPlusCircle } from 'react-icons/bi';
 
 // Définition de la mutation GraphQL pour la suppression
 const DELETE_CATEGORY_MUTATION = gql`
@@ -77,10 +78,6 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
 
   return (
     <>
-      <button className="btn btn-circle btn-accent" onClick={handleAddCategoryClick}>
-        <IoIosAdd size={50} />
-      </button>
-
       {isAddModalOpen && (
         <AddCategoryModal
           isOpen={isAddModalOpen}
@@ -96,9 +93,9 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
           onCategoryUpdated={handleCategoryUpdated}
         />
       )}
-      <table className="min-w-full table-auto">
+      <table className="min-w-full rounded table-auto">
         <thead>
-          <tr className="bg-gray-400 text-left text-white">
+          <tr className="bg-secondary text-left text-white">
             <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">Image</th>
             <th className="px-4 py-2">Nom</th>
@@ -115,9 +112,9 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
               </td>
               <td className="px-4 py-2 border-b">{category.name}</td>
               <td className="px-4 py-2 border-b">{category.description}</td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 border-b space-x-3">
                 <button
-                  className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                  className="mr-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleEditClick(category)}
                 >
                   Edit
@@ -133,6 +130,12 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
           ))}
         </tbody>
       </table>
+      <button
+        className="w-full py-2 bg-secondary text-white flex justify-center items-center rounded-b"
+        onClick={handleAddCategoryClick}
+      >
+        <BiPlusCircle size={40} />
+      </button>
     </>
   );
 };

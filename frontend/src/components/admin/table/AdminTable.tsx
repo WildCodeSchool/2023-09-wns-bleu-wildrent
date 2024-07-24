@@ -6,8 +6,8 @@ import { BiPlusCircle } from 'react-icons/bi';
 export default function AdminTable({ columns, dataset, remove, edit, create }: AdminTableProps) {
   return (
     <>
-      <table className="min-w-full bg-white rounded-t overflow-hidden">
-        <thead className="bg-gray-400 text-white space-y-2 w-full">
+      <table className="min-w-full bg-blue rounded mt-4 overflow-hidden">
+        <thead className="bg-secondary text-white space-y-2 w-full">
           <tr>
             {columns.map(({ title, id }) => (
               <th className="py-3 px-4 text-center font-semibold text-sm" key={id}>
@@ -27,7 +27,7 @@ export default function AdminTable({ columns, dataset, remove, edit, create }: A
       {create && (
         <button
           data-test-id="add_btn"
-          className="w-full py-2 bg-green-400 text-white flex justify-center items-center rounded-b"
+          className="w-full py-2 bg-secondary text-white flex justify-center items-center rounded-b"
           onClick={create}
           type="button"
         >
