@@ -73,10 +73,10 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
             <th className="px-4 py-2 text-center">Cat</th>
             <th className="px-4 py-2 text-center">SubCat</th>
             <th className="px-4 py-2 text-center">Image</th>
-            <th className="px-4 py-2 text-center">Nom</th>
+            <th className="px-4 py-2 text-center">Name</th>
             <th className="px-4 py-2 text-center">Desciption</th>
-            <th className="px-4 py-2 text-center">Prix</th>
-            <th className="px-4 py-2 text-center">Quantité</th>
+            <th className="px-4 py-2 text-center">Price</th>
+            <th className="px-4 py-2 text-center">Quantity</th>
 
             <th className="px-4 py-2 text-center">Actions</th>
           </tr>
@@ -91,7 +91,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
               </td>
               <td className="px-4 py-2 border-b text-center">{productRef.subCategory?.name}</td>
               <td className="px-4 py-2 border-b text-center">
-                <Image src={productRef?.image} width={50} height={30} alt={productRef.name} />
+                <img src={productRef?.image} width={50} height={30} alt={productRef.name} />
               </td>
 
               <td className="px-4 py-2 border-b text-center">

@@ -9,6 +9,7 @@ export default function AdminTableModal({
   setOpen,
   editionMode,
   id,
+  defaultValues,
 }: AdminTableModalProps) {
   return (
     <>
@@ -38,6 +39,7 @@ export default function AdminTableModal({
                 inputType={inputType}
                 options={options}
                 required={required}
+                defaultValue={defaultValues ? defaultValues[id] : ''}
               />
             ))}
           </form>

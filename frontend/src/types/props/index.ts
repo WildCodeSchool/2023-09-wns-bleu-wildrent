@@ -13,7 +13,7 @@ export type FormInputProps = {
   inputType?: string;
   error?: string;
   options?: Option[];
-  defaultValue?: string;
+  defaultValue?: string | number;
   required?: boolean;
 };
 
@@ -38,4 +38,5 @@ export type AdminTableModalProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   editionMode?: boolean;
   id?: number;
+  defaultValues?: Record<string, string>;
 };

@@ -19,24 +19,24 @@ interface UpdateSubCategoryModalProps {
 const fields = [
   // Définition des champs du formulaire
   {
-    label: 'Nom de la sous-catégorie',
+    label: 'Subcategory name',
     id: 'name',
     type: 'text',
-    placeholder: 'Entrez le nom de la sous-catégorie',
+    placeholder: 'Add the subcategory name',
     required: true,
   },
   {
-    label: 'Description de la sous-catégorie',
+    label: 'Description',
     id: 'description',
     type: 'textarea',
-    placeholder: 'Entrez la description',
+    placeholder: 'Add the description',
     required: true,
   },
   {
-    label: 'Image de la sous-catégorie',
+    label: 'Subcategory image',
     id: 'image',
     type: 'text',
-    placeholder: "URL de l'image",
+    placeholder: "Add the subcategory's image URL",
     required: true,
   },
 ];
@@ -160,7 +160,7 @@ function UpdateSubCategoryModal({
               className="btn btn-primary"
               disabled={loading || categoriesLoading}
             >
-              Mettre à jour
+              Save
             </button>
           </form>
         </div>

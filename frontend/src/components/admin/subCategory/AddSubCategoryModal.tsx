@@ -7,31 +7,32 @@ import Loader from '@/components/Loader';
 
 const fields = [
   {
-    label: 'Nom de la sous-catégorie',
+    label: 'Subcategory name',
     id: 'name',
     type: 'text',
-    placeholder: 'Entrez le nom de la sous-catégorie',
+    placeholder: 'Add the subcategory name',
     required: true,
   },
   {
-    label: 'Description de la sous-catégorie',
+    label: 'Description',
     id: 'description',
     type: 'textarea',
-    placeholder: 'Entrez la description',
+    placeholder: 'Add the description',
     required: true,
   },
   {
-    label: 'Image de la sous-catégorie',
+    label: 'Subcategory image',
     id: 'image',
     type: 'text',
-    placeholder: "URL de l'image",
+    placeholder: "Add the subcategory's image URL",
     required: true,
   },
   {
-    label: 'Catégorie',
+    label: 'Category',
     id: 'category',
     type: 'select',
     required: true,
+    placeholder: 'Select a category',
   },
 ];
 
@@ -142,16 +143,6 @@ function AddSubCategoryModal({
                   required={field.required}
                 />
               ))}
-              {/* <div className="form-group">
-                <label htmlFor="categoryId">Catégorie</label>
-                <select id="categoryId" name="categoryId" className="form-control">
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
               <button
                 type="submit"
                 className="btn btn-primary"
