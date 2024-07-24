@@ -42,9 +42,9 @@ const teamMembers = [
 const About = () => {
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center mb-4">About Us</h1>
-        <p className="text-center text-gray-700 mb-8">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold text-center my-6 text-secondary">About Us</h1>
+        <p className="m-4 text-justify">
           We are a team of four technology and design enthusiasts dedicated to creating innovative
           and intuitive solutions. Together, we have worked on this project to provide the best
           possible experience.

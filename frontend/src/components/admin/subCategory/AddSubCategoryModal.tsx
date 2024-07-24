@@ -74,7 +74,6 @@ function AddSubCategoryModal({
       formJSON[key] = value instanceof File ? value.name : value;
     });
     const categoryId = formJSON.category;
-    console.log('🚀 ~ handleSubmit ~ categoryId:', categoryId);
     if (!categoryId) {
       showAlert('error', 'Catégorie invalide.', 3000);
       return;

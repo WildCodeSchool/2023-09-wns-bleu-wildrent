@@ -13,11 +13,11 @@ export default function Home() {
   const categories = data?.allCategories || [];
   return (
     <Layout>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-auto">
         <h1 className="text-3xl font-bold text-center my-6 text-secondary">
           Our products by category
         </h1>
-        <p className="container m-4 p-4 text-justify">
+        <p className="m-4 text-justify">
           Dessert marshmallow marshmallow powder tootsie roll sweet roll sugar plum marzipan. Cake
           gummies sweet roll caramels oat cake. Tart marshmallow brownie apple pie oat cake.
           Chocolate cake cheesecake danish pastry tart. Chocolate cake icing danish pudding jelly

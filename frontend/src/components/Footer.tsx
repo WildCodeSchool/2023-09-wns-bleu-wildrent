@@ -35,7 +35,7 @@ export default function Footer() {
               </Link>
             </div>
           </div>
-          <nav className="flex flex-col gap-2 text-sm md:flex-row md:gap-4 lg:gap-2">
+          <nav className="hidden md:flex flex-col gap-2 text-sm md:flex-row md:gap-4 lg:gap-2">
             {navData.map((item, index) => (
               <Link
                 key={index}

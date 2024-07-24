@@ -34,8 +34,6 @@ const SubCategoryDetails = () => {
   } = useGetSubCategoryNameQuery({
     variables: { subCategoryId: parsedSubCategoryId },
   });
-  console.log('🚀 ~ SubCategoryDetails ~ subCategoryData:', subCategoryData);
-
   if (productsLoading || subCategoryLoading) return <Loader />;
   if (productsError) return showAlert('error', productsError?.message, 3000);
   if (subCategoryError) return showAlert('error', subCategoryError?.message, 3000);
