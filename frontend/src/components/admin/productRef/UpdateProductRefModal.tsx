@@ -48,7 +48,7 @@ const fields = [
   },
   {
     label: 'Quantité disponible',
-    id: 'quantityAvailable',
+    id: 'quantity',
     type: 'number',
     placeholder: '5',
     required: true,
@@ -129,7 +129,9 @@ function UpdateProductRefModal({
                 defaultValue={
                   field.id === 'subCategory'
                     ? String(subCategoryId)
-                    : (productRef[field.id as keyof ProductRef] as string)
+                    : field.id === 'quantity'
+                      ? productRef.quantityAvailable
+                      : (productRef[field.id as keyof ProductRef] as string)
                 }
                 options={
                   field.id === 'subCategory'
