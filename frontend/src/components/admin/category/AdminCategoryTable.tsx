@@ -98,23 +98,23 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
       <table className="min-w-full rounded table-auto">
         <thead>
           <tr className="bg-secondary text-left text-white">
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Description</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="px-4 py-2 text-center">ID</th>
+            <th className="px-4 py-2 text-center">Image</th>
+            <th className="px-4 py-2 text-center">Name</th>
+            <th className="px-4 py-2 text-center">Description</th>
+            <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {categories.map((category) => (
             <tr key={category.id} className={category.id % 2 === 0 ? 'bg-gray-200' : ''}>
-              <td className="px-4 py-2 border-b">{category.id}</td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 border-b text-center">{category.id}</td>
+              <td className="px-4 py-2 border-b text-center">
                 <img src={category.image} width={50} height={50} alt={category.name} />
               </td>
-              <td className="px-4 py-2 border-b">{category.name}</td>
-              <td className="px-4 py-2 border-b">{category.description}</td>
-              <td className="px-4 py-2 border-b space-x-3">
+              <td className="px-4 py-2 border-b text-center">{category.name}</td>
+              <td className="px-4 py-2 border-b text-center">{category.description}</td>
+              <td className="px-4 py-2 border-b text-center space-x-3">
                 <button
                   className="mr-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleEditClick(category)}

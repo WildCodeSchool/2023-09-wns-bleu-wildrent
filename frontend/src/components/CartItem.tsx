@@ -9,7 +9,6 @@ export type CartItemProps = {
     image: string;
     quantity: number;
   };
-
   updateQuantity: (id: number, quantity: number) => void;
   removeItem: (id: number) => void;
 };
@@ -22,7 +21,7 @@ export const CartItem = ({ item, updateQuantity, removeItem }: CartItemProps) =>
   return (
     <div className="mx-auto w-full flex-none lg:max-w-2xl m-2 xl:max-w-4xl">
       <div className="space-y-6">
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6">
           <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
             <Link href={`/products/${item.productRefId}`}>
               <img
@@ -45,15 +44,13 @@ export const CartItem = ({ item, updateQuantity, removeItem }: CartItemProps) =>
               />
 
               <div className="text-end md:order-4 md:w-32">
-                <p className="text-base font-bold text-gray-900 dark:text-white">
-                  {item.priceHT} €
-                </p>
+                <p className="text-base font-bold text-gray-900">{item.priceHT} €</p>
               </div>
             </div>
 
             <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
               <Link href={`/products/${item.productRefId}`}>
-                <div className="text-base font-medium text-gray-900 hover:underline dark:text-white">
+                <div className="text-base font-medium text-gray-900 hover:underline">
                   {item.name}
                 </div>
               </Link>

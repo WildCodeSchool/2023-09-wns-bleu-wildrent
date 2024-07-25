@@ -5,8 +5,7 @@ type DateContextType = {
   endDate: string;
   setStartDate: (date: string) => void;
   setEndDate: (date: string) => void;
-  nbDays: number;
-  calculateNbDays: () => void;
+  calculateNbDays: () => number;
 };
 
 const DateContext = createContext<DateContextType | undefined>(undefined);
@@ -14,20 +13,16 @@ const DateContext = createContext<DateContextType | undefined>(undefined);
 const DateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-  const [nbDays, setNbDays] = useState<number>(0);
 
-  const calculateNbDays = () => {
+  const calculateNbDays = (): number => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    const nbDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    setNbDays(nbDays);
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
   return (
-    <DateContext.Provider
-      value={{ startDate, endDate, setStartDate, setEndDate, nbDays, calculateNbDays }}
-    >
+    <DateContext.Provider value={{ startDate, endDate, setStartDate, setEndDate, calculateNbDays }}>
       {children}
     </DateContext.Provider>
   );

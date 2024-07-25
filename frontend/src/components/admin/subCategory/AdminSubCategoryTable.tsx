@@ -101,31 +101,31 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
       <table className="min-w-full rounded table-auto">
         <thead>
           <tr className="bg-secondary text-left text-white">
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Description</th>
-            <th className="px-4 py-2">Category</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="px-4 py-2 text-center">ID</th>
+            <th className="px-4 py-2 text-center">Image</th>
+            <th className="px-4 py-2 text-center">Name</th>
+            <th className="px-4 py-2 text-center">Description</th>
+            <th className="px-4 py-2 text-center">Category</th>
+            <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {subCategories.map((subCategory) => (
             <tr key={subCategory.id} className={subCategory.id % 2 === 0 ? 'bg-gray-200' : ''}>
-              <td className="px-4 py-2 border-b">{subCategory.id}</td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 border-b text-center">{subCategory.id}</td>
+              <td className="px-4 py-2 border-b text-center">
                 {subCategory.image ? (
                   <Image src={subCategory.image} width={50} height={30} alt={subCategory.name} />
                 ) : (
-                  "Pas d'image"
+                  'No image'
                 )}
               </td>
-              <td className="px-4 py-2 border-b">{subCategory.name}</td>
-              <td className="px-4 py-2 border-b">
-                {subCategory.description ?? 'Pas de description'}
+              <td className="px-4 py-2 border-b text-center">{subCategory.name}</td>
+              <td className="px-4 py-2 border-b text-center">
+                {subCategory.description ?? 'No description'}
               </td>
-              <td className="px-4 py-2 border-b">
-                {subCategory.category ? subCategory.category.name : 'Non spécifié'}
+              <td className="px-4 py-2 border-b text-center">
+                {subCategory.category ? subCategory.category.name : 'No category'}
               </td>
               <td className="px-4 py-2 space-x-3 border-b">
                 <button

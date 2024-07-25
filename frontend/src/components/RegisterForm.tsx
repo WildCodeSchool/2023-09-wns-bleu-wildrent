@@ -7,6 +7,7 @@ import { useRef } from 'react';
 
 import { useAlert } from './hooks/AlertContext';
 import { useAuthModal } from './hooks/useAuthModal';
+import { validateForm } from '@/utils/validateForm';
 
 const fields = [
   {
@@ -45,6 +46,7 @@ const fields = [
     required: true,
   },
 ];
+
 interface RegisterFormProps {
   closeModal: () => void;
 }
@@ -53,11 +55,23 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
   const [register, { loading, error }] = useRegisterMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
   const { showAlert } = useAlert();
-  const { showLoginForm } = useAuthModal();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+
+    const { isEmailValid, isPasswordValid } = validateForm(formData);
+
+    if (!isEmailValid) {
+      showAlert('error', 'Invalid email address', 3000);
+      return;
+    }
+
+    if (!isPasswordValid) {
+      showAlert('error', 'Password must be at least 6 characters long', 3000);
+      return;
+    }
+
     if (formData.get('password') === formData.get('confirm_password')) {
       formData.delete('confirm_password');
       const newUser = Object.fromEntries(formData.entries()) as InputRegister;

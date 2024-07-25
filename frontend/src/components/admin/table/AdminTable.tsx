@@ -8,14 +8,13 @@ export default function AdminTable({ columns, dataset, remove, edit, create }: A
     <>
       <table className="min-w-full bg-blue rounded mt-4 overflow-hidden">
         <thead className="bg-secondary text-white space-y-2 w-full">
-          <tr>
+          <tr className="bg-secondary text-left text-white">
             {columns.map(({ title, id }) => (
-              <th className="py-3 px-4 text-center font-semibold text-sm" key={id}>
+              <th className="px-4 py-2 text-center" key={id}>
                 {title}
               </th>
             ))}
-            <th className="py-3 px-4 text-center font-semibold text-sm"></th>
-            <th className="py-3 px-4 text-center font-semibold text-sm"></th>
+            <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
