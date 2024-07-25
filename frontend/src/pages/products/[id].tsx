@@ -34,6 +34,12 @@ function ProductRefDetails() {
   }, [cartList]);
   const productRef = data?.productRefById;
 
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) return showAlert('error', error?.message, 3000);
+
   if (!productRef) {
     return console.error('productRef is undefined');
   }
@@ -55,15 +61,6 @@ function ProductRefDetails() {
     setShowDialog(true);
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
-  if (error) return showAlert('error', error?.message, 3000);
-
-  if (!productRef) {
-    return <p className="text-center">Produit non trouvé</p>;
-  }
   const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!startDate || !endDate) {
       showAlert('info', 'Please set the start and end dates before changing the quantity.', 3000);

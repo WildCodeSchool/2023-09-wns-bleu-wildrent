@@ -38,7 +38,6 @@ const Cart = () => {
 
   const router = useRouter();
   const { data } = useAllProductRefsQuery();
-  console.log('🚀 ~ Cart ~ data:', data);
 
   const checkQuantity = (id: number, quantity: number): boolean => {
     const product = data?.allProductRefs.find((item) => item.id === id);
