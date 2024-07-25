@@ -14,7 +14,7 @@ export default function AdminTableModal({
     <>
       <div className="overlay z-30"></div>
       <dialog
-        className="bg-slate-200 p-4 rounded-lg z-40 min-w-[25%] fixed top-10 flex flex-col items-center max-h-[75dvh]"
+        className="bg-base-100 p-4 rounded-lg z-40 min-w-[25%] fixed top-10 flex flex-col items-center max-h-[75dvh]"
         open={open}
       >
         <button onClick={() => setOpen(false)} className="rounded-full p-2 bg-transparent self-end">
@@ -44,7 +44,7 @@ export default function AdminTableModal({
         </div>
         <button
           form="modalForm"
-          className="px-3 py-2 mt-4 bg-neutral-900 text-white rounded-lg self-end"
+          className="px-3 py-2 mt-4 bg-secondary text-white rounded-lg self-end"
           type="submit"
         >
           Save
