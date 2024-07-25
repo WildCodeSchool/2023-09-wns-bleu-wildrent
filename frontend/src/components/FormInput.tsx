@@ -25,14 +25,14 @@ export default function FormInput({
     setIsInvalid(!validity.valid);
   };
   return (
-    <div className="flex flex-col gap-2">
-      <label className="font-semibold text-center" htmlFor={id}>
+    <div className="flex flex-col gap-2 items-center w-full">
+      <label className="font-semibold text-center w-full" htmlFor={id}>
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative w-full space-x-4">
         {type === 'textarea' ? (
           <textarea
-            className="px-4 py-2 w-full pr-10 rounded-md placeholder:italic placeholder:font-light"
+            className="px-4 py-2 w-full rounded-md placeholder:italic placeholder:font-light"
             id={id}
             name={id}
             placeholder={placeholder}
@@ -44,7 +44,7 @@ export default function FormInput({
           />
         ) : type === 'select' ? (
           <select
-            className="px-4 py-2 rounded-md"
+            className="px-4 py-2 w-full rounded-md"
             id={id}
             name={id}
             defaultValue={defaultValue as string}
