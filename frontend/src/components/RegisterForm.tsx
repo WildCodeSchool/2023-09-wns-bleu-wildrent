@@ -4,7 +4,9 @@ import FormInput from './FormInput';
 import client from '@/graphql/client';
 import React, { useEffect } from 'react';
 import { useRef } from 'react';
-import { log } from 'console';
+
+import { useAlert } from './hooks/AlertContext';
+import { useAuthModal } from './hooks/useAuthModal';
 
 const fields = [
   {
@@ -50,7 +52,8 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
   const router = useRouter();
   const [register, { loading, error }] = useRegisterMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
-
+  const { showAlert } = useAlert();
+  const { showLoginForm } = useAuthModal();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!e.currentTarget.checkValidity()) return;
@@ -65,8 +68,12 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
           },
         });
         if (data?.register.success && !error && !loading) {
+          showAlert('success', data?.register.message, 3000);
           router.push('/');
           closeModal();
+          showAlert('info', 'You can log in now!', 3000);
+        } else {
+          showAlert('error', data?.register.message ?? 'Could not create account', 3000);
         }
       } catch (err) {
         console.error(`could not create account: ${err}`);

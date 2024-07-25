@@ -28,7 +28,6 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ closeModal, switchToRegister }: LoginFormProps) {
-  const router = useRouter();
   const [login, { loading, error }] = useLoginMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
   const { showAlert } = useAlert();
