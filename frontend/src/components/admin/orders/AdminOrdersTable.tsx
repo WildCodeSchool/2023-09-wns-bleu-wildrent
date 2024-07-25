@@ -39,9 +39,9 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({ orders }) => {
 
   return (
     <>
-      <table className="min-w-full table-auto mx-auto">
+      <table className="min-w-full rounded table-auto mx-auto">
         <thead>
-          <tr className="bg-gray-400 text-left text-white">
+          <tr className="bg-secondary text-left text-white">
             <th className="px-4 py-2 text-center">ID</th>
             <th className="px-4 py-2 text-center">User</th>
             <th className="px-4 py-2 text-center">Order Date</th>
@@ -65,9 +65,9 @@ const AdminOrdersTable: React.FC<AdminOrdersTableProps> = ({ orders }) => {
                 <td className="px-4 py-2 border-b text-center">{order.numberOfDays}</td>
                 <td className="px-4 py-2 border-b text-center">{order.totalAmount}€</td>
                 <td className="px-4 py-2 border-b text-center">{order.paymentStatus}</td>
-                <td className="px-4 py-2 border-b text-center">
+                <td className="px-4 py-2 border-b text-center space-x-3">
                   <button
-                    className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                    className="mr-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded"
                     onClick={() => toggleExpand(order.id)}
                   >
                     {expandedOrderId === order.id ? 'Hide Details' : 'Show Details'}

@@ -10,7 +10,7 @@ export default function SideBarLink({ href, text, testId }: LinkProps) {
     <Link
       data-test-id={testId}
       href={href}
-      className={`${isActive(href) ? 'bg-base-300' : ''} flex items-center px-4 py-2 cursor-pointer`}
+      className={`${isActive(href) ? 'bg-secondary' : ''} flex items-center px-4 py-2 cursor-pointer rounded`}
     >
       {text}
     </Link>
