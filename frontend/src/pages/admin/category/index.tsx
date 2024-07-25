@@ -24,6 +24,9 @@ const CategoriesAdmin = () => {
 
   return (
     <LayoutDashboard>
+      <div className="text-center p-4">
+        <h2>Categories Management</h2>
+      </div>
       {data?.allCategories && <AdminCategoryTable initialCategories={data.allCategories as any} />}
     </LayoutDashboard>
   );

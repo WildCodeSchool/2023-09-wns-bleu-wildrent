@@ -24,7 +24,6 @@ export default function FormInput({
     const { validity } = event.target;
     setIsInvalid(!validity.valid);
   };
-
   return (
     <div className="flex flex-col gap-2">
       <label className="font-semibold text-center" htmlFor={id}>
@@ -48,15 +47,13 @@ export default function FormInput({
             className="px-4 py-2 rounded-md"
             id={id}
             name={id}
-            defaultValue={defaultValue}
+            defaultValue={defaultValue as string}
             aria-required={required}
             aria-invalid={isInvalid ? 'true' : 'false'}
             onBlur={handleValidation}
             required={required}
           >
-            <option disabled value="">
-              Select an option
-            </option>
+            <option value="">{placeholder}</option>
             {options &&
               options.map((option, index) => (
                 <option key={index} value={option.value}>

@@ -24,11 +24,11 @@ const OrdersAdmin = () => {
 
   return (
     <LayoutDashboard>
-      {/* <button className="btn btn-circle btn-accent" onClick={() => handleModal()}>
-        <IoIosAdd size={50} />
-      </button> */}
+      <div className="text-center p-4">
+        <h2>Orders Management</h2>
+      </div>
+
       {data?.allOrders && <AdminOrdersTable orders={data.allOrders as any} />}
-      {/* {<AddProductRefModal isOpen={isModalOpen} onClose={closeModal} />} */}
     </LayoutDashboard>
   );
 };

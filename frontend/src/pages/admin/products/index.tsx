@@ -24,6 +24,9 @@ const ProductsAdmin = () => {
   if (error) return showAlert('error', error?.message, 3000);
   return (
     <LayoutDashboard>
+      <div className="text-center p-4">
+        <h2>Products Management</h2>
+      </div>
       <button className="btn btn-circle btn-accent" onClick={() => handleModal()}>
         <IoIosAdd size={50} />
       </button>

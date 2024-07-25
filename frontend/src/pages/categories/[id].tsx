@@ -61,7 +61,7 @@ const CategoryDetails = () => {
             ))}
           </div>
         ) : (
-          <p className="text-center">Aucune sous-catégorie disponible pour le moment.</p>
+          <p className="text-center">No Product</p>
         )}
       </div>
     </Layout>

@@ -58,21 +58,23 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
   };
 
   const handleDeleteCategoryClick = async (categoryId: number) => {
-    try {
-      const { data } = await deleteCategory({
-        variables: { id: categoryId },
-      });
-      if (data.deleteCategory) {
-        setCategories(categories.filter((category) => category.id !== categoryId));
-        showAlert('success', 'Category successfully deleted', 3000);
+    if (window.confirm('Are you sure you want to delete this order?')) {
+      try {
+        const { data } = await deleteCategory({
+          variables: { id: categoryId },
+        });
+        if (data.deleteCategory) {
+          setCategories(categories.filter((category) => category.id !== categoryId));
+          showAlert('success', 'Category successfully deleted', 3000);
 
-        client.resetStore();
-      } else {
-        showAlert('error', 'Failed to delete category', 3000);
+          client.resetStore();
+        } else {
+          showAlert('error', 'Failed to delete category', 3000);
+        }
+      } catch (error) {
+        console.error('Error deleting category', error);
+        showAlert('error', 'Error deleting category', 3000);
       }
-    } catch (error) {
-      console.error('Error deleting category', error);
-      showAlert('error', 'Error deleting category', 3000);
     }
   };
 
@@ -98,7 +100,7 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
           <tr className="bg-secondary text-left text-white">
             <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Nom</th>
+            <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Description</th>
             <th className="px-4 py-2">Actions</th>
           </tr>
@@ -108,7 +110,7 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
             <tr key={category.id} className={category.id % 2 === 0 ? 'bg-gray-200' : ''}>
               <td className="px-4 py-2 border-b">{category.id}</td>
               <td className="px-4 py-2 border-b">
-                <Image src={category.image} width={50} height={30} alt={category.name} />
+                <img src={category.image} width={50} height={50} alt={category.name} />
               </td>
               <td className="px-4 py-2 border-b">{category.name}</td>
               <td className="px-4 py-2 border-b">{category.description}</td>

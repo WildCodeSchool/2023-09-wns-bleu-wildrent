@@ -7,6 +7,7 @@ import {
   NewUserInput,
   useCreateNewUserMutation,
   useGetAllUsersQuery,
+  User,
   useUpdateUserAdminMutation,
 } from '@/graphql/generated/schema';
 import { useDeleteUserMutation } from '@/graphql/generated/schema';
@@ -19,6 +20,7 @@ export default function Page() {
   const [open, setOpen] = useState<boolean>(false);
   const [editionMode, setEditionMode] = useState<boolean>(false);
   const [userId, setUserId] = useState<number>(0);
+  const [defaultValues, setDefaultValues] = useState<Partial<User> | null>(null);
 
   const [createUser] = useCreateNewUserMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -38,12 +40,26 @@ export default function Page() {
   };
 
   const handleEdit = (id: number) => {
-    setUserId(id);
-    setEditionMode(!editionMode);
+    const userToEdit = users?.allUsers.find((user) => user.id === id);
+    if (userToEdit) {
+      const { __typename, ...userWithoutTypename } = userToEdit;
+      const userRecord: Record<string, string> = Object.entries(userWithoutTypename).reduce(
+        (acc, [key, value]) => {
+          acc[key] = value ? String(value) : ''; // Convertir toutes les valeurs en string
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+
+      setUserId(id);
+      setEditionMode(true);
+      setDefaultValues(userRecord); // Utiliser userRecord
+    }
   };
 
   const registerNewUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const newUser = Object.fromEntries(formData.entries()) as NewUserInput;
     try {
@@ -54,10 +70,13 @@ export default function Page() {
       });
       if (res.data?.createNewUser.success) {
         setOpen(false);
-        alert(res.data.createNewUser.message);
+        showAlert('success', res.data?.createNewUser.message, 3000);
+      } else {
+        showAlert('error', 'Error adding user', 3000);
       }
     } catch (e) {
-      console.error((e as Error).message);
+      showAlert('error', 'Network or query error while adding user', 3000);
+      console.error('Error adding subcategory', error);
     } finally {
       client.resetStore();
     }
@@ -65,7 +84,8 @@ export default function Page() {
 
   const editUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    if (!e.currentTarget.checkValidity()) return;
+    const formData = new FormData(e.currentTarget);
     const updatedUser = Object.fromEntries(formData.entries());
     try {
       const res = await updateUser({
@@ -78,9 +98,12 @@ export default function Page() {
       });
       if (res.data?.updateUserAdmin.success) {
         setEditionMode(false);
-        alert(res.data.updateUserAdmin.message);
+        showAlert('success', res.data.updateUserAdmin.message, 3000);
+      } else {
+        showAlert('error', 'Error updating user', 3000);
       }
     } catch (e) {
+      showAlert('error', 'Network or query error while updating user', 3000);
       console.error((e as Error).message);
     } finally {
       client.resetStore();
@@ -112,7 +135,9 @@ export default function Page() {
   return (
     <LayoutDashboard>
       <main className="container">
-        <h1>Gestion des utilisateurs</h1>
+        <div className="text-center p-4">
+          <h2>Users Management</h2>
+        </div>
         <div className="px-4">
           <AdminTable
             columns={cols}
@@ -138,6 +163,7 @@ export default function Page() {
             setOpen={setEditionMode}
             editionMode={editionMode}
             id={userId}
+            defaultValues={defaultValues as Record<string, string>}
           />
         )}
       </main>

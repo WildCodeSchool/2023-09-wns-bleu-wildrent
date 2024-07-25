@@ -103,9 +103,9 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
           <tr className="bg-secondary text-left text-white">
             <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Nom</th>
+            <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Description</th>
-            <th className="px-4 py-2">Catégorie</th>
+            <th className="px-4 py-2">Category</th>
             <th className="px-4 py-2">Actions</th>
           </tr>
         </thead>

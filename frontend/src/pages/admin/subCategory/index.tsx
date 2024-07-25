@@ -24,6 +24,9 @@ const SubCategoriesAdmin = () => {
 
   return (
     <LayoutDashboard>
+      <div className="text-center p-4">
+        <h2>SubCategories Management</h2>
+      </div>
       {data?.allSubCategories && (
         <AdminSubCategoryTable initialSubCategories={data.allSubCategories as any} />
       )}
