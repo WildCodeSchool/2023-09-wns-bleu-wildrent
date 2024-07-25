@@ -1,5 +1,4 @@
 import { AdminTableRowProps } from '@/types/props';
-import { MdClose } from 'react-icons/md';
 
 export default function AdminTableRow({ row, edit, remove }: AdminTableRowProps) {
   return (
@@ -24,8 +23,6 @@ export default function AdminTableRow({ row, edit, remove }: AdminTableRowProps)
             Edit
           </button>
         )}
-      </td>
-      <td className="px-4 py-2 space-x-3 border-b">
         {remove && (
           <button
             data-test-id="delete_btn"

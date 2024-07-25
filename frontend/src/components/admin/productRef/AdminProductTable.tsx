@@ -98,7 +98,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
               </td>
               <td className="px-4 py-2 border-b text-center">{productRef.priceHT}€ HT</td>
               <td className="px-4 py-2 border-b text-center">{productRef.quantityAvailable}</td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 space-x-3 border-b">
                 <button
                   className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded mb-3"
                   onClick={() => handleEditClick(productRef)}
