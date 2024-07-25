@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { hash } from 'argon2';
 import User from '../../backend/src/entities/user.entity';
 import { connect, disconnect } from './dbHelpers';
 import { clearDB } from '../../backend/src/db';
@@ -10,7 +9,7 @@ test.afterAll(disconnect);
 
 test('Login admin et user', async ({ page }) => {
   const emailAdmin = 'contact@wildrent.com';
-  const passwordAdmin = 'mdp';
+  const passwordAdmin = 'mdp123';
   const roleAdmin = 'ADMIN';
   // const hashedPasswordAdmin = await hash(passwordAdmin);
   const admin = new User();
@@ -25,7 +24,7 @@ test('Login admin et user', async ({ page }) => {
   await page.click('[data-test-id="nav-login-button"]');
   // Remplir le formulaire de connexion admin
   await page.fill('input#email', 'contact@wildrent.com');
-  await page.fill('input#password', 'mdp');
+  await page.fill('input#password', 'mdp123');
 
   // Cliquer sur le bouton de connexion
   await page.click('[data-test-id="login-button"]');
@@ -48,7 +47,7 @@ test('Login admin et user', async ({ page }) => {
 
   // Créer un utilisateur de test
   const emailUser = 'moi@gmail.com';
-  const passwordUser = 'mdp';
+  const passwordUser = 'mdp123';
   const roleUser = 'USER';
   // const hashedPasswordUSer = await hash(passwordUser);
 
@@ -60,7 +59,7 @@ test('Login admin et user', async ({ page }) => {
 
   // Remplir le formulaire de connexion utilisateur
   await page.fill('input#email', 'moi@gmail.com');
-  await page.fill('input#password', 'mdp');
+  await page.fill('input#password', 'mdp123');
 
   // Cliquer sur le bouton de connexion
   await page.click('[data-test-id="login-button"]');
