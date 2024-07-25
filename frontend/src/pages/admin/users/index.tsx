@@ -15,6 +15,7 @@ import { createColumnsFromData, createDataset } from '@/utils/table';
 import { useState } from 'react';
 import { newUserFields } from '@/const';
 import { useAlert } from '@/components/hooks/AlertContext';
+import { validateForm } from '@/utils/validateForm';
 
 export default function Page() {
   const [open, setOpen] = useState<boolean>(false);
@@ -61,6 +62,17 @@ export default function Page() {
     e.preventDefault();
     if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const { isEmailValid, isPasswordValid } = validateForm(formData);
+
+    if (!isEmailValid) {
+      showAlert('error', 'Invalid email address', 3000);
+      return;
+    }
+
+    if (!isPasswordValid) {
+      showAlert('error', 'Password must be at least 6 characters long', 3000);
+      return;
+    }
     const newUser = Object.fromEntries(formData.entries()) as NewUserInput;
     try {
       const res = await createUser({
@@ -86,6 +98,17 @@ export default function Page() {
     e.preventDefault();
     if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget);
+    const { isEmailValid, isPasswordValid } = validateForm(formData);
+
+    if (!isEmailValid) {
+      showAlert('error', 'Invalid email address', 3000);
+      return;
+    }
+
+    if (!isPasswordValid) {
+      showAlert('error', 'Password must be at least 6 characters long', 3000);
+      return;
+    }
     const updatedUser = Object.fromEntries(formData.entries());
     try {
       const res = await updateUser({

@@ -39,12 +39,12 @@ const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     [closeAlert],
   );
 
-  const baseClasses = 'alert text-center font-bold p-4 rounded shadow-lg';
+  const baseClasses = 'alert text-center font-bold p-4 rounded-xl shadow-lg border-2';
   const alertClasses = clsx(baseClasses, {
-    'bg-green-100 text-green-700': alertType === 'success',
-    'bg-yellow-100 text-yellow-700': alertType === 'warning',
-    'bg-red-100 text-red-700': alertType === 'error',
-    'bg-blue-100 text-blue-700': alertType === 'info',
+    'border-green-300 bg-green-100 text-green-700': alertType === 'success',
+    'border-yello-300 bg-yellow-100 text-yellow-700': alertType === 'warning',
+    'border-red-300 bg-red-50 text-red-700': alertType === 'error',
+    'border-blue-300 bg-blue-100 text-blue-700': alertType === 'info',
   });
 
   return (

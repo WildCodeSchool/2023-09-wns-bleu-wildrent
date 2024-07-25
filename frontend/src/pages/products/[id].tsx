@@ -74,12 +74,21 @@ function ProductRefDetails() {
   const breadcrumbItems = [
     { label: 'Catégories', href: '/' },
     {
-      label: productRef.name,
-      href: `/categories/${productRef?.subCategory?.category?.id}`,
+      label: productRef?.subCategory?.category?.name ?? 'Categorie inconnue',
+      href: `/categories/${productRef?.subCategory?.category?.id ?? ''}`,
     },
-    { label: productRef.subCategory.name, href: `/subcategories/${productRef.subCategory.id}` },
-    { label: productRef.name, href: `/products/${productRef.id}`, current: true },
+    {
+      label: productRef?.subCategory?.name ?? 'Sous-categorie inconnue',
+      href: `/subcategories/${productRef?.subCategory?.id ?? ''}`,
+    },
+    {
+      label: productRef?.name ?? 'Produit inconnu',
+      href: `/products/${productRef?.id ?? ''}`,
+      current: true,
+    },
   ];
+
+  <BreadcrumbComponent items={breadcrumbItems} />;
 
   return (
     <Layout>
@@ -128,15 +137,15 @@ function ProductRefDetails() {
                       }}
                       min="1"
                       max={productRef?.quantityAvailable || 0}
-                      className="mt-2 p-1 border rounded w-16"
+                      className="m-4 p-1 border rounded w-16"
                     />
                     <button
-                      className="m-4 text-secondary hover:text-secondary/50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      className=" btn bg-primary m-4 text-white hover:text-secondary/50 hover:text-black cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                       onClick={handleAddToCart}
                       type="button"
                       disabled={!startDate || !endDate || productRef?.quantityAvailable === 0}
                     >
-                      <BiSolidCartAdd size={25} />
+                      Add to Cart
                     </button>
                     {showDialog && (
                       <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-10">

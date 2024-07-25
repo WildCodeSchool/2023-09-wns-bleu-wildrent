@@ -9,6 +9,7 @@ import {
 import client from '@/graphql/client';
 import Orders from '@/components/Orders';
 import { useAlert } from '@/components/hooks/AlertContext';
+import router from 'next/router';
 
 const TABS = {
   ORDERS: 'ORDERS',
@@ -35,9 +36,12 @@ function MyProfile() {
         });
         if (res.data?.deleteUser.success) {
           await logout();
+          router.push('/');
           await client.resetStore();
+          showAlert('success', 'user deleted', 3000);
+        } else {
+          showAlert('error', res?.data?.deleteUser?.message || 'orders in progress', 3000);
         }
-        return alert(res.data?.deleteUser.message);
       } else {
         return showAlert('error', 'User not exist', 3000);
       }

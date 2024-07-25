@@ -1,9 +1,9 @@
 import { useLoginMutation, InputLogin } from '../graphql/generated/schema';
 import FormInput from './FormInput';
-import { useRouter } from 'next/navigation';
 import client from '@/graphql/client';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useAlert } from './hooks/AlertContext';
+import { validateForm } from '@/utils/validateForm';
 
 const fields = [
   {
@@ -31,11 +31,24 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
   const [login, { loading, error }] = useLoginMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
   const { showAlert } = useAlert();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!e.currentTarget.checkValidity()) return;
+
     try {
       const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const { isEmailValid, isPasswordValid } = validateForm(formData);
+
+      if (!isEmailValid) {
+        showAlert('error', 'Invalid email address', 3000);
+        return;
+      }
+
+      if (!isPasswordValid) {
+        showAlert('error', 'Password must be at least 6 characters long', 3000);
+        return;
+      }
       const user = Object.fromEntries(formData.entries()) as InputLogin;
 
       const response = await login({
@@ -44,7 +57,7 @@ export default function LoginForm({ closeModal, switchToRegister }: LoginFormPro
         },
       });
       if (response.data?.login.success) {
-        showAlert('success', response.data?.login?.message, 3000);
+        showAlert('success', `Welcome`, 3000);
         closeModal();
       } else {
         showAlert('error', response.data?.login?.message ?? 'Wrong credentials', 3000);
