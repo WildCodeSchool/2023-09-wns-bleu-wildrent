@@ -9,6 +9,7 @@ import {
 import client from '@/graphql/client';
 import Orders from '@/components/Orders';
 import { useAlert } from '@/components/hooks/AlertContext';
+import router from 'next/router';
 
 const TABS = {
   ORDERS: 'ORDERS',
@@ -35,9 +36,12 @@ function MyProfile() {
         });
         if (res.data?.deleteUser.success) {
           await logout();
+          router.push('/');
           await client.resetStore();
+          showAlert('success', 'user deleted', 3000);
+        } else {
+          showAlert('error', res?.data?.deleteUser?.message || 'orders in progress', 3000);
         }
-        return alert(res.data?.deleteUser.message);
       } else {
         return showAlert('error', 'User not exist', 3000);
       }
@@ -72,9 +76,9 @@ function MyProfile() {
 
   return (
     <Layout>
-      <section className="flex">
-        <div className="w-1/4 p-4 border-r">
-          <ul className="space-y-4">
+      <section className="flex flex-col md:flex-row justify-center">
+        <div className="w-full md:w-1/4 p-4 md:border-r">
+          <ul className="flex flex-row md:flex-col space-y-0 md:space-y-4 space-x-4 md:space-x-0">
             <li>
               <button
                 onClick={() => setActiveTab(TABS.ORDERS)}
@@ -101,7 +105,7 @@ function MyProfile() {
             </li>
           </ul>
         </div>
-        <div className="w-3/4 p-4">
+        <div className="w-full md:w-3/4">
           {activeTab === TABS.ORDERS && <Orders />}
           {activeTab === TABS.PROFILE && (
             <div className="card card-compact w-full bg-base-100 shadow-xl p-5">
@@ -219,14 +223,16 @@ function MyProfile() {
           )}
           {activeTab === TABS.ACCOUNT && (
             <div>
-              <h2 className="text-xl font-bold text-black">Account Settings</h2>
-              <button
-                className="btn btn-error text-primary mt-4 px-6 py-2"
-                onClick={deleteAccount}
-                type="button"
-              >
-                Delete your account
-              </button>
+              <div className="card card-compact w-full bg-base-100 shadow-xl p-5">
+                <h2 className="text-xl font-bold text-black">Account Settings</h2>
+                <button
+                  className="btn btn-error text-primary mt-4 px-6 py-2"
+                  onClick={deleteAccount}
+                  type="button"
+                >
+                  Delete your account
+                </button>
+              </div>
             </div>
           )}
         </div>

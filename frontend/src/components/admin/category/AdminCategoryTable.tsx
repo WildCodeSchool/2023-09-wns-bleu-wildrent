@@ -8,6 +8,7 @@ import AddCategoryModal from '@/components/admin/category/AddCategoryModal';
 import client from '@/graphql/client';
 import { IoIosAdd } from 'react-icons/io';
 import { useAlert } from '@/components/hooks/AlertContext';
+import { BiPlusCircle } from 'react-icons/bi';
 
 // Définition de la mutation GraphQL pour la suppression
 const DELETE_CATEGORY_MUTATION = gql`
@@ -57,30 +58,28 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
   };
 
   const handleDeleteCategoryClick = async (categoryId: number) => {
-    try {
-      const { data } = await deleteCategory({
-        variables: { id: categoryId },
-      });
-      if (data.deleteCategory) {
-        setCategories(categories.filter((category) => category.id !== categoryId));
-        showAlert('success', 'Category successfully deleted', 3000);
+    if (window.confirm('Are you sure you want to delete this order?')) {
+      try {
+        const { data } = await deleteCategory({
+          variables: { id: categoryId },
+        });
+        if (data.deleteCategory) {
+          setCategories(categories.filter((category) => category.id !== categoryId));
+          showAlert('success', 'Category successfully deleted', 3000);
 
-        client.resetStore();
-      } else {
-        showAlert('error', 'Failed to delete category', 3000);
+          client.resetStore();
+        } else {
+          showAlert('error', 'Failed to delete category', 3000);
+        }
+      } catch (error) {
+        console.error('Error deleting category', error);
+        showAlert('error', 'Error deleting category', 3000);
       }
-    } catch (error) {
-      console.error('Error deleting category', error);
-      showAlert('error', 'Error deleting category', 3000);
     }
   };
 
   return (
     <>
-      <button className="btn btn-circle btn-accent" onClick={handleAddCategoryClick}>
-        <IoIosAdd size={50} />
-      </button>
-
       {isAddModalOpen && (
         <AddCategoryModal
           isOpen={isAddModalOpen}
@@ -96,28 +95,28 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
           onCategoryUpdated={handleCategoryUpdated}
         />
       )}
-      <table className="min-w-full table-auto">
+      <table className="min-w-full rounded table-auto">
         <thead>
-          <tr className="bg-gray-400 text-left text-white">
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Nom</th>
-            <th className="px-4 py-2">Description</th>
-            <th className="px-4 py-2">Actions</th>
+          <tr className="bg-secondary text-left text-white">
+            <th className="px-4 py-2 text-center">ID</th>
+            <th className="px-4 py-2 text-center">Image</th>
+            <th className="px-4 py-2 text-center">Name</th>
+            <th className="px-4 py-2 text-center">Description</th>
+            <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {categories.map((category) => (
             <tr key={category.id} className={category.id % 2 === 0 ? 'bg-gray-200' : ''}>
-              <td className="px-4 py-2 border-b">{category.id}</td>
-              <td className="px-4 py-2 border-b">
-                <Image src={category.image} width={50} height={30} alt={category.name} />
+              <td className="px-4 py-2 border-b text-center">{category.id}</td>
+              <td className="px-4 py-2 border-b text-center">
+                <img src={category.image} width={50} height={50} alt={category.name} />
               </td>
-              <td className="px-4 py-2 border-b">{category.name}</td>
-              <td className="px-4 py-2 border-b">{category.description}</td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 border-b text-center">{category.name}</td>
+              <td className="px-4 py-2 border-b text-center">{category.description}</td>
+              <td className="px-4 py-2 border-b text-center space-x-3">
                 <button
-                  className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                  className="mr-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleEditClick(category)}
                 >
                   Edit
@@ -133,6 +132,12 @@ const AdminCategoryTable: React.FC<AdminCategoryTableProps> = ({ initialCategori
           ))}
         </tbody>
       </table>
+      <button
+        className="w-full py-2 bg-secondary text-white flex justify-center items-center rounded-b"
+        onClick={handleAddCategoryClick}
+      >
+        <BiPlusCircle size={40} />
+      </button>
     </>
   );
 };

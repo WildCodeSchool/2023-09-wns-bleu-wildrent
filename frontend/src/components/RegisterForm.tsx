@@ -4,7 +4,10 @@ import FormInput from './FormInput';
 import client from '@/graphql/client';
 import React, { useEffect } from 'react';
 import { useRef } from 'react';
-import { log } from 'console';
+
+import { useAlert } from './hooks/AlertContext';
+import { useAuthModal } from './hooks/useAuthModal';
+import { validateForm } from '@/utils/validateForm';
 
 const fields = [
   {
@@ -43,6 +46,7 @@ const fields = [
     required: true,
   },
 ];
+
 interface RegisterFormProps {
   closeModal: () => void;
 }
@@ -50,11 +54,24 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
   const router = useRouter();
   const [register, { loading, error }] = useRegisterMutation();
   const modalRef = useRef<HTMLDialogElement>(null);
-
+  const { showAlert } = useAlert();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!e.currentTarget.checkValidity()) return;
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+
+    const { isEmailValid, isPasswordValid } = validateForm(formData);
+
+    if (!isEmailValid) {
+      showAlert('error', 'Invalid email address', 3000);
+      return;
+    }
+
+    if (!isPasswordValid) {
+      showAlert('error', 'Password must be at least 6 characters long', 3000);
+      return;
+    }
+
     if (formData.get('password') === formData.get('confirm_password')) {
       formData.delete('confirm_password');
       const newUser = Object.fromEntries(formData.entries()) as InputRegister;
@@ -65,8 +82,12 @@ export default function RegisterForm({ closeModal }: RegisterFormProps) {
           },
         });
         if (data?.register.success && !error && !loading) {
+          showAlert('success', data?.register.message, 3000);
           router.push('/');
           closeModal();
+          showAlert('info', 'You can log in now!', 3000);
+        } else {
+          showAlert('error', data?.register.message ?? 'Could not create account', 3000);
         }
       } catch (err) {
         console.error(`could not create account: ${err}`);

@@ -11,9 +11,8 @@ import ProductRefModalDetails from './ProductRefModalDetails';
 import AddProductRefModal from './AddProductRefModal';
 import client from '@/graphql/client';
 import UpdateProductRefModal from './UpdateProductRefModal';
-import { IoIosAdd } from 'react-icons/io';
+import { BiPlusCircle } from 'react-icons/bi';
 
-// Étendez le type généré pour inclure __typename, qui est habituellement renvoyé par les requêtes GraphQL.
 type ProductRef = GeneratedProductRef & {
   __typename?: string;
 };
@@ -27,6 +26,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
   const [selectedProductRef, setSelectedProductRef] = useState<ProductRef | null>(null);
   const { showAlert } = useAlert();
   const [deleteProductRef] = useDeleteProductRefMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleDelete = async (id: number, e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (window.confirm('Are you sure you want to delete this product?')) {
@@ -47,7 +47,6 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleEditClick = (productRef: ProductRef) => {
     setSelectedProductRef(productRef);
     setIsModalOpen(true);
@@ -57,27 +56,23 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
     setSelectedProductRef(null);
   };
 
+  const handleModal = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <>
-      {selectedProductRef && (
-        <UpdateProductRefModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          productRef={selectedProductRef}
-        />
-      )}
-      <table className="min-w-full table-auto">
+      <table className="min-w-full rounded table-auto">
         <thead>
-          <tr className="bg-gray-400 text-left text-white">
+          <tr className="bg-secondary text-left text-white">
             <th className="px-4 py-2 text-center">ID</th>
             <th className="px-4 py-2 text-center">Cat</th>
             <th className="px-4 py-2 text-center">SubCat</th>
             <th className="px-4 py-2 text-center">Image</th>
-            <th className="px-4 py-2 text-center">Nom</th>
+            <th className="px-4 py-2 text-center">Name</th>
             <th className="px-4 py-2 text-center">Desciption</th>
-            <th className="px-4 py-2 text-center">Prix</th>
-            <th className="px-4 py-2 text-center">Quantité</th>
-
+            <th className="px-4 py-2 text-center">Price</th>
+            <th className="px-4 py-2 text-center">Quantity</th>
             <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
@@ -91,7 +86,7 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
               </td>
               <td className="px-4 py-2 border-b text-center">{productRef.subCategory?.name}</td>
               <td className="px-4 py-2 border-b text-center">
-                <Image src={productRef?.image} width={50} height={30} alt={productRef.name} />
+                <img src={productRef?.image} width={50} height={30} alt={productRef.name} />
               </td>
 
               <td className="px-4 py-2 border-b text-center">
@@ -103,14 +98,13 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
               </td>
               <td className="px-4 py-2 border-b text-center">{productRef.priceHT}€ HT</td>
               <td className="px-4 py-2 border-b text-center">{productRef.quantityAvailable}</td>
-              <td className="px-4 py-2 border-b text-center">
+              <td className="px-4 py-2 space-x-3 border-b">
                 <button
-                  className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mb-3"
+                  className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded mb-3"
                   onClick={() => handleEditClick(productRef)}
                 >
                   Edit
                 </button>
-
                 <button
                   onClick={(e) => handleDelete(productRef.id, e)}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
@@ -122,6 +116,19 @@ const AdminProductTable: React.FC<AdminProductTableProps> = ({ productRefs }) =>
           ))}
         </tbody>
       </table>
+      <div className="w-full py-2 bg-secondary text-white flex justify-center items-center rounded-b mt-4">
+        <button className="flex justify-center items-center" onClick={handleModal}>
+          <BiPlusCircle size={40} />
+        </button>
+      </div>
+      {selectedProductRef && (
+        <UpdateProductRefModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          productRef={selectedProductRef}
+        />
+      )}
+      <AddProductRefModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </>
   );
 };

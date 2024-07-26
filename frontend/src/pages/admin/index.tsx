@@ -4,8 +4,8 @@ import LayoutDashboard from '../../components/admin/LayoutDashboard';
 const Dashboard = () => {
   return (
     <LayoutDashboard>
-      <div className="p-4">
-        <h1 className="text-2xl font-semibold">Bienvenue sur le tableau de bord</h1>
+      <div className="flex justify-center items-center h-full p-4">
+        <h1 className="text-4xl font-semibold text-center">Welcome to the Dashboard</h1>
       </div>
     </LayoutDashboard>
   );

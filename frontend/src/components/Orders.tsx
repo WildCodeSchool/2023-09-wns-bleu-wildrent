@@ -9,8 +9,8 @@ function Orders() {
 
   return (
     <>
-      <div className="card card-compact w-full bg-base-100 shadow-xl p-5 m-5">
-        <h2 className="mb-4 text-xl font-bold dark:text-white">Orders </h2>
+      <div className="card card-compact w-full bg-base-100 shadow-xl p-5">
+        <h2 className="mb-4 text-xl font-bold">Orders </h2>
         {orders.length > 0 ? (
           <section className="flex flex-col">
             {orders.map((order) => (
@@ -18,9 +18,7 @@ function Orders() {
             ))}
           </section>
         ) : (
-          <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            No rental
-          </div>
+          <div className="block mb-2 text-sm font-medium text-gray-900">No rental</div>
         )}
       </div>{' '}
     </>

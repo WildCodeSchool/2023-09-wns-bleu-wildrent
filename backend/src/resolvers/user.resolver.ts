@@ -135,6 +135,9 @@ export default class UserResolver {
       if (!currentUser) {
         return { success: false, message: 'no currentUser' };
       }
+      if (currentUser.orders) {
+        return { success: false, message: 'orders in progress' };
+      }
       if (currentUser.role === 'ADMIN' || currentUser.id === userId) {
         const res = await this.userService.deleteUser(userId);
         return res;

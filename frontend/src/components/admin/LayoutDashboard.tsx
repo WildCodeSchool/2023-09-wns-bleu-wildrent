@@ -9,7 +9,7 @@ type LayoutDashboardProps = {
 
 const LayoutDashboard: React.FC<LayoutDashboardProps> = ({ children }) => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-base-100">
       <Sidebar navItems={adminSideBarItems} />
       <main className="flex-1 p-4">{children}</main>
     </div>

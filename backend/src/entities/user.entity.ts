@@ -9,6 +9,7 @@ import {
 import { Field, InputType, Int, ObjectType } from 'type-graphql';
 import { argon2id, verify, hash } from 'argon2';
 import { Order } from './order.entity';
+import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
 type ROLE = 'ADMIN' | 'USER';
 @ObjectType()
@@ -66,10 +67,13 @@ export default class User extends BaseEntity {
       },
     },
   })
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @Field()
   @Column()
+  @IsNotEmpty()
   password: string;
 
   @OneToMany(() => Order, (order) => order.user, {
@@ -89,9 +93,13 @@ export class Profile extends User {
 @InputType()
 export class NewUserInput {
   @Field({ nullable: true })
+  @IsEmail()
+  @IsNotEmpty()
   email?: string;
 
   @Field({ nullable: true })
+  @Length(6, 20)
+  @IsNotEmpty()
   password?: string;
 
   @Field({ nullable: true })
@@ -180,9 +188,13 @@ export class InputRegister {
   lastname: string;
 
   @Field()
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @Field()
+  @Length(6, 20)
+  @IsNotEmpty()
   password: string;
 }
 

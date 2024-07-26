@@ -12,38 +12,38 @@ import Loader from '@/components/Loader';
 import { useAlert } from '@/components/hooks/AlertContext';
 const fields = [
   {
-    label: 'Nom du produit',
+    label: 'Product Name',
     id: 'name',
     type: 'text',
-    placeholder: 'Chaise Adèle',
+    placeholder: 'Chair Adèle',
     required: true,
   },
   {
-    label: 'Description détaillée',
+    label: 'Description',
     id: 'description',
     type: 'textarea',
-    placeholder: 'les détails du produit',
+    placeholder: 'Product details',
     required: true,
   },
   {
-    label: 'Prix HT par unité et par jour de location',
+    label: 'Price HT per unit & per day',
     id: 'priceHT',
     type: 'number',
     placeholder: '20€',
     required: true,
   },
   {
-    label: 'Photo du produit',
+    label: 'Product image',
     id: 'image',
     type: 'text',
-    placeholder: 'Ajouter le lien vers la photo du produit',
+    placeholder: 'Link to the product image',
     required: true,
   },
   {
     label: 'Type',
     id: 'subCategory',
     type: 'select',
-    placeholder: 'Ajouter le lien vers la photo du produit',
+    placeholder: 'Select a subcategory',
     required: true,
   },
   {
@@ -102,7 +102,10 @@ function UpdateProductRefModal({
   if (errorSubCategories) {
     showAlert('error', errorSubCategories?.message, 3000);
   }
-
+  // Trouver l'ID de la sous-catégorie à partir de son nom
+  const subCategoryId = subCategoriesData?.allSubCategories.find(
+    (subCategory: SimpleSubCategory) => subCategory.name === productRef?.subCategory?.name,
+  )?.id;
   return (
     <div>
       <input
@@ -123,10 +126,16 @@ function UpdateProductRefModal({
                 label={field.label}
                 placeholder={field.placeholder}
                 inputType={field.type}
-                defaultValue={productRef[field.id as keyof ProductRef] as string}
+                defaultValue={
+                  field.id === 'subCategory'
+                    ? String(subCategoryId)
+                    : field.id === 'quantity'
+                      ? productRef.quantityAvailable
+                      : (productRef[field.id as keyof ProductRef] as string)
+                }
                 options={
-                  subCategoriesData?.allSubCategories
-                    ? subCategoriesData.allSubCategories.map((subCategory: SimpleSubCategory) => ({
+                  field.id === 'subCategory'
+                    ? subCategoriesData?.allSubCategories.map((subCategory: SimpleSubCategory) => ({
                         value: subCategory.id,
                         label: subCategory.name,
                       }))

@@ -8,6 +8,7 @@ import AddSubCategoryModal from '@/components/admin/subCategory/AddSubCategoryMo
 import client from '@/graphql/client';
 import { IoIosAdd } from 'react-icons/io';
 import { useAlert } from '@/components/hooks/AlertContext';
+import { BiPlusCircle } from 'react-icons/bi';
 
 const DELETE_SUBCATEGORY_MUTATION = gql`
   mutation DeleteSubCategory($id: Int!) {
@@ -82,10 +83,6 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
 
   return (
     <>
-      <button className="btn btn-circle btn-accent" onClick={handleAddSubCategoryClick}>
-        <IoIosAdd size={50} />
-      </button>
-
       {isAddModalOpen && (
         <AddSubCategoryModal
           isOpen={isAddModalOpen}
@@ -101,38 +98,38 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
           onSubCategoryUpdated={handleSubCategoryUpdated}
         />
       )}
-      <table className="min-w-full table-auto">
+      <table className="min-w-full rounded table-auto">
         <thead>
-          <tr className="bg-gray-400 text-left text-white">
-            <th className="px-4 py-2">ID</th>
-            <th className="px-4 py-2">Image</th>
-            <th className="px-4 py-2">Nom</th>
-            <th className="px-4 py-2">Description</th>
-            <th className="px-4 py-2">Catégorie</th>
-            <th className="px-4 py-2">Actions</th>
+          <tr className="bg-secondary text-left text-white">
+            <th className="px-4 py-2 text-center">ID</th>
+            <th className="px-4 py-2 text-center">Image</th>
+            <th className="px-4 py-2 text-center">Name</th>
+            <th className="px-4 py-2 text-center">Description</th>
+            <th className="px-4 py-2 text-center">Category</th>
+            <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {subCategories.map((subCategory) => (
             <tr key={subCategory.id} className={subCategory.id % 2 === 0 ? 'bg-gray-200' : ''}>
-              <td className="px-4 py-2 border-b">{subCategory.id}</td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 border-b text-center">{subCategory.id}</td>
+              <td className="px-4 py-2 border-b text-center">
                 {subCategory.image ? (
                   <Image src={subCategory.image} width={50} height={30} alt={subCategory.name} />
                 ) : (
-                  "Pas d'image"
+                  'No image'
                 )}
               </td>
-              <td className="px-4 py-2 border-b">{subCategory.name}</td>
-              <td className="px-4 py-2 border-b">
-                {subCategory.description ?? 'Pas de description'}
+              <td className="px-4 py-2 border-b text-center">{subCategory.name}</td>
+              <td className="px-4 py-2 border-b text-center">
+                {subCategory.description ?? 'No description'}
               </td>
-              <td className="px-4 py-2 border-b">
-                {subCategory.category ? subCategory.category.name : 'Non spécifié'}
+              <td className="px-4 py-2 border-b text-center">
+                {subCategory.category ? subCategory.category.name : 'No category'}
               </td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 space-x-3 border-b">
                 <button
-                  className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                  className="mr-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-2 rounded"
                   onClick={() => handleEditClick(subCategory)}
                 >
                   Edit
@@ -148,6 +145,12 @@ const AdminSubCategoryTable: React.FC<AdminSubCategoryTableProps> = ({ initialSu
           ))}
         </tbody>
       </table>
+      <button
+        className="w-full py-2 bg-secondary text-white flex justify-center items-center rounded-b"
+        onClick={handleAddSubCategoryClick}
+      >
+        <BiPlusCircle size={40} />
+      </button>
     </>
   );
 };
